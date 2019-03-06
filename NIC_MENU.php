@@ -156,62 +156,83 @@ class NCBANKUSSD extends DynamicMenuController {
         }
     }
 
+                
     
-    
-    function serviceNotAvailable(){
-        $message = "Service not available \n\n" .  "0. Home \n" . "00. Back \n" . "000. Logout \n";
+    function serviceNotAvailable() {
+        $message = "Service not available \n\n" . "0. Home \n" . "00. Back \n" . "000. Logout \n";
         $this->displayText = $message;
         $this->sessionState = "CONTINUE";
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
         $this->nextFunction = "menuSwitcher";
         $this->previousPage = "startPage";
- 
+    }
+
+    function merchantsMenu() {
+        $this->serviceNotAvailable();
+    }
+
+    //todo: sprint one, Balance Inquiry
+    function BalanceEnquiryMenu() {
+        $message = "\n\nChoose Account\n";
+
+        //todo: fetch accounts from the url given 
+        $dummyaccounts = ['1234567898', '897654532'];
+                
+        $index = 0;
+        foreach ($dummyaccounts as $account) {
+            $message .= $index . ")" . $account . "\n";
+            $index = $index + 1;
+        }
+
+        $message .= "0. Home \n" . "00. Back \n" . "000. Logout \n";
+        
+        $this->displayText = $message;
+        $this->sessionState = "CONTINUE";
+        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+        $this->nextFunction = "menuSwitcher";
+        $this->previousPage = "startPage";
     }
     
-    function merchantsMenu(){
-       $this->serviceNotAvailable();
-       
-       
-    }
-    
-    function BalanceEnquiryMenu(){
-       $this->serviceNotAvailable();
-       
-       
-    }
-    
-    function BillPaymentsMenu(){
-       $this->serviceNotAvailable();
-        
-    }
-    
-    function FundsTransferMenu(){
-       $this->serviceNotAvailable();
-        
-    }
-    
-    function BankToMobileMenu(){
-       $this->serviceNotAvailable();
-        
-    }
-    function AirtimePurchaseMenu(){
-       $this->serviceNotAvailable();
-        
-    }
-    function MiniStatementMenu(){
-       $this->serviceNotAvailable();
-        
-    }
-    function ChequeRequestMenu(){
-       $this->serviceNotAvailable();
-        
-    }
-    function ChangePinMenu(){
-       $this->serviceNotAvailable();
-        
+    function promptPin(){
+        $message .= "Enter Pin to confirm \n0. Home \n" . "00. Back \n" . "000. Logout \n";
+         $this->displayText = $message;
+        $this->sessionState = "CONTINUE";
+        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+        $this->nextFunction = "menuSwitcher";
+        $this->previousPage = "startPage";
     }
     
     
+    
+
+    function BillPaymentsMenu() {
+        $this->serviceNotAvailable();
+    }
+
+    function FundsTransferMenu() {
+        $this->serviceNotAvailable();
+    }
+
+    function BankToMobileMenu() {
+        $this->serviceNotAvailable();
+    }
+
+    function AirtimePurchaseMenu() {
+        $this->serviceNotAvailable();
+    }
+
+    function MiniStatementMenu() {
+        $this->serviceNotAvailable();
+    }
+
+    function ChequeRequestMenu() {
+        $this->serviceNotAvailable();
+    }
+
+    function ChangePinMenu() {
+        $this->serviceNotAvailable();
+    }
+
     function validateMobileNumber($input) {
 
         if (strlen($input) == 12 && is_numeric($input)) {
