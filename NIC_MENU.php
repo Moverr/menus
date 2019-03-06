@@ -9,7 +9,7 @@
 error_reporting(0);
 include 'DynamicMenuController.php';
 
-class HostaliteUSSD extends DynamicMenuController {
+class NCBANKUSSD extends DynamicMenuController {
 
     private $MENU_STATUS = true;
     private $KEY_CUSTOMER_MOBILE_NUMBER = "customerMobileNumber";
@@ -43,7 +43,7 @@ class HostaliteUSSD extends DynamicMenuController {
 
         $message = "Welcome to NC Bank \n\n" . "Home Menu \n" . "1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
 
-                 
+
 
 
         $this->displayText = $message;
@@ -346,5 +346,5 @@ class HostaliteUSSD extends DynamicMenuController {
 
 }
 
-$mulaUGMenu = new HostaliteUSSD;
-echo $mulaUGMenu->navigate();
+$ncBankUSSD = new NCBANKUSSD;
+echo $ncBankUSSD->navigate();
