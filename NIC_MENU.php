@@ -37,15 +37,16 @@ class HostaliteUSSD extends DynamicMenuController {
         256775516494,
         256779999508,
     );
-    
     private $SERVICE_DESCRIPTION = "NC BANK MENU ";
 
     function startPage() {
 
-                
+        $message = "Welcome to NC Bank \n\n" . "Home Menu \n" . "1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
+
+                 
 
 
-        $this->displayText =  "Welcome home";
+        $this->displayText = $message;
         $this->sessionState = "CONTINUE";
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
         $this->nextFunction = "menuSwitcher";
