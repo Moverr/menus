@@ -156,6 +156,62 @@ class NCBANKUSSD extends DynamicMenuController {
         }
     }
 
+    
+    
+    function serviceNotAvailable(){
+        $message = "Service not available \n\n" .  "0. Home \n" . "00. Back \n" . "000. Logout \n";
+        $this->displayText = $message;
+        $this->sessionState = "CONTINUE";
+        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+        $this->nextFunction = "menuSwitcher";
+        $this->previousPage = "startPage";
+ 
+    }
+    
+    function merchantsMenu(){
+       $this->serviceNotAvailable();
+       
+       
+    }
+    
+    function BalanceEnquiryMenu(){
+       $this->serviceNotAvailable();
+       
+       
+    }
+    
+    function BillPaymentsMenu(){
+       $this->serviceNotAvailable();
+        
+    }
+    
+    function FundsTransferMenu(){
+       $this->serviceNotAvailable();
+        
+    }
+    
+    function BankToMobileMenu(){
+       $this->serviceNotAvailable();
+        
+    }
+    function AirtimePurchaseMenu(){
+       $this->serviceNotAvailable();
+        
+    }
+    function MiniStatementMenu(){
+       $this->serviceNotAvailable();
+        
+    }
+    function ChequeRequestMenu(){
+       $this->serviceNotAvailable();
+        
+    }
+    function ChangePinMenu(){
+       $this->serviceNotAvailable();
+        
+    }
+    
+    
     function validateMobileNumber($input) {
 
         if (strlen($input) == 12 && is_numeric($input)) {
