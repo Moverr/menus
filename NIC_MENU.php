@@ -37,20 +37,23 @@ class HostaliteUSSD extends DynamicMenuController {
         256775516494,
         256779999508,
     );
+    private $SERVICE_DESCRIPTION = "NC BANK MENU ";
 
     function startPage() {
 
+        $message = "Welcome to NC Bank \n\n" + "Home Menu \n" + "1. Merchants \n" + "2. Balance Enquiry \n" + "3. Bill Payment \n" + "4. Funds Transfer \n" + "5. Bank to Mobile \n" + "6. Airtime Purchase \n" + "7. Mini statement \n" + "8. Cheque Requests \n" + "9. Change PIN \n";
 
-                $this->displayText = "WELCOME MOVER GOD ABOVE EVERY THING";
-                $this->sessionState = "CONTINUE";
-                $this->serviceDescription = "Hostallite Menu";
-                $this->nextFunction = "validateMobileNumber";
-                $this->previousPage = "startPage";
+
+
+
+        $this->displayText = $message;
+        $this->sessionState = "CONTINUE";
+        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+        $this->nextFunction = "menuSwitcher";
+        $this->previousPage = "startPage";
 
         // if ($this->MENU_STATUS) {
-
         //     CoreUtils::flog4php(4, $this->msisdn, array("MESSAGE" => "Just recieved a menu request from SDP"), __FILE__, __FUNCTION__, __LINE__, "ussdinfo", USSD_LOG_PROPERTIES);
-
         //     if (in_array($this->_msisdn, $this->MERCHANT_WHITELIST)) {
         //         $this->displayText = "Please enter your member ID";
         //         $this->sessionState = "CONTINUE";
@@ -66,6 +69,91 @@ class HostaliteUSSD extends DynamicMenuController {
         //     CoreUtils::flog4php(4, $this->msisdn, array("MESSAGE" => "MTN Mula Menu is disabled"), __FILE__, __FUNCTION__, __LINE__, "ussdinfo", USSD_LOG_PROPERTIES);
         //     return $this->renderErrorMessage();
         // }
+    }
+
+    function menuSwitcher($input) {
+        if (is_numeric($input)) {
+            switch ($input) {
+                case '1':
+                    # code...
+                    break;
+
+                case '2':
+                    # code...
+                    break;
+
+
+                case '3':
+                    # code...
+                    break;
+
+
+                case '4':
+                    # code...
+                    break;
+
+
+
+                case '5':
+                    # code...
+                    break;
+
+
+
+                case '6':
+                    # code...
+                    break;
+
+
+
+                case '7':
+                    # code...
+                    break;
+
+
+                case '8':
+                    # code...
+                    break;
+
+
+                case '9':
+                    # code...
+                    break;
+
+
+                case '0':
+                    # code...
+                    break;
+
+
+
+                case '00':
+                    # code...
+                    break;
+
+
+                case '000':
+                    # code...
+                    break;
+
+
+
+                default:
+                    # code...
+                    $this->displayText = "Invalid input. Please enter a menu number ";
+                    $this->sessionState = "CONTINUE";
+                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                    $this->nextFunction = "menuSwitcher";
+                    $this->previousPage = "menuSwitcher";
+                    break;
+            }
+        } else {
+            $this->displayText = "Invalid input. Please enter a menu number ";
+            $this->sessionState = "CONTINUE";
+            $this->serviceDescription = "MTN Mula";
+            $this->nextFunction = "validateMobileNumber";
+            $this->previousPage = "validateMobileNumber";
+        }
     }
 
     function validateMobileNumber($input) {
