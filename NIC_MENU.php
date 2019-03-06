@@ -40,25 +40,32 @@ class HostaliteUSSD extends DynamicMenuController {
 
     function startPage() {
 
-        if ($this->MENU_STATUS) {
 
-            CoreUtils::flog4php(4, $this->msisdn, array("MESSAGE" => "Just recieved a menu request from SDP"), __FILE__, __FUNCTION__, __LINE__, "ussdinfo", USSD_LOG_PROPERTIES);
-
-            if (in_array($this->_msisdn, $this->MERCHANT_WHITELIST)) {
-                $this->displayText = "Please enter your member ID";
+                $this->displayText = "WELCOME MOVER GOD ABOVE EVERY THING";
                 $this->sessionState = "CONTINUE";
                 $this->serviceDescription = "Hostallite Menu";
                 $this->nextFunction = "validateMobileNumber";
                 $this->previousPage = "startPage";
-            } else {
-                $this->displayText = "Sorry, you are not enabled to access this service.";
-                $this->sessionState = "END";
-                $this->serviceDescription = "MTN Mula";
-            }
-        } else {
-            CoreUtils::flog4php(4, $this->msisdn, array("MESSAGE" => "MTN Mula Menu is disabled"), __FILE__, __FUNCTION__, __LINE__, "ussdinfo", USSD_LOG_PROPERTIES);
-            return $this->renderErrorMessage();
-        }
+
+        // if ($this->MENU_STATUS) {
+
+        //     CoreUtils::flog4php(4, $this->msisdn, array("MESSAGE" => "Just recieved a menu request from SDP"), __FILE__, __FUNCTION__, __LINE__, "ussdinfo", USSD_LOG_PROPERTIES);
+
+        //     if (in_array($this->_msisdn, $this->MERCHANT_WHITELIST)) {
+        //         $this->displayText = "Please enter your member ID";
+        //         $this->sessionState = "CONTINUE";
+        //         $this->serviceDescription = "Hostallite Menu";
+        //         $this->nextFunction = "validateMobileNumber";
+        //         $this->previousPage = "startPage";
+        //     } else {
+        //         $this->displayText = "Sorry, you are not enabled to access this service.";
+        //         $this->sessionState = "END";
+        //         $this->serviceDescription = "MTN Mula";
+        //     }
+        // } else {
+        //     CoreUtils::flog4php(4, $this->msisdn, array("MESSAGE" => "MTN Mula Menu is disabled"), __FILE__, __FUNCTION__, __LINE__, "ussdinfo", USSD_LOG_PROPERTIES);
+        //     return $this->renderErrorMessage();
+        // }
     }
 
     function validateMobileNumber($input) {
