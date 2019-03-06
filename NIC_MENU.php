@@ -76,48 +76,58 @@ class NCBANKUSSD extends DynamicMenuController {
             switch ($input) {
                 case '1':
                     # code...
-                    break;
+                    $this->MerchantsMenu(); 
+                   break;
 
                 case '2':
                     # code...
+                    $this->BalanceEnquiryMenu();
                     break;
 
 
                 case '3':
                     # code...
+                    $this->BillPaymentsMenu();
                     break;
 
 
                 case '4':
                     # code...
+                    $this->FundsTransferMenu();
                     break;
 
 
 
                 case '5':
                     # code...
+                    $this->BankToMobileMenu();
                     break;
 
 
 
                 case '6':
                     # code...
+                     $this->BankToMobileMenu();
+                    
                     break;
 
 
 
                 case '7':
                     # code...
+                    $this->MiniStatementMenu();
                     break;
 
 
                 case '8':
                     # code...
+                    $this->ChequeRequestMenu();
                     break;
 
 
                 case '9':
                     # code...
+                    $this->ChangePinMenu();
                     break;
 
 
@@ -158,7 +168,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
                 
     
-    function serviceNotAvailable() {
+    function ServiceNotAvailable() {
         $message = "Service not available \n\n" . "0. Home \n" . "00. Back \n" . "000. Logout \n";
         $this->displayText = $message;
         $this->sessionState = "CONTINUE";
@@ -167,7 +177,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->previousPage = "startPage";
     }
 
-    function merchantsMenu() {
+    function MerchantsMenu() {
         $this->serviceNotAvailable();
     }
 
@@ -193,17 +203,9 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->previousPage = "startPage";
     }
     
-    function promptPin(){
-        $message .= "Enter Pin to confirm \n0. Home \n" . "00. Back \n" . "000. Logout \n";
-         $this->displayText = $message;
-        $this->sessionState = "CONTINUE";
-        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-        $this->nextFunction = "menuSwitcher";
-        $this->previousPage = "startPage";
-    }
     
     
-    
+                
 
     function BillPaymentsMenu() {
         $this->serviceNotAvailable();
@@ -232,6 +234,21 @@ class NCBANKUSSD extends DynamicMenuController {
     function ChangePinMenu() {
         $this->serviceNotAvailable();
     }
+    
+    
+    function PromptPin(){
+        $message .= "Enter Pin to confirm \n0. Home \n" . "00. Back \n" . "000. Logout \n";
+         $this->displayText = $message;
+        $this->sessionState = "CONTINUE";
+        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+        $this->nextFunction = "menuSwitcher";
+        $this->previousPage = "startPage";
+    }
+    
+    function SignOutMenu(){
+        
+    }
+    
 
     function validateMobileNumber($input) {
 
