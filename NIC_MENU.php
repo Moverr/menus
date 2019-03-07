@@ -73,7 +73,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function menuSwitcher($input) {
         if (is_numeric($input)) {
-            switch ($input) {
+            switch (''.$input) {
                 case '1':
                     # code...
                     $this->MerchantsMenu(); 
