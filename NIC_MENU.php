@@ -88,9 +88,15 @@ class NCBANKUSSD extends DynamicMenuController {
         rtrim($fields_string, '&');
 
 
+        try{
+        
         $response = $this->http_post($this->walletUrl, $fields, $fields_string);
-                
-        $this->displayText(js_encode($response));
+        }catch(Exception $er){
+            $this->displayText($er->getMessage());
+        }
+        
+         $this->displayText("pass");        
+        
     }
 
     function http_post($url, $fields, $fields_string) {
