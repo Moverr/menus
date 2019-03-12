@@ -38,6 +38,7 @@ class NCBANKUSSD extends DynamicMenuController {
         256779999508,
     );
     private $SERVICE_DESCRIPTION = "NC BANK MENU ";
+    private $walletUrl = 'http://132.147.160.57:8300/wallet/IS_APIs/CustomerRegistration/fetchCustomerData';
 
     function startPage() {
 
@@ -46,7 +47,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->displayText = $message;
         $this->sessionState = "CONTINUE";
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-        $this->nextFunction = "validateMSSDN";
+        $this->nextFunction = "fetchCustomerData";
         $this->previousPage = "startPage";
     }
 
@@ -65,7 +66,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->previousPage = "startPage";
     }
 
-    function fetchCustomerData() {
+    function fetchCustomerData($input) {
         /**
          * Make api call to wallet to fetch member details and respond to user
          */
@@ -75,8 +76,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
         $fields = array(
-//  "RESPONSE_TYPE" => 'JSON',
-            "MSISDN" => $this->_msisdn,
+            "MSISDN" => '',
             "USERNAME" => "system-user",
             "PASSWORD" => "lipuka"
         );
@@ -89,8 +89,33 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
         $response = $this->http_post($this->walletUrl, $fields, $fields_string);
+                
+        $this->displayText(js_encode($response));
+    }
 
-        return $response;
+    function http_post($url, $fields, $fields_string) {
+        try {
+////open connection
+            $ch = curl_init($url);
+//set the url, number of POST vars, POST data
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+//curl_setopt($ch, CURLOPT_MUTE,1);
+            curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
+            curl_setopt($ch, CURLOPT_POST, count($fields));
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+//new options
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+//curl_setopt($ch, CURLOPT_CAINFO, REQUEST_SSL_CERTIFICATE);
+//execute post
+            $result = curl_exec($ch);
+//close connection
+            curl_close($ch);
+            return $result;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
     }
 
     function menuSwitcher($input) {
