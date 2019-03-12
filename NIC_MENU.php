@@ -81,19 +81,19 @@ class NCBANKUSSD extends DynamicMenuController {
             "PASSWORD" => "lipuka"
         );
 
-//$client->query ( $this->fetch_customer_details_function, $payload );
-        foreach ($fields as $key => $value) {
-            $fields_string .= $key . '=' . $value . '&';
-        }
-        rtrim($fields_string, '&');
+////$client->query ( $this->fetch_customer_details_function, $payload );
+//        foreach ($fields as $key => $value) {
+//            $fields_string .= $key . '=' . $value . '&';
+//        }
+//        rtrim($fields_string, '&');
 
 
-        try{
-        
-        $response = $this->http_post($this->walletUrl, $fields, $fields_string);
-        }catch(Exception $er){
-            $this->displayText($er->getMessage());
-        }
+//        try{
+//        
+//        $response = $this->http_post($this->walletUrl, $fields, $fields_string);
+//        }catch(Exception $er){
+//            $this->displayText($er->getMessage());
+//        }
         
          $this->displayText("pass");        
         
