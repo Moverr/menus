@@ -42,6 +42,22 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function startPage() {
 
+
+        $fields = array(
+            "MSISDN" => '256783262929',
+            "USERNAME" => "system-user",
+            "PASSWORD" => "lipuka"
+        );
+
+
+        try {
+
+            $response = $this->http_post($this->walletUrl, $fields, $fields_string);
+        } catch (Exception $er) {
+            $this->displayText($er->getMessage());
+        }
+
+
         $message = "Welcome to NC Bank \n\nEnter Mobile Banking Number";
 
         $this->displayText = $message;
@@ -86,17 +102,14 @@ class NCBANKUSSD extends DynamicMenuController {
 //            $fields_string .= $key . '=' . $value . '&';
 //        }
 //        rtrim($fields_string, '&');
-
-
 //        try{
 //        
 //        $response = $this->http_post($this->walletUrl, $fields, $fields_string);
 //        }catch(Exception $er){
 //            $this->displayText($er->getMessage());
 //        }
-        
-         $this->displayText("pass");        
-        
+
+        $this->displayText("pass");
     }
 
     function http_post($url, $fields, $fields_string) {
