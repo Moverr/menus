@@ -41,43 +41,65 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function startPage() {
 
+        $message = "Welcome to NC Bank \n\nEnter Mobile Banking Number";
+
+        $this->displayText = $message;
+        $this->sessionState = "CONTINUE";
+        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+        $this->nextFunction = "validateMSSDN";
+        $this->previousPage = "startPage";
+    }
+
+    function validateMSSDN($input) {
+
+        $mssdn = $input;
+        //todo: check with the servers and see if the account exists, if exists store the information 
+
+        $this->fetchCustomerData();
         $message = "Welcome to NC Bank \n\n" . "Home Menu \n" . "1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
-
-
-
 
         $this->displayText = $message;
         $this->sessionState = "CONTINUE";
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
         $this->nextFunction = "menuSwitcher";
         $this->previousPage = "startPage";
+    }
 
-        // if ($this->MENU_STATUS) {
-        //     CoreUtils::flog4php(4, $this->msisdn, array("MESSAGE" => "Just recieved a menu request from SDP"), __FILE__, __FUNCTION__, __LINE__, "ussdinfo", USSD_LOG_PROPERTIES);
-        //     if (in_array($this->_msisdn, $this->MERCHANT_WHITELIST)) {
-        //         $this->displayText = "Please enter your member ID";
-        //         $this->sessionState = "CONTINUE";
-        //         $this->serviceDescription = "Hostallite Menu";
-        //         $this->nextFunction = "validateMobileNumber";
-        //         $this->previousPage = "startPage";
-        //     } else {
-        //         $this->displayText = "Sorry, you are not enabled to access this service.";
-        //         $this->sessionState = "END";
-        //         $this->serviceDescription = "MTN Mula";
-        //     }
-        // } else {
-        //     CoreUtils::flog4php(4, $this->msisdn, array("MESSAGE" => "MTN Mula Menu is disabled"), __FILE__, __FUNCTION__, __LINE__, "ussdinfo", USSD_LOG_PROPERTIES);
-        //     return $this->renderErrorMessage();
-        // }
+    function fetchCustomerData() {
+        /**
+         * Make api call to wallet to fetch member details and respond to user
+         */
+//$client = new IXR_Client ( $this->walletUrl );
+        $fields_string = null;
+        $fields = null;
+
+
+        $fields = array(
+//  "RESPONSE_TYPE" => 'JSON',
+            "MSISDN" => $this->_msisdn,
+            "USERNAME" => "system-user",
+            "PASSWORD" => "lipuka"
+        );
+
+//$client->query ( $this->fetch_customer_details_function, $payload );
+        foreach ($fields as $key => $value) {
+            $fields_string .= $key . '=' . $value . '&';
+        }
+        rtrim($fields_string, '&');
+
+
+        $response = $this->http_post($this->walletUrl, $fields, $fields_string);
+
+        return $response;
     }
 
     function menuSwitcher($input) {
         if (is_numeric($input)) {
-            switch (''.$input) {
+            switch ('' . $input) {
                 case '1':
                     # code...
-                    $this->MerchantsMenu(); 
-                   break;
+                    $this->MerchantsMenu();
+                    break;
 
                 case '2':
                     # code...
@@ -107,8 +129,8 @@ class NCBANKUSSD extends DynamicMenuController {
 
                 case '6':
                     # code...
-                     $this->BankToMobileMenu();
-                    
+                    $this->BankToMobileMenu();
+
                     break;
 
 
@@ -166,8 +188,6 @@ class NCBANKUSSD extends DynamicMenuController {
         }
     }
 
-                
-    
     function ServiceNotAvailable() {
         $message = "Service not available \n\n" . "0. Home \n" . "00. Back \n" . "000. Logout \n";
         $this->displayText = $message;
@@ -187,7 +207,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
         //todo: fetch accounts from the url given 
         $dummyaccounts = ['1234567898', '897654532'];
-                
+
         $index = 0;
         foreach ($dummyaccounts as $account) {
             $message .= $index . ")" . $account . "\n";
@@ -195,17 +215,13 @@ class NCBANKUSSD extends DynamicMenuController {
         }
 
         $message .= "0. Home \n" . "00. Back \n" . "000. Logout \n";
-        
+
         $this->displayText = $message;
         $this->sessionState = "CONTINUE";
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
         $this->nextFunction = "menuSwitcher";
         $this->previousPage = "startPage";
     }
-    
-    
-    
-                
 
     function BillPaymentsMenu() {
         $this->serviceNotAvailable();
@@ -234,21 +250,19 @@ class NCBANKUSSD extends DynamicMenuController {
     function ChangePinMenu() {
         $this->serviceNotAvailable();
     }
-    
-    
-    function PromptPin(){
+
+    function PromptPin() {
         $message .= "Enter Pin to confirm \n0. Home \n" . "00. Back \n" . "000. Logout \n";
-         $this->displayText = $message;
+        $this->displayText = $message;
         $this->sessionState = "CONTINUE";
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
         $this->nextFunction = "menuSwitcher";
         $this->previousPage = "startPage";
     }
-    
-    function SignOutMenu(){
+
+    function SignOutMenu() {
         
     }
-    
 
     function validateMobileNumber($input) {
 
