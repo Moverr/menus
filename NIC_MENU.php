@@ -42,7 +42,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function startPage() {
 
-
+        fetchCustomerData();
         $message = "Welcome to NC Bank \n\n" . "Home Menu \n" . "1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
 
         $this->displayText = $message;
@@ -69,7 +69,15 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $response = $this->http_post($this->walletUrl, $fields, $fields_string);
 
-        return $response;
+        return populateEntity($response);
+    }
+
+    function populateEntity($response) {
+        if ($response != null) {
+            $clientProfile = json_decode($response, true);
+        }
+
+        return null;
     }
 
     function http_post($url, $fields, $fields_string) {
