@@ -42,7 +42,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function startPage() {
 
-//        $account = fetchCustomerData();
+        $account = fetchCustomerData();
         $message = "Welcome to NC Bank \n\n" . "Home Menu \n" . "1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
 
         $message .= "" . $account;
@@ -64,17 +64,22 @@ class NCBANKUSSD extends DynamicMenuController {
             "PASSWORD" => "lipuka"
         );
 
+
         foreach ($fields as $key => $value) {
             $fields_string .= $key . '=' . $value . '&';
         }
         rtrim($fields_string, '&');
 
-        $response = `{"SUCCESS":true,"customerDetails":"31|1|1|NAKIDDE|TEDDY|2019-02-19 12:13:42|2019-02-19 12:13:42","accountDetails":"31|3000001968|teddy|1|Uganda Shilling |800|UGX |31#8|3000025673|TOM KAMUKAMA|1|Uganda Shilling |800|UGX |31","nominationDetails":"hi|3000010207|Kampala|NIC","EXCEPTION":null}`;
+//        $response = `{"SUCCESS":true,"customerDetails":"31|1|1|NAKIDDE|TEDDY|2019-02-19 12:13:42|2019-02-19 12:13:42","accountDetails":"31|3000001968|teddy|1|Uganda Shilling |800|UGX |31#8|3000025673|TOM KAMUKAMA|1|Uganda Shilling |800|UGX |31","nominationDetails":"hi|3000010207|Kampala|NIC","EXCEPTION":null}`;
+        $response = $this->http_post($this->walletUrl, $fields, $fields_string);
+//        return populateEntity($response);
 
-        return populateEntity($response);
+        return ".PASS";
     }
 
     function populateEntity($response) {
+
+
         $reponseData = [];
         $clientProfile = null;
         if ($response != null) {
