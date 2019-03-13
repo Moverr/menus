@@ -73,11 +73,15 @@ class NCBANKUSSD extends DynamicMenuController {
         }
         rtrim($fields_string, '&');
 
-        return "PASSSSS ";
+       
 
 
 //        $response = `{"SUCCESS":true,"customerDetails":"31|1|1|NAKIDDE|TEDDY|2019-02-19 12:13:42|2019-02-19 12:13:42","accountDetails":"31|3000001968|teddy|1|Uganda Shilling |800|UGX |31#8|3000025673|TOM KAMUKAMA|1|Uganda Shilling |800|UGX |31","nominationDetails":"hi|3000010207|Kampala|NIC","EXCEPTION":null}`;
-        $response = $this->http_post($this->walletUrl, $fields, $fields_string);
+        
+         $this->http_post($this->walletUrl, $fields, $fields_string);
+         
+          return "PASSSSS ";
+          
 //        return populateEntity($response);
 
         return $response;
