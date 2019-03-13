@@ -75,8 +75,7 @@ class NCBANKUSSD extends DynamicMenuController {
             $clientProfiledata = populateClientProfile($clientProfile);
 
 //            accountDetails
-
-            $message = print_r($clientProfiledata, true);
+//            $message = print_r($clientProfiledata, true);
 //            $message = "Welcome to NC Bank \n\n" . "Home Menu \n" . "1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
 
             $this->displayText = $message;
@@ -90,7 +89,7 @@ class NCBANKUSSD extends DynamicMenuController {
     function populateClientProfile($clientProfile) {
         $clientProfiledata = explode('|', $clientProfile ['customerDetails']);
 
-        $clientProfile = [];
+        $clientProfile = array();
         if ($clientProfiledata != null) {
 
             $clientprofileID = $clientProfiledata [0];
@@ -102,13 +101,15 @@ class NCBANKUSSD extends DynamicMenuController {
             $lastName = $clientProfiledata [4] != null ? $clientProfiledata [4] : "";
             $customerNames = $firstName . " " . $lastName;
 
-            $clientProfile[] = ["clientprofileID" => $clientprofileID];
-            $clientProfile[] = ["profileactive" => $profileactive];
-            $clientProfile[] = ["customeractive" => $customeractive];
-            $clientProfile[] = ["profile_pin_status" => $profile_pin_status];
-            $clientProfile[] = ["firstName" => $firstName];
-            $clientProfile[] = ["lastName" => $lastName];
-            $clientProfile[] = ["customerNames" => $customerNames];
+            $clientProfile = [
+                "clientprofileID" => $clientprofileID,
+                "profileactive" => $profileactive,
+                "customeractive" => $customeractive,
+                "profile_pin_status" => $profile_pin_status,
+                "firstName" => $firstName,
+                "lastName" => $lastName,
+                "customerNames" => $customerNames
+            ];
         }
 
         return $clientProfile;
