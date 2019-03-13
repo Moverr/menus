@@ -74,6 +74,8 @@ class NCBANKUSSD extends DynamicMenuController {
 
             $clientProfiledata = explode('|', $clientProfile ['customerDetails']);
 
+//            accountDetails
+
             $message = print_r($clientProfiledata, true);
 //            $message = "Welcome to NC Bank \n\n" . "Home Menu \n" . "1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
 
@@ -83,14 +85,33 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->nextFunction = "menuSwitcher";
             $this->previousPage = "startPage";
         }
+    }
 
+    function populateClientProfile($clientProfile) {
+        $clientProfiledata = explode('|', $clientProfile ['customerDetails']);
 
-//
-//        return "PASSSSS  -- " . print_r($clientProfile, true);
-//
-////        return populateEntity($response);
-//
-//        return $response;
+        $clientProfile = [];
+        if ($clientProfiledata != null) {
+
+            $clientprofileID = $clientProfiledata [0];
+            $profileactive = $clientProfiledata [1];
+            $customeractive = $clientProfiledata [1];
+            $profile_pin_status = $clientProfiledata [2];
+
+            $firstName = $clientProfiledata [3] != null ? $clientProfiledata [3] : "";
+            $lastName = $clientProfiledata [4] != null ? $clientProfiledata [4] : "";
+            $customerNames = $firstName . " " . $lastName;
+
+            $clientProfile[] = ["clientprofileID" => $clientprofileID];
+            $clientProfile[] = ["profileactive" => $profileactive];
+            $clientProfile[] = ["customeractive" => $customeractive];
+            $clientProfile[] = ["profile_pin_status" => $profile_pin_status];
+            $clientProfile[] = ["firstName" => $firstName];
+            $clientProfile[] = ["lastName" => $lastName];
+            $clientProfile[] = ["customerNames" => $customerNames];
+        }
+
+        return $clientProfile;
     }
 
     function populateEntity($response) {
