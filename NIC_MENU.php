@@ -42,17 +42,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function startPage() {
 
-        $account = $this->fetchCustomerData();
-        $message = " --  ";
-//                "Welcome to NC Bank \n\n" . "Home Menu \n" . "1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
-
-        $message .= "::::::::::::" . $account;
-
-        $this->displayText = $message;
-        $this->sessionState = "CONTINUE";
-        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-        $this->nextFunction = "menuSwitcher";
-        $this->previousPage = "startPage";
+        $this->fetchCustomerData();
     }
 
     function fetchCustomerData() {
@@ -67,33 +57,40 @@ class NCBANKUSSD extends DynamicMenuController {
             "PASSWORD" => "lipuka"
         );
 
-
         foreach ($fields as $key => $value) {
             $fields_string .= $key . '=' . $value . '&';
         }
         rtrim($fields_string, '&');
 
-
-
-
-//        $response = `{"SUCCESS":true,"customerDetails":"31|1|1|NAKIDDE|TEDDY|2019-02-19 12:13:42|2019-02-19 12:13:42","accountDetails":"31|3000001968|teddy|1|Uganda Shilling |800|UGX |31#8|3000025673|TOM KAMUKAMA|1|Uganda Shilling |800|UGX |31","nominationDetails":"hi|3000010207|Kampala|NIC","EXCEPTION":null}`;
-
         $response = $this->http_post($this->walletUrl, $fields, $fields_string);
         $clientProfile = json_decode($response, true);
 
         if ($clientProfile['SUCCESS'] != 1) {
-            //todo:
+
             $error = $clientProfile['ERRORS'];
-            $message = $clientProfile['MESSAGE'];
-            return "PASSSSS  -- " . print_r($clientProfile['ERRORS'], true);
+            //todo: log error speicifying the root cause 
+//            $message = $clientProfile['MESSAGE'];                 
+            $this->displayText = $error;
+            $this->sessionState = "END";
+            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+        } else {
+
+            $message = "Welcome to NC Bank \n\n" . "Home Menu \n" . "1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
+
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+            $this->nextFunction = "menuSwitcher";
+            $this->previousPage = "startPage";
         }
 
 
-        return "PASSSSS  -- " . print_r($clientProfile, true);
-
-//        return populateEntity($response);
-
-        return $response;
+//
+//        return "PASSSSS  -- " . print_r($clientProfile, true);
+//
+////        return populateEntity($response);
+//
+//        return $response;
     }
 
     function populateEntity($response) {
