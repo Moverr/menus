@@ -110,13 +110,13 @@ class NCBANKUSSD extends DynamicMenuController {
                 "lastName" => $lastName,
                 "customerNames" => $customerNames
             ];
-            $this->saveSessionVar('clientprofileID', $clientprofileID);
-            $this->saveSessionVar('profileactive', $profileactive);
-            $this->saveSessionVar('customeractive', $customeractive);
-            $this->saveSessionVar('profile_pin_status', $profile_pin_status);
-            $this->saveSessionVar('firstName', $firstName);
-            $this->saveSessionVar('lastName', $lastName);
-            $this->saveSessionVar('customerNames', $customerNames);
+//            $this->saveSessionVar('clientprofileID', $clientprofileID);
+//            $this->saveSessionVar('profileactive', $profileactive);
+//            $this->saveSessionVar('customeractive', $customeractive);
+//            $this->saveSessionVar('profile_pin_status', $profile_pin_status);
+//            $this->saveSessionVar('firstName', $firstName);
+//            $this->saveSessionVar('lastName', $lastName);
+//            $this->saveSessionVar('customerNames', $customerNames);
         }
 
 
