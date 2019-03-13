@@ -87,10 +87,10 @@ class NCBANKUSSD extends DynamicMenuController {
     }
 
     function populateClientProfile($clientProfile) {
-//        $clientProfiledata = explode('|', $clientProfile ['customerDetails']);
+        $clientProfiledata = explode('|', $clientProfile ['customerDetails']);
 
         $clientProfile = array();
-       /* if ($clientProfiledata != null) {
+        if ($clientProfiledata != null) {
 
             $clientprofileID = $clientProfiledata [0];
             $profileactive = $clientProfiledata [1];
@@ -111,7 +111,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 "customerNames" => $customerNames
             ];
         }
-        */
+
 
         return $clientProfile;
     }
