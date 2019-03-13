@@ -42,13 +42,15 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function startPage() {
 
-        fetchCustomerData();
+        $account = fetchCustomerData();
         $message = "Welcome to NC Bank \n\n" . "Home Menu \n" . "1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
+
+        $message .= "" . $account;
 
         $this->displayText = $message;
         $this->sessionState = "CONTINUE";
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-        $this->nextFunction = "fetchCustomerData";
+        $this->nextFunction = "menuSwitcher";
         $this->previousPage = "startPage";
     }
 
@@ -67,7 +69,7 @@ class NCBANKUSSD extends DynamicMenuController {
         }
         rtrim($fields_string, '&');
 
-        ;
+        $response = `{"SUCCESS":true,"customerDetails":"31|1|1|NAKIDDE|TEDDY|2019-02-19 12:13:42|2019-02-19 12:13:42","accountDetails":"31|3000001968|teddy|1|Uganda Shilling |800|UGX |31#8|3000025673|TOM KAMUKAMA|1|Uganda Shilling |800|UGX |31","nominationDetails":"hi|3000010207|Kampala|NIC","EXCEPTION":null}`;
 
         return populateEntity($response);
     }
@@ -98,25 +100,29 @@ class NCBANKUSSD extends DynamicMenuController {
 
             $reponseData[] = ['clientprofileID' => $clientprofileID];
             $reponseData[] = ['profileactive' => $profileactive];
+            $reponseData[] = ['accounts' => getAccountDetails($allAccountDetails)];
+
             $customeractivea[] = ['customeractive' => $customeractive];
         }
 
         function getAccountDetails($allAccountDetails = null) {
+
+            $ACCOUNTS = [];
+
             if ($allAccountDetails !== null) {
                 $accountDetails = explode("#", $allAccountDetails);
                 $storedAliases = array();
                 $storedAccountNumbers = array();
                 $storedAccountIDs = array();
-                $clientAccountsCount = 0;
+
 
                 //sample: 
                 //|31|3000001968|  teddy       |1|Uganda Shilling |800|UGX|31
                 $ACCOUNTNUMBER = null;
                 $ACCOUNTCBSID = null;
                 $ACCOUNTALIAS = null;
-                $ACCOUNTS = [];
-                foreach ($accountDetails as $profileEnrolment) {
 
+                foreach ($accountDetails as $profileEnrolment) {
 
                     $singleAccount = explode("|", $profileEnrolment);
                     $ACCOUNTCBSID = $singleAccount[0];
@@ -136,15 +142,7 @@ class NCBANKUSSD extends DynamicMenuController {
             }
         }
 
-//           return [
-//            'id' => $this->id,
-//            'authentication' => $this->authentication,
-//            'role' => $this->role
-//        ];
-//           
-
-
-        return $clientProfile;
+        return $ACCOUNTS;
     }
 
     function http_post($url, $fields, $fields_string) {
