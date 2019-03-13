@@ -93,23 +93,23 @@ class NCBANKUSSD extends DynamicMenuController {
         if ($clientProfiledata != null) {
 
             $clientprofileID = $clientProfiledata [0];
-            $profileactive = $clientProfiledata [1];
-            $customeractive = $clientProfiledata [1];
-            $profile_pin_status = $clientProfiledata [2];
-
-            $firstName = $clientProfiledata [3] != null ? $clientProfiledata [3] : "";
-            $lastName = $clientProfiledata [4] != null ? $clientProfiledata [4] : "";
-            $customerNames = $firstName . " " . $lastName;
-
-            $clientProfile = [
-                "clientprofileID" => $clientprofileID,
-                "profileactive" => $profileactive,
-                "customeractive" => $customeractive,
-                "profile_pin_status" => $profile_pin_status,
-                "firstName" => $firstName,
-                "lastName" => $lastName,
-                "customerNames" => $customerNames
-            ];
+//            $profileactive = $clientProfiledata [1];
+//            $customeractive = $clientProfiledata [1];
+//            $profile_pin_status = $clientProfiledata [2];
+//
+//            $firstName = $clientProfiledata [3] != null ? $clientProfiledata [3] : "";
+//            $lastName = $clientProfiledata [4] != null ? $clientProfiledata [4] : "";
+//            $customerNames = $firstName . " " . $lastName;
+//
+//            $clientProfile = [
+//                "clientprofileID" => $clientprofileID,
+//                "profileactive" => $profileactive,
+//                "customeractive" => $customeractive,
+//                "profile_pin_status" => $profile_pin_status,
+//                "firstName" => $firstName,
+//                "lastName" => $lastName,
+//                "customerNames" => $customerNames
+//            ];
         }
 
         return $clientProfile;
