@@ -72,7 +72,7 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
         } else {
 
-            $message = print_r($clientProfile['customerDetails'], true)
+            $message = print_r($clientProfile['customerDetails'], true);
 //            $message = "Welcome to NC Bank \n\n" . "Home Menu \n" . "1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
 
             $this->displayText = $message;
