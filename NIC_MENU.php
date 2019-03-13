@@ -79,8 +79,9 @@ class NCBANKUSSD extends DynamicMenuController {
 //        $response = `{"SUCCESS":true,"customerDetails":"31|1|1|NAKIDDE|TEDDY|2019-02-19 12:13:42|2019-02-19 12:13:42","accountDetails":"31|3000001968|teddy|1|Uganda Shilling |800|UGX |31#8|3000025673|TOM KAMUKAMA|1|Uganda Shilling |800|UGX |31","nominationDetails":"hi|3000010207|Kampala|NIC","EXCEPTION":null}`;
 
         $response = $this->http_post($this->walletUrl, $fields, $fields_string);
+        $clientProfile = json_decode($response, true);
 
-        return "PASSSSS " . $response;
+        return "PASSSSS " . $clientProfile;
 
 //        return populateEntity($response);
 
