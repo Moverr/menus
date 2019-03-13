@@ -42,17 +42,16 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function startPage() {
 
-        $this->fetchCustomerData();
+        $this->init();
     }
 
-    function fetchCustomerData() {
-
+    function init() {
 
         $fields_string = null;
         $fields = null;
         // "MSISDN" => $this->_msisdn,
         $fields = array(
-            "MSISDN" => '2567832629291',
+            "MSISDN" => '256783262929',
             "USERNAME" => "system-user",
             "PASSWORD" => "lipuka"
         );
