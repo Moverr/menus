@@ -62,7 +62,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $fields = null;
         // "MSISDN" => $this->_msisdn,
         $fields = array(
-            "MSISDN" => '256783262929',
+            "MSISDN" => '2567832629291',
             "USERNAME" => "system-user",
             "PASSWORD" => "lipuka"
         );
@@ -80,6 +80,11 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $response = $this->http_post($this->walletUrl, $fields, $fields_string);
         $clientProfile = json_decode($response, true);
+        
+        if($clientProfile['SUCCESS'] != 1){
+          return "PASSSSS  -- " . print_r($clientProfile['EXCEPTION'],true);   
+        }
+        
 
         return "PASSSSS  -- " . print_r($clientProfile,true);
 
