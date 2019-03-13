@@ -82,7 +82,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $clientProfile = json_decode($response, true);
         
         if($clientProfile['SUCCESS'] != 1){
-          return "PASSSSS  -- " . print_r($clientProfile['EXCEPTION'],true);   
+          return "PASSSSS  -- " . print_r($clientProfile,true);   
         }
         
 
