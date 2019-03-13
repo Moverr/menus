@@ -81,7 +81,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $response = $this->http_post($this->walletUrl, $fields, $fields_string);
         $clientProfile = json_decode($response, true);
 
-        return "PASSSSS  -- " . $clientProfile['SUCCESS'];
+        return "PASSSSS  -- " . print_r($clientProfile,true);
 
 //        return populateEntity($response);
 
