@@ -72,7 +72,7 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
         } else {
 
-            $clientProfiledata = populateClientProfile($clientProfile);
+            $clientProfiledata = $this->populateClientProfile($clientProfile);
 
 //            accountDetails
 //            $message = print_r($clientProfiledata, true);
@@ -87,30 +87,31 @@ class NCBANKUSSD extends DynamicMenuController {
     }
 
     function populateClientProfile($clientProfile) {
-        $clientProfiledata = explode('|', $clientProfile ['customerDetails']);
+//        $clientProfiledata = explode('|', $clientProfile ['customerDetails']);
 
         $clientProfile = array();
-        if ($clientProfiledata != null) {
+       /* if ($clientProfiledata != null) {
 
             $clientprofileID = $clientProfiledata [0];
-//            $profileactive = $clientProfiledata [1];
-//            $customeractive = $clientProfiledata [1];
-//            $profile_pin_status = $clientProfiledata [2];
-//
-//            $firstName = $clientProfiledata [3] != null ? $clientProfiledata [3] : "";
-//            $lastName = $clientProfiledata [4] != null ? $clientProfiledata [4] : "";
-//            $customerNames = $firstName . " " . $lastName;
-//
-//            $clientProfile = [
-//                "clientprofileID" => $clientprofileID,
-//                "profileactive" => $profileactive,
-//                "customeractive" => $customeractive,
-//                "profile_pin_status" => $profile_pin_status,
-//                "firstName" => $firstName,
-//                "lastName" => $lastName,
-//                "customerNames" => $customerNames
-//            ];
+            $profileactive = $clientProfiledata [1];
+            $customeractive = $clientProfiledata [1];
+            $profile_pin_status = $clientProfiledata [2];
+
+            $firstName = $clientProfiledata [3] != null ? $clientProfiledata [3] : "";
+            $lastName = $clientProfiledata [4] != null ? $clientProfiledata [4] : "";
+            $customerNames = $firstName . " " . $lastName;
+
+            $clientProfile = [
+                "clientprofileID" => $clientprofileID,
+                "profileactive" => $profileactive,
+                "customeractive" => $customeractive,
+                "profile_pin_status" => $profile_pin_status,
+                "firstName" => $firstName,
+                "lastName" => $lastName,
+                "customerNames" => $customerNames
+            ];
         }
+        */
 
         return $clientProfile;
     }
