@@ -67,17 +67,30 @@ class NCBANKUSSD extends DynamicMenuController {
         }
         rtrim($fields_string, '&');
 
-        $response = $this->http_post($this->walletUrl, $fields, $fields_string);
+        ;
 
         return populateEntity($response);
     }
 
     function populateEntity($response) {
+        $reponseData = [];
+        $clientProfile = null;
         if ($response != null) {
             $clientProfile = json_decode($response, true);
+            $clientProfiledata = explode('|', $clientProfile ['customerDetails']);
+            $this->logMessage("NC Customer Details: " . print_r($clientProfiledata, TRUE), NULL, DTBUGconfigs::LOG_LEVEL_INFO);
         }
 
-        return null;
+
+//           return [
+//            'id' => $this->id,
+//            'authentication' => $this->authentication,
+//            'role' => $this->role
+//        ];
+//           
+
+
+        return $clientProfile;
     }
 
     function http_post($url, $fields, $fields_string) {
