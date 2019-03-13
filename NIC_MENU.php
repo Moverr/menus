@@ -43,22 +43,7 @@ class NCBANKUSSD extends DynamicMenuController {
     function startPage() {
 
 
-        $fields = array(
-            "MSISDN" => '256783262929',
-            "USERNAME" => "system-user",
-            "PASSWORD" => "lipuka"
-        );
-
-
-        try {
-
-            $response = $this->http_post($this->walletUrl, $fields, $fields_string);
-        } catch (Exception $er) {
-            $this->displayText($er->getMessage());
-        }
-
-
-        $message = "Welcome to NC Bank \n\nEnter Mobile Banking Number";
+        $message = "Welcome to NC Bank \n\n" . "Home Menu \n" . "1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
 
         $this->displayText = $message;
         $this->sessionState = "CONTINUE";
@@ -67,49 +52,24 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->previousPage = "startPage";
     }
 
-    function validateMSSDN($input) {
-
-        $mssdn = $input;
-        //todo: check with the servers and see if the account exists, if exists store the information 
-
-        $this->fetchCustomerData();
-        $message = "Welcome to NC Bank \n\n" . "Home Menu \n" . "1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
-
-        $this->displayText = $message;
-        $this->sessionState = "CONTINUE";
-        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-        $this->nextFunction = "menuSwitcher";
-        $this->previousPage = "startPage";
-    }
-
-    function fetchCustomerData($input) {
-        /**
-         * Make api call to wallet to fetch member details and respond to user
-         */
-//$client = new IXR_Client ( $this->walletUrl );
+    function fetchCustomerData() {
         $fields_string = null;
         $fields = null;
-
-
+        // "MSISDN" => $this->_msisdn,
         $fields = array(
             "MSISDN" => '256783262929',
             "USERNAME" => "system-user",
             "PASSWORD" => "lipuka"
         );
 
-////$client->query ( $this->fetch_customer_details_function, $payload );
-//        foreach ($fields as $key => $value) {
-//            $fields_string .= $key . '=' . $value . '&';
-//        }
-//        rtrim($fields_string, '&');
-//        try{
-//        
-//        $response = $this->http_post($this->walletUrl, $fields, $fields_string);
-//        }catch(Exception $er){
-//            $this->displayText($er->getMessage());
-//        }
+        foreach ($fields as $key => $value) {
+            $fields_string .= $key . '=' . $value . '&';
+        }
+        rtrim($fields_string, '&');
 
-        $this->displayText("pass");
+        $response = $this->http_post($this->walletUrl, $fields, $fields_string);
+
+        return $response;
     }
 
     function http_post($url, $fields, $fields_string) {
