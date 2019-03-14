@@ -73,7 +73,9 @@ class NCBANKUSSD extends DynamicMenuController {
         } else {
 
             $clientProfiledata = $this->populateClientProfile($clientProfile);
+            $clientAccountDetails = $this->populateClientProfile($clientProfile);
 
+            //populateAccountDetails
 //            accountDetails
             $message = print_r($clientProfile, true);
             //de
@@ -131,14 +133,14 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $clientAccountData = explode('|', $clientProfile ['accountDetails']);
 
-        [accountDetails] =>
-        31|3000001968|teddy|1|Uganda Shilling |800|UGX |31
-        #
-        8|3000025673|TOM KAMUKAMA|1|Uganda Shilling |800|UGX |31
-        [nominationDetails] =>
-        hi|3000010207|Kampala|NIC
-        [EXCEPTION] =>
-        )
+//        [accountDetails] =>
+//        31|3000001968|teddy|1|Uganda Shilling |800|UGX |31
+//        #
+//        8|3000025673|TOM KAMUKAMA|1|Uganda Shilling |800|UGX |31
+//        [nominationDetails] =>
+//        hi|3000010207|Kampala|NIC
+//        [EXCEPTION] =>
+//        )
 
         if ($clientAccountData != null) {
 
@@ -146,80 +148,18 @@ class NCBANKUSSD extends DynamicMenuController {
 
             if ($ACCOUNTS != null) {
                 foreach ($ACCOUNTS as $ACCOUNT) {
-                    
-                }
-            }
-        }
+                    $singleAccount = explode("|", $ACCOUNT);
 
-
-        $reponseData = [];
-        $clientProfile = null;
-        if ($response != null) {
-            $clientProfile = json_decode($response, true);
-            $clientProfiledata = explode('|', $clientProfile ['customerDetails']);
-            $this->logMessage("NC Customer Details: " . print_r($clientProfiledata, TRUE), NULL, DTBUGconfigs::LOG_LEVEL_INFO);
-
-            $clientprofileID = $clientProfiledata [0];
-            $profileactive = $clientProfiledata [1];
-            $customeractive = $clientProfiledata [1];
-            $profile_pin_status = $clientProfiledata [2];
-            $customerNames = $clientProfiledata [3];
-            $customerNames .= (($clientProfiledata [4] == "NULL" || $clientProfiledata [4] == "") ? "" : " " . $clientProfiledata [4]);
-
-            $lastPinChange = $clientProfiledata[7];
-            $clientprofileID = $clientProfiledata [0];
-
-            $profileActiveStatus = $customeractive;
-            $customerActiveStatus = $customeractive;
-
-            $allAccountDetails = $clientProfiledata['accountDetails'];
-
-
-            $reponseData[] = ['clientprofileID' => $clientprofileID];
-            $reponseData[] = ['profileactive' => $profileactive];
-            $reponseData[] = ['accounts' => getAccountDetails($allAccountDetails)];
-
-            $customeractivea[] = ['customeractive' => $customeractive];
-        }
-
-        function getAccountDetails($allAccountDetails = null) {
-
-            $ACCOUNTS = [];
-
-            if ($allAccountDetails !== null) {
-                $accountDetails = explode("#", $allAccountDetails);
-                $storedAliases = array();
-                $storedAccountNumbers = array();
-                $storedAccountIDs = array();
-
-
-                //sample: 
-                //|31|3000001968|  teddy       |1|Uganda Shilling |800|UGX|31
-                $ACCOUNTNUMBER = null;
-                $ACCOUNTCBSID = null;
-                $ACCOUNTALIAS = null;
-
-                foreach ($accountDetails as $profileEnrolment) {
-
-                    $singleAccount = explode("|", $profileEnrolment);
                     $ACCOUNTCBSID = $singleAccount[0];
                     $ACCOUNTNUMBER = $singleAccount[1];
-                    $storedAccountNumbers[] = $ACCOUNTNUMBER;
-                    $ACCOUNTALIAS = $singleAccount[2];
-                    $storedAliases[] = $ACCOUNTALIAS;
-                    $storedAccountIDs[] = $ACCOUNTCBSID;
-
-                    $ACCOUNT = [
-                        "ACCOUNTNUMBER" => $ACCOUNTNUMBER,
-                        "ACCOUNTCBSID" => $ACCOUNTCBSID,
-                        "ACCOUNTALIAS" => $ACCOUNTALIAS
-                    ];
-                    $ACCOUNTS[] = $ACCOUNT;
+                    $ACCOUNTNAME = $singleAccount[2];
+                    //todo: undefined not known 
+                    $ACCOUNTCURRENCYINWORDS = $singleAccount[4];
+                    $ACCOUNTBALANCE = $singleAccount[5];
+                    $ACCOUNTCURRENCY = $singleAccount[6];
                 }
             }
         }
-
-        return $ACCOUNTS;
     }
 
     function http_post($url, $fields, $fields_string) {
