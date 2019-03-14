@@ -73,7 +73,7 @@ class NCBANKUSSD extends DynamicMenuController {
         } else {
 
             $clientProfiledata = $this->populateClientProfile($clientProfile);
-            $clientAccountDetails = $this->populateClientProfile($clientProfile);
+            $clientAccountDetails = $this->populateAccountDetails($clientProfile);
 
             //populateAccountDetails
 //            accountDetails
