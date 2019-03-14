@@ -174,7 +174,7 @@ class NCBANKUSSD extends DynamicMenuController {
             }
 
 
-            return $ACCOUNTSDATA;
+            return $clientAccountData;
         }
     }
 
