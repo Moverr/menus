@@ -41,7 +41,7 @@ class NCBANKUSSD extends DynamicMenuController {
     private $walletUrl = 'http://132.147.160.57:8300/wallet/IS_APIs/CustomerRegistration/fetchCustomerData';
 
     function startPage() {
-
+$this->saveSessionVar('test', 'test');
         $this->init();
     }
 
