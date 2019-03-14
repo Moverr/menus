@@ -41,7 +41,7 @@ class NCBANKUSSD extends DynamicMenuController {
     private $walletUrl = 'http://132.147.160.57:8300/wallet/IS_APIs/CustomerRegistration/fetchCustomerData';
 
     function startPage() {
-        $this->saveSessionVar('test', 'test');
+
         $this->init();
     }
 
@@ -110,13 +110,16 @@ class NCBANKUSSD extends DynamicMenuController {
                 "lastName" => $lastName,
                 "customerNames" => $customerNames
             ];
-//            $this->saveSessionVar('clientprofileID', $clientprofileID);
-//            $this->saveSessionVar('profileactive', $profileactive);
-//            $this->saveSessionVar('customeractive', $customeractive);
-//            $this->saveSessionVar('profile_pin_status', $profile_pin_status);
-//            $this->saveSessionVar('firstName', $firstName);
-//            $this->saveSessionVar('lastName', $lastName);
-//            $this->saveSessionVar('customerNames', $customerNames);
+
+
+
+            $this->saveSessionVar('clientprofileID', $clientProfile["clientprofileID"]);
+            $this->saveSessionVar('profileactive', $clientProfile["profileactive"]);
+            $this->saveSessionVar('customeractive', $clientProfile["customeractive"]);
+            $this->saveSessionVar('profile_pin_status', $clientProfile["profile_pin_status"]);
+            $this->saveSessionVar('firstName', $clientProfile["firstName"]);
+            $this->saveSessionVar('lastName', $clientProfile["lastName"]);
+            $this->saveSessionVar('customerNames', $clientProfile["customerNames"]);
         }
 
 
