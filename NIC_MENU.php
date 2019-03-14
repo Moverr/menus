@@ -219,7 +219,7 @@ class NCBANKUSSD extends DynamicMenuController {
                         $message .= $index . ") " . $account['ACCOUNTNUMBER'] . "\n";
                     }
 
-                    $message .= "0. Home \n" . "00. Back \n" . "000. Logout \n";
+                    $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
 
                     $this->displayText = $message;
                     $this->sessionState = "CONTINUE";
@@ -327,28 +327,47 @@ class NCBANKUSSD extends DynamicMenuController {
 
     //todo: sprint one, Balance Inquiry
     function BalanceEnquiryMenu($input) {
-        $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
-
-
-        $selectedAccount = null;
-        foreach ($ACCOUNTS as $account) {
-            if ($account['ID'] == $input) {
-                $selectedAccount = $account;
+        switch ($input) {
+            case '0':
+                $this->displayText = "Thank you for supporting NC BANK";
+                $this->sessionState = "END";
                 break;
-            }
+            case '00':
+                $this->displayText = "Thank you for supporting NC BANK";
+                $this->sessionState = "END";
+                break;
+            case '000':
+                $this->displayText = "Thank you for supporting NC BANK";
+                $this->sessionState = "END";
+                break;
+
+            default:
+                $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+
+
+                $selectedAccount = null;
+                foreach ($ACCOUNTS as $account) {
+                    if ($account['ID'] == $input) {
+                        $selectedAccount = $account;
+                        break;
+                    }
+                }
+                $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
+                $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
+                $message .= "\nAccount Balance : " . $selectedAccount['ACCOUNTBALANCE'] . ' ' . $selectedAccount['ACCOUNTCURRENCY'] . ' ';
+
+
+                $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                $this->nextFunction = "BalanceEnquiryMenu";
+                $this->previousPage = "startPage";
+
+
+                break;
         }
-        $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
-        $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
-        $message .= "\nAccount Balance : " . $selectedAccount['ACCOUNTBALANCE'] . ' ' . $selectedAccount['ACCOUNTCURRENCY'] . ' ';
-
-
-        $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
-
-        $this->displayText = $message;
-        $this->sessionState = "CONTINUE";
-        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-        $this->nextFunction = "BalanceEnquiryMenu";
-        $this->previousPage = "startPage";
     }
 
     function BillPaymentsMenu() {
