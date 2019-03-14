@@ -146,33 +146,33 @@ class NCBANKUSSD extends DynamicMenuController {
 
             $ACCOUNTS = explode("#", $clientAccountData);
             $ACCOUNTSDATA = [];
-            if ($ACCOUNTS != null) {
-                $count = 0;
-                foreach ($ACCOUNTS as $ACCOUNT) {
-                    $count ++;
-                    $singleAccount = explode("|", $ACCOUNT);
 
-                    $ACCOUNTCBSID = $singleAccount[0];
-                    $ACCOUNTNUMBER = $singleAccount[1];
-                    $ACCOUNTNAME = $singleAccount[2];
-                    //todo: undefined not known 
-                    $ACCOUNTCURRENCYINWORDS = $singleAccount[4];
-                    $ACCOUNTBALANCE = $singleAccount[5];
-                    $ACCOUNTCURRENCY = $singleAccount[6];
+            $count = 0;
+            foreach ($ACCOUNTS as $ACCOUNT) {
+                $count ++;
+                $singleAccount = explode("|", $ACCOUNT);
 
-                    $ACCOUNTDATA = [
-                        "ID" => $count,
-                        "ACCOUNTCBSID" => $ACCOUNTCBSID,
-                        "ACCOUNTNUMBER" => $ACCOUNTNUMBER,
-                        "ACCOUNTNUMBER" => $ACCOUNTNUMBER,
-                        "ACCOUNTNAME" => $ACCOUNTNAME,
-                        "ACCOUNTCURRENCYINWORDS" => $ACCOUNTCURRENCYINWORDS,
-                        "ACCOUNTBALANCE" => $ACCOUNTBALANCE,
-                        "ACCOUNTCURRENCY" => $ACCOUNTCURRENCY
-                    ];
-                    $ACCOUNTSDATA [] = $ACCOUNTDATA;
-                }
+                $ACCOUNTCBSID = $singleAccount[0];
+                $ACCOUNTNUMBER = $singleAccount[1];
+                $ACCOUNTNAME = $singleAccount[2];
+                //todo: undefined not known 
+                $ACCOUNTCURRENCYINWORDS = $singleAccount[4];
+                $ACCOUNTBALANCE = $singleAccount[5];
+                $ACCOUNTCURRENCY = $singleAccount[6];
+
+                $ACCOUNTDATA = [
+                    "ID" => $count,
+                    "ACCOUNTCBSID" => $ACCOUNTCBSID,
+                    "ACCOUNTNUMBER" => $ACCOUNTNUMBER,
+                    "ACCOUNTNUMBER" => $ACCOUNTNUMBER,
+                    "ACCOUNTNAME" => $ACCOUNTNAME,
+                    "ACCOUNTCURRENCYINWORDS" => $ACCOUNTCURRENCYINWORDS,
+                    "ACCOUNTBALANCE" => $ACCOUNTBALANCE,
+                    "ACCOUNTCURRENCY" => $ACCOUNTCURRENCY
+                ];
+                $ACCOUNTSDATA [] = $ACCOUNTDATA;
             }
+
 
             return $ACCOUNTSDATA;
         }
