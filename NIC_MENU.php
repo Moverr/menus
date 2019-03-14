@@ -41,7 +41,7 @@ class NCBANKUSSD extends DynamicMenuController {
     private $walletUrl = 'http://132.147.160.57:8300/wallet/IS_APIs/CustomerRegistration/fetchCustomerData';
 
     function startPage() {
-$this->saveSessionVar('test', 'test');
+        $this->saveSessionVar('test', 'test');
         $this->init();
     }
 
@@ -76,7 +76,7 @@ $this->saveSessionVar('test', 'test');
 
 //            accountDetails
 //            $message = print_r($clientProfiledata, true);
-            $message = "Hello " . $clientProfiledata['customerNames'] . ", Welcome to NC Bank \n\n" . "Home Menu \n" . "1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
+            $message = "Hello " . lcfirst($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n\n" . "Home Menu \n" . "1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
 
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
