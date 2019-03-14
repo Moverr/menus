@@ -209,7 +209,25 @@ class NCBANKUSSD extends DynamicMenuController {
 
                 case '2':
                     # code...
-                    $this->BalanceEnquiryMenu();
+                    $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+
+                    $message = "\n\nChoose Account\n";
+
+                    $index = 0;
+                    foreach ($ACCOUNTS as $account) {
+                        $index = $index + 1;
+                        $message .= $index . ") " . $account['ACCOUNTNUMBER'] . "\n";
+                    }
+
+                    $message .= "0. Home \n" . "00. Back \n" . "000. Logout \n";
+
+                    $this->displayText = $message;
+                    $this->sessionState = "CONTINUE";
+                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                    $this->nextFunction = "BalanceEnquiryMenu";
+                    $this->previousPage = "startPage";
+
+
                     break;
 
 
@@ -308,27 +326,27 @@ class NCBANKUSSD extends DynamicMenuController {
     }
 
     //todo: sprint one, Balance Inquiry
-    function BalanceEnquiryMenu() {
-
+    function BalanceEnquiryMenu($input) {
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
 
-        $message = "\n\nChoose Account\n";
-//        $message .= print_r($ACCOUNTS);
-        //todo: fetch accounts from the url given 
-        $dummyaccounts = ['1234567898', '897654532'];
 
-        $index = 0;
+        $selectedAccount = null;
         foreach ($ACCOUNTS as $account) {
-            $message .= $index . ")" . $account['ACCOUNTNUMBER'] . "\n";
-            $index = $index + 1;
+            if ($account['ID'] == $input) {
+                $selectedAccount = $account;
+                break;
+            }
         }
+        $message = "Account : " . $selectedAccount['ACCOUNTNUMBER'] . ' [ ' . $selectedAccount['ACCOUNTNUMBER'] . ' ]';
+        $message = "Balance : " . $selectedAccount['ACCOUNTBALANCE'] . ' ' . $selectedAccount['ACCOUNTCURRENCY'] . ' ';
 
-        $message .= "0. Home \n" . "00. Back \n" . "000. Logout \n";
+
+        $message .= "\n0. Home \n" . "00. Back \n" . "000. Logout \n";
 
         $this->displayText = $message;
         $this->sessionState = "CONTINUE";
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-        $this->nextFunction = "menuSwitcher";
+        $this->nextFunction = "BalanceEnquiryMenu";
         $this->previousPage = "startPage";
     }
 
