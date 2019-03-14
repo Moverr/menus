@@ -75,7 +75,7 @@ class NCBANKUSSD extends DynamicMenuController {
             $clientProfiledata = $this->populateClientProfile($clientProfile);
 
 //            accountDetails
-            $message = print_r($clientProfile, true); 
+            $message = print_r($clientProfile, true);
             //de
 //            $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n\n" . "Home Menu \n" . "1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
 
@@ -127,7 +127,29 @@ class NCBANKUSSD extends DynamicMenuController {
         return $clientProfile;
     }
 
-    function populateEntity($response) {
+    function populateAccountDetails($clientProfile) {
+
+        $clientAccountData = explode('|', $clientProfile ['accountDetails']);
+
+        [accountDetails] =>
+        31|3000001968|teddy|1|Uganda Shilling |800|UGX |31
+        #
+        8|3000025673|TOM KAMUKAMA|1|Uganda Shilling |800|UGX |31
+        [nominationDetails] =>
+        hi|3000010207|Kampala|NIC
+        [EXCEPTION] =>
+        )
+
+        if ($clientAccountData != null) {
+
+            $ACCOUNTS = explode("#", $clientAccountData);
+
+            if ($ACCOUNTS != null) {
+                foreach ($ACCOUNTS as $ACCOUNT) {
+                    
+                }
+            }
+        }
 
 
         $reponseData = [];
