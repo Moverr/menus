@@ -131,7 +131,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function populateAccountDetails($clientProfile) {
 
-        $clientAccountData = explode('|', $clientProfile ['accountDetails']);
+        $clientAccountData = explode('#', $clientProfile ['accountDetails']);
 
 //        [accountDetails] =>
 //        31|3000001968|teddy|1|Uganda Shilling |800|UGX |31
