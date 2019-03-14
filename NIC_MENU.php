@@ -309,7 +309,12 @@ class NCBANKUSSD extends DynamicMenuController {
 
     //todo: sprint one, Balance Inquiry
     function BalanceEnquiryMenu() {
+
+        $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+
         $message = "\n\nChoose Account\n";
+        $message .= print_r($ACCOUNTS);
+
 
         //todo: fetch accounts from the url given 
         $dummyaccounts = ['1234567898', '897654532'];
