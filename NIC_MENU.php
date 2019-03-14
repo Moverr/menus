@@ -144,7 +144,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
         if ($clientAccountData != null) {
 
-            $ACCOUNTS = explode("#", $clientAccountData);
+            $ACCOUNTS = $clientAccountData;
             $ACCOUNTSDATA = [];
 
             $count = 0;
@@ -174,7 +174,7 @@ class NCBANKUSSD extends DynamicMenuController {
             }
 
 
-            return $clientAccountData;
+            return $ACCOUNTSDATA;
         }
     }
 
