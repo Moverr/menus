@@ -170,6 +170,7 @@ class NCBANKUSSD extends DynamicMenuController {
                         "ACCOUNTBALANCE" => $ACCOUNTBALANCE,
                         "ACCOUNTCURRENCY" => $ACCOUNTCURRENCY
                     ];
+                    $ACCOUNTSDATA [] = $ACCOUNTDATA;
                 }
             }
 
