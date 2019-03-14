@@ -337,11 +337,11 @@ class NCBANKUSSD extends DynamicMenuController {
                 break;
             }
         }
-        $message = "Account : " . $selectedAccount['ACCOUNTNUMBER'] . ' [ ' . $selectedAccount['ACCOUNTNUMBER'] . ' ]';
+        $message = "Account : " . $selectedAccount['ACCOUNTNUMBER'] . '\n' . $selectedAccount['ACCOUNTNAME'] . ' ]';
         $message .= "\nBalance : " . $selectedAccount['ACCOUNTBALANCE'] . ' ' . $selectedAccount['ACCOUNTCURRENCY'] . ' ';
 
 
-        $message .= "\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+        $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
 
         $this->displayText = $message;
         $this->sessionState = "CONTINUE";
