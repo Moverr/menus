@@ -338,7 +338,7 @@ class NCBANKUSSD extends DynamicMenuController {
             }
         }
         $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
-        $message = "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
+        $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
         $message .= "\nAccount Balance : " . $selectedAccount['ACCOUNTBALANCE'] . ' ' . $selectedAccount['ACCOUNTCURRENCY'] . ' ';
 
 
