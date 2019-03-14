@@ -157,6 +157,16 @@ class NCBANKUSSD extends DynamicMenuController {
                     $ACCOUNTCURRENCYINWORDS = $singleAccount[4];
                     $ACCOUNTBALANCE = $singleAccount[5];
                     $ACCOUNTCURRENCY = $singleAccount[6];
+
+                    $ACCOUNTDATA = [
+                        "ACCOUNTCBSID" => $ACCOUNTCBSID,
+                        "ACCOUNTNUMBER" => $ACCOUNTNUMBER,
+                        "ACCOUNTNUMBER" => $ACCOUNTNUMBER,
+                        "ACCOUNTNAME" => $ACCOUNTNAME,
+                        "ACCOUNTCURRENCYINWORDS" => $ACCOUNTCURRENCYINWORDS,
+                        "ACCOUNTBALANCE" => $ACCOUNTBALANCE,
+                        "ACCOUNTCURRENCY" => $ACCOUNTCURRENCY
+                    ];
                 }
             }
         }
