@@ -313,15 +313,13 @@ class NCBANKUSSD extends DynamicMenuController {
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
 
         $message = "\n\nChoose Account\n";
-        $message .= print_r($ACCOUNTS);
-
-
+//        $message .= print_r($ACCOUNTS);
         //todo: fetch accounts from the url given 
         $dummyaccounts = ['1234567898', '897654532'];
 
         $index = 0;
-        foreach ($dummyaccounts as $account) {
-            $message .= $index . ")" . $account . "\n";
+        foreach ($ACCOUNTS as $account) {
+            $message .= $index . ")" . $account['ACCOUNTNUMBER'] . "\n";
             $index = $index + 1;
         }
 
