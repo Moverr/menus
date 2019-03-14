@@ -145,9 +145,11 @@ class NCBANKUSSD extends DynamicMenuController {
         if ($clientAccountData != null) {
 
             $ACCOUNTS = explode("#", $clientAccountData);
-
+            $ACCOUNTSDATA = [];
             if ($ACCOUNTS != null) {
+                $count = 0;
                 foreach ($ACCOUNTS as $ACCOUNT) {
+                    $count ++;
                     $singleAccount = explode("|", $ACCOUNT);
 
                     $ACCOUNTCBSID = $singleAccount[0];
@@ -159,6 +161,7 @@ class NCBANKUSSD extends DynamicMenuController {
                     $ACCOUNTCURRENCY = $singleAccount[6];
 
                     $ACCOUNTDATA = [
+                        "ID" => $count,
                         "ACCOUNTCBSID" => $ACCOUNTCBSID,
                         "ACCOUNTNUMBER" => $ACCOUNTNUMBER,
                         "ACCOUNTNUMBER" => $ACCOUNTNUMBER,
@@ -169,6 +172,8 @@ class NCBANKUSSD extends DynamicMenuController {
                     ];
                 }
             }
+
+            return $ACCOUNTSDATA;
         }
     }
 
