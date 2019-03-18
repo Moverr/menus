@@ -406,6 +406,18 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->previousPage = "TopUpAmountMenu";
     }
 
+    function finishBuyingAirtime($input){
+        $message = "Dear Customer, your airtime purchase request was failed. The reference NO. is #12891. For queries 0312388100/0312388155 or email"
+                . " ncbankcustomercare@ncgroup.com.";
+            
+        
+        $this->displayText = $message;
+        $this->sessionState = "CONTINUE";
+        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+        $this->nextFunction = "TopUpAmountMenu";
+        $this->previousPage = "AirtimeMerchantChooseAccount";
+    }
+    
     function AirtimeMerchantChooseAccount($input) {
 
 
@@ -424,14 +436,12 @@ class NCBANKUSSD extends DynamicMenuController {
                 $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
             }
         }
-//        $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
-//
-
+            
 
         $this->displayText = $message;
         $this->sessionState = "CONTINUE";
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-        $this->nextFunction = "TopUpAmountMenu";
+        $this->nextFunction = "finishBuyingAirtime";
         $this->previousPage = "AirtimeMerchantChooseAccount";
     }
 
