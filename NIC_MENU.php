@@ -408,9 +408,10 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function AirtimeMerchantChooseAccount($input) {
 
-        $message = "You do not have an active account";
-
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+
+
+        $message = "You do not have an active account";
         if ($ACCOUNTS != null) {
             $message = "Choose Account ";
             $count = 0;
