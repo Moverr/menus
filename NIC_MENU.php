@@ -253,18 +253,18 @@ class NCBANKUSSD extends DynamicMenuController {
             "PASSWORD" => "lipuka"
         );
 
-        foreach ($fields as $key => $value) {
-            $fields_string .= $key . '=' . $value . '&';
-        }
-        rtrim($fields_string, '&');
+//        foreach ($fields as $key => $value) {
+//            $fields_string .= $key . '=' . $value . '&';
+//        }
+//        rtrim($fields_string, '&');
 
 
         $client = new XMLRPC_Client('http://132.147.160.57:8300/wallet/Cloud_APIs/index');
-        $response = $client->call('validatePIN', $fields);
+//        $response = $client->call('validatePIN', $fields);
 
 
 
-        $message = "" . print_r($response);
+        $message = "" . print_r($client);
         $this->displayText = $message;
     }
 
