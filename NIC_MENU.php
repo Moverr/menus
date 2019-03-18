@@ -248,7 +248,7 @@ class NCBANKUSSD extends DynamicMenuController {
 // "MSISDN" => $this->_msisdn,
         $fields = array(
             "MSISDN" => '256783262929',
-            "PIN" => '1234',
+            "PIN" => '23332',
             "USERNAME" => "system-user",
             "PASSWORD" => "lipuka"
         );
@@ -265,7 +265,7 @@ class NCBANKUSSD extends DynamicMenuController {
 //        $url = 'http://my.host:5862';
 #$requested = xml_gen($function_name,$epos,$time);
 
-        $request = xmlrpc_encode_request('validatePIN', $fields);
+        $request = xmlrpc_encode_request('fetchCustomerData', $fields);
 
 
 #echo($requested);
