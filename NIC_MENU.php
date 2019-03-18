@@ -270,7 +270,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
 
-        $message = "" . print_r($client);
+        $message .= " --- ";
         $this->displayText = $message;
     }
 
