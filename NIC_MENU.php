@@ -195,7 +195,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
     public function call() {
 
-        ini_set("display_error", 1);
+                
         error_reporting(E_ALL);
 
 // get arguments
@@ -226,14 +226,14 @@ class NCBANKUSSD extends DynamicMenuController {
         curl_close($ch);
 
 // check for curl errors
-        if ($curl_errorno != 0) {
-            die("Curl ERROR: {$curl_errorno} - {$curl_error}n");
-        }
-
-// check for server errors
-        if ($response_code != 200) {
-            die("ERROR: non-200 response from server: {$response_code} - {$response}n");
-        }
+//        if ($curl_errorno != 0) {
+//            die("Curl ERROR: {$curl_errorno} - {$curl_error}n");
+//        }
+//
+//// check for server errors
+//        if ($response_code != 200) {
+//            die("ERROR: non-200 response from server: {$response_code} - {$response}n");
+//        }
 //    return $response;
 //    $response .= 'e>';
         return xmlrpc_decode($response);
@@ -259,14 +259,14 @@ class NCBANKUSSD extends DynamicMenuController {
 //        rtrim($fields_string, '&');
 
          $message = "NBONO";
-        try{
-
-        $client = new XMLRPC_Client('http://132.147.160.57:8300/wallet/Cloud_APIs/index');
-//        $response = $client->call('validatePIN', $fields);
-         $message = "" . print_r($client);
-        }catch(Exception $er){
-            $message = "".print_r($er);
-        }
+//        try{
+//
+//        $client = new XMLRPC_Client('http://132.147.160.57:8300/wallet/Cloud_APIs/index');
+////        $response = $client->call('validatePIN', $fields);
+//         $message = "" . print_r($client);
+//        }catch(Exception $er){
+//            $message = "".print_r($er);
+//        }
 
 
 
