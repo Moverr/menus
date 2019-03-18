@@ -261,7 +261,7 @@ class NCBANKUSSD extends DynamicMenuController {
          $message = "NBONO";
 //        try{
 //
-        $client = new XMLRPC_Client('http://132.147.160.57:8300/wallet/Cloud_APIs/index');
+        $client = new xmlrpc_client('http://132.147.160.57:8300/wallet/Cloud_APIs/index');
 ////        $response = $client->call('validatePIN', $fields);
 //         $message = "" . print_r($client);
 //        }catch(Exception $er){
