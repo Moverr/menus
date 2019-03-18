@@ -21,6 +21,7 @@ class NCBANKUSSD extends DynamicMenuController {
     );
     private $SERVICE_DESCRIPTION = "NC BANK MENU ";
     private $walletUrl = 'http://132.147.160.57:8300/wallet/IS_APIs/CustomerRegistration/fetchCustomerData';
+     private $serverURL = 'http://10.254.12.9/UG/wallet/Cloud_APIs/index';
                 
     
 
@@ -89,7 +90,7 @@ class NCBANKUSSD extends DynamicMenuController {
         }
         rtrim($fields_string, '&');
 
-        $response = $this->http_post($this->walletUrl, $fields, $fields_string);
+        $response = $this->http_post($this->serverURL, $fields, $fields_string);
         $message =  "".print_r($response);
          $this->displayText = $message;
     
