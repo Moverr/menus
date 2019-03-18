@@ -193,13 +193,13 @@ class NCBANKUSSD extends DynamicMenuController {
         }
     }
 
-    public function call() {
+    public function call($url, $params) {
 
-                
+
         error_reporting(E_ALL);
 
 // get arguments
-        $params = func_get_args();
+
         $method = array_shift($params);
 
         $post = xmlrpc_encode_request($method, $params);
@@ -213,7 +213,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $ch = curl_init();
 
 // set URL and other appropriate options
-        curl_setopt($ch, CURLOPT_URL, $this->url);
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -258,16 +258,10 @@ class NCBANKUSSD extends DynamicMenuController {
 //        }
 //        rtrim($fields_string, '&');
 
-         $message = "NBONO";
-      try{
-//    
-//
-            new xmlrpc_client("google.com");
-////        $response = $client->call('validatePIN', $fields);
-//         $message = "" . print_r($client);
-        }catch(Exception $er){
-            $message = "ERROR";
-        }
+        $message = "NBONO";
+                
+            $response = $this->http_post($this->serverURL, $fields, "");
+                
 
 
 
