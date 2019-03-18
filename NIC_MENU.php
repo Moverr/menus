@@ -412,10 +412,8 @@ class NCBANKUSSD extends DynamicMenuController {
             
         
         $this->displayText = $message;
-        $this->sessionState = "CONTINUE";
-        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-        $this->nextFunction = "TopUpAmountMenu";
-        $this->previousPage = "AirtimeMerchantChooseAccount";
+        $this->sessionState = "END";
+        $this->serviceDescription = $this->SERVICE_DESCRIPTION; 
     }
     
     function AirtimeMerchantChooseAccount($input) {
