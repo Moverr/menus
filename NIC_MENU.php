@@ -328,8 +328,9 @@ class NCBANKUSSD extends DynamicMenuController {
 
         switch ($input) {
             case '0':
+                 $this->firstMenu();
                 break;
-                $this->firstMenu();
+               
 
             case '00':
                 $this->firstMenu();
