@@ -263,7 +263,7 @@ class NCBANKUSSD extends DynamicMenuController {
 // "MSISDN" => $this->_msisdn,
         $fields = array(
             "MSISDN" => '256783262929',
-            "PIN" => '23332',
+            "PIN" => '1234',
             "USERNAME" => "system-user",
             "PASSWORD" => "lipuka"
         );
@@ -276,14 +276,9 @@ class NCBANKUSSD extends DynamicMenuController {
         $message = "MOMO";
 
 
-        $url = $this->serverURL;
-//        $url = 'http://my.host:5862';
-#$requested = xml_gen($function_name,$epos,$time);
-
+        $url = $this->serverURL; 
         $request = xmlrpc_encode_request('fetchCustomerData', $fields);
-
-
-#echo($requested);
+                
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
@@ -394,6 +389,24 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->serviceNotAvailable();
     }
 
+    function TopUpAmountMenu($input){
+        
+        
+         $message = "1)MTN "
+                 . "\n2)Airtel"
+                 . "\n3)Africell"
+                 . "\n4)UTL"
+                 . "\n5)Smile";
+                $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                $this->nextFunction = "TopUpAmountMenu";
+                $this->previousPage = "TopUpAmountMenu";
+                
+    }
+    
     function AirtimePurchaseMenu($input) {
         switch ($input) {
             case '1':
@@ -403,7 +416,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
                 $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-                $this->nextFunction = "AirtimePurchaseMenu";
+                $this->nextFunction = "TopUpAmountMenu";
                 $this->previousPage = "AirtimePurchaseMenu";
 
                 break;
