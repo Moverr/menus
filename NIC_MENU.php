@@ -408,7 +408,8 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function AirtimeMerchantChooseAccount($input) {
 
-//        $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+
+        $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
 
 
         $message = "Select Account";
