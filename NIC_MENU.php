@@ -412,6 +412,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
         $message = "Select Account";
+
 //        if ($ACCOUNTS != null) {
 //            $message = "Choose Account ";
 //            $count = 0;
