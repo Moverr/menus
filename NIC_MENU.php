@@ -136,7 +136,26 @@ class NCBANKUSSD extends DynamicMenuController {
 
                 case '6':
 # code...
-                    $this->BankToMobileMenu();
+                    $selectedAccount = null;
+//                foreach ($ACCOUNTS as $account) {
+//                    if ($account['ID'] == $input) {
+//                        $selectedAccount = $account;
+//                        break;
+//                    }
+//                }
+                    $message = " Top Up"
+                            . "\n.1 Own Phone"
+                            . "\n.2 Other Phone";
+
+
+                    $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+
+                    $this->displayText = $message;
+                    $this->sessionState = "CONTINUE";
+                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                    $this->nextFunction = "AirtimePurchaseMenu";
+                    $this->previousPage = "startPage";
+
 
                     break;
 
