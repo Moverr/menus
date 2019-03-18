@@ -27,15 +27,15 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function startPage() {
 
-//        $this->init();
-        $this->checkPin();
+        $this->init();
+//        $this->checkPin();
     }
 
     function init() {
 
         $fields_string = null;
         $fields = null;
-// "MSISDN" => $this->_msisdn,
+        // "MSISDN" => $this->_msisdn,
         $fields = array(
             "MSISDN" => '256783262929',
             "USERNAME" => "system-user",
@@ -50,14 +50,14 @@ class NCBANKUSSD extends DynamicMenuController {
         $response = $this->http_post($this->walletUrl, $fields, $fields_string);
         $clientProfile = json_decode($response, true);
 
-        $this->saveSessionVar("clientProfile", $clientProfile);
+        $this->saveSessionVar("CLIENTPROFILE", $clientProfile);
 
         $this->firstMenu();
     }
 
     function firstMenu() {
 
-        $clientProfile = $this->getSessionVar('clientProfile');
+        $clientProfile = $this->getSessionVar('CLIENTPROFILE');
 
         if ($clientProfile['SUCCESS'] != 1) {
 
@@ -66,6 +66,8 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->sessionState = "END";
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
         } else {
+
+
 
             $clientProfiledata = $this->populateClientProfile($clientProfile);
             $clientAccountDetails = $this->populateAccountDetails($clientProfile);
@@ -278,9 +280,6 @@ class NCBANKUSSD extends DynamicMenuController {
         $results = curl_exec($ch);
         curl_close($ch);
 
-//Decoding the response to be displayed
-//Decoding the response to be displayed
-
 
 
 
@@ -336,10 +335,15 @@ class NCBANKUSSD extends DynamicMenuController {
         switch ($input) {
             case '0':
                 break;
+                $this->firstMenu();
 
             case '00':
+                $this->firstMenu();
+
                 break;
             case '000':
+
+                $this->firstMenu();
 
                 break;
             default:
