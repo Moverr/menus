@@ -18,31 +18,18 @@ class NCBANKUSSD extends DynamicMenuController {
     private $MIN_AMOUNT = 500;
     private $STATUS_CODE = 2;
     private $MERCHANT_WHITELIST = array(
-        256772987736,
-        256779999570,
-        260966917530,
-        256779221616,
-        256783262929,
-        256779999751,
-        256779999508,
-        256771002652,
-        256771002654,
-        256771000120,
-        256772122344,
-        256772120645,
-        256772121280,
-        256779999722,
-        256772635813,
-        256775110678,
-        256775516494,
-        256779999508,
     );
     private $SERVICE_DESCRIPTION = "NC BANK MENU ";
     private $walletUrl = 'http://132.147.160.57:8300/wallet/IS_APIs/CustomerRegistration/fetchCustomerData';
+                
+    
 
+//    /authenticateCustomerPin
+    
     function startPage() {
 
-        $this->init();
+//        $this->init();
+        $this->checkPin();
     }
 
     function init() {
@@ -84,6 +71,29 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->previousPage = "startPage";
         }
     }
+    
+    function checkPin(){
+    
+            $fields_string = null;
+        $fields = null;
+        // "MSISDN" => $this->_msisdn,
+        $fields = array(
+            "MSISDN" => '256783262929',
+            "PINHASH"=>'1234',
+            "USERNAME" => "system-user",
+            "PASSWORD" => "lipuka"
+        );
+
+        foreach ($fields as $key => $value) {
+            $fields_string .= $key . '=' . $value . '&';
+        }
+        rtrim($fields_string, '&');
+
+        $response = $this->http_post($this->walletUrl, $fields, $fields_string);
+        echo "".print_r($response);
+    
+    }
+    
 
     function populateClientProfile($clientProfile) {
         $clientProfiledata = explode('|', $clientProfile ['customerDetails']);
@@ -124,6 +134,8 @@ class NCBANKUSSD extends DynamicMenuController {
 
         return $clientProfile;
     }
+    
+    
 
     function populateAccountDetails($clientProfile) {
 
@@ -325,49 +337,47 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->serviceNotAvailable();
     }
 
+    function generalMenu($input) {
+        if ($input == '0') {
+            $this->displayText = "Thank you for supporting NC BANK";
+            $this->sessionState = "END";
+        } else if ($input == '0') {
+            $this->displayText = "Thank you for supporting NC BANK";
+            $this->sessionState = "END";
+        } else if ($input == '0') {
+            $this->displayText = "Thank you for supporting NC BANK";
+            $this->sessionState = "END";
+        } else if ($input == '0') {
+            $this->displayText = "Thank you for supporting NC BANK";
+            $this->sessionState = "END";
+        }
+    }
+
     //todo: sprint one, Balance Inquiry
     function BalanceEnquiryMenu($input) {
-        switch ($input) {
-            case '0':
-                $this->displayText = "Thank you for supporting NC BANK";
-                $this->sessionState = "END";
+
+        $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+
+
+        $selectedAccount = null;
+        foreach ($ACCOUNTS as $account) {
+            if ($account['ID'] == $input) {
+                $selectedAccount = $account;
                 break;
-            case '00':
-                $this->displayText = "Thank you for supporting NC BANK";
-                $this->sessionState = "END";
-                break;
-            case '000':
-                $this->displayText = "Thank you for supporting NC BANK";
-                $this->sessionState = "END";
-                break;
-
-            default:
-                $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
-
-
-                $selectedAccount = null;
-                foreach ($ACCOUNTS as $account) {
-                    if ($account['ID'] == $input) {
-                        $selectedAccount = $account;
-                        break;
-                    }
-                }
-                $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
-                $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
-                $message .= "\nAccount Balance : " . $selectedAccount['ACCOUNTBALANCE'] . ' ' . $selectedAccount['ACCOUNTCURRENCY'] . ' ';
-
-
-                $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
-
-                $this->displayText = $message;
-                $this->sessionState = "CONTINUE";
-                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-                $this->nextFunction = "BalanceEnquiryMenu";
-                $this->previousPage = "startPage";
-
-
-                break;
+            }
         }
+        $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
+        $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
+        $message .= "\nAccount Balance : " . $selectedAccount['ACCOUNTBALANCE'] . ' ' . $selectedAccount['ACCOUNTCURRENCY'] . ' ';
+
+
+        $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+
+        $this->displayText = $message;
+        $this->sessionState = "CONTINUE";
+        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+        $this->nextFunction = "BalanceEnquiryMenu";
+        $this->previousPage = "startPage";
     }
 
     function BillPaymentsMenu() {
