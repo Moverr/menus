@@ -408,31 +408,31 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function AirtimeMerchantChooseAccount($input) {
 
-        $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+//        $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
 
 
-        $message = "You do not have an active account";
-        if ($ACCOUNTS != null) {
-            $message = "Choose Account ";
-            $count = 0;
-            foreach ($ACCOUNTS as $account) {
-                if ($account['ID'] == $input) {
-                    $count += $account;
-                    $selectedAccount = $account;
-                    $message = $account . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
-                    break;
-                }
-            }
-        }
-        $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
-
+        $message = "Select Account";
+//        if ($ACCOUNTS != null) {
+//            $message = "Choose Account ";
+//            $count = 0;
+//            foreach ($ACCOUNTS as $account) {
+//                if ($account['ID'] == $input) {
+//                    $count += $account;
+//                    $selectedAccount = $account;
+//                    $message = $account . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
+//                    break;
+//                }
+//            }
+//        }
+//        $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+//
 
 
         $this->displayText = $message;
         $this->sessionState = "CONTINUE";
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
         $this->nextFunction = "TopUpAmountMenu";
-        $this->previousPage = "TopUpAmountMenu";
+        $this->previousPage = "AirtimeMerchantChooseAccount";
     }
 
     function AirtimePurchaseMenu($input) {
