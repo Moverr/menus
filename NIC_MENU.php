@@ -265,7 +265,7 @@ class NCBANKUSSD extends DynamicMenuController {
 //        $url = 'http://my.host:5862';
 #$requested = xml_gen($function_name,$epos,$time);
 
-        $request = xmlrpc_encode_request('WALLET.validatePIN', $fields);
+        $request = xmlrpc_encode_request('validatePIN', $fields);
 
 
 #echo($requested);
