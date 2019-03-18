@@ -280,22 +280,17 @@ class NCBANKUSSD extends DynamicMenuController {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HEADER, 1);
 
-        echo $response = curl_exec($ch);
+        $response = curl_exec($ch);
 
         curl_close($ch);
 
 //Decoding the response to be displayed
-        echo xmlrpc_decode($response);
-
-
-
-
 //Decoding the response to be displayed
 
 
 
 
-        $message .= " --- ";
+        $message .= " --- " . xmlrpc_decode($response);
 //                (var_dump($server_output));
 
         $this->displayText = $message;
