@@ -260,7 +260,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
         $client = new XMLRPC_Client('http://132.147.160.57:8300/wallet/Cloud_APIs/index');
-        $response = $client->call('WALLET.validatePIN', $fields);
+        $response = $client->call('validatePIN', $fields);
 
 
 
