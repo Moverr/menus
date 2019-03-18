@@ -79,7 +79,7 @@ class NCBANKUSSD extends DynamicMenuController {
         // "MSISDN" => $this->_msisdn,
         $fields = array(
             "MSISDN" => '256783262929',
-            "PINHASH"=>'1234',
+            "PINHASH"=>'12784',
             "USERNAME" => "system-user",
             "PASSWORD" => "lipuka"
         );
@@ -90,7 +90,8 @@ class NCBANKUSSD extends DynamicMenuController {
         rtrim($fields_string, '&');
 
         $response = $this->http_post($this->walletUrl, $fields, $fields_string);
-        echo "".print_r($response);
+        $message =  "".print_r($response);
+         $this->displayText = $message;
     
     }
     
