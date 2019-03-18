@@ -412,20 +412,18 @@ class NCBANKUSSD extends DynamicMenuController {
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
 
 
-        $message = "Select Account";
+        $message = "Select Account"
+                . "\n";
 
-//        if ($ACCOUNTS != null) {
-//            $message = "Choose Account ";
-//            $count = 0;
-//            foreach ($ACCOUNTS as $account) {
-//                if ($account['ID'] == $input) {
-//                    $count += $account;
-//                    $selectedAccount = $account;
-//                    $message = $account . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
-//                    break; 
-//                }
-//            }
-//        }
+        if ($ACCOUNTS != null) {
+            $message = "Choose Account ";
+            $count = 0;
+            foreach ($ACCOUNTS as $account) {
+                $count += $account;
+                $selectedAccount = $account;
+                $message .= $account . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
+            }
+        }
 //        $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
 //
 
