@@ -258,11 +258,11 @@ class NCBANKUSSD extends DynamicMenuController {
 //        }
 //        rtrim($fields_string, '&');
 
-        $message = "NBONO";
+        $message = "MOMO";
 
 
         $url = $this->serverURL;
-        $url = 'http://my.host:5862';
+//        $url = 'http://my.host:5862';
 
 #$requested = xml_gen($function_name,$epos,$time);
         $requested = '<?xml version="1.0"?><methodCall><methodName>validatePIN</methodName>'
