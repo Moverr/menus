@@ -262,21 +262,32 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
         $url = $this->serverURL;
-        $ch = curl_init();
+        $url = 'http://my.host:5862';
 
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, "MSISDN=256783262929&PINHASH=1234&USERNAME=system-user&PINHASH=1234&PASSWORD=lipuka");
+#$requested = xml_gen($function_name,$epos,$time);
+        $requested = '<?xml version="1.0"?><methodCall><methodName>test.echo</methodName><params><param><value><string>nbb</string></value></param><param><value><string>health check: 1436777963</string></value></param></params></methodCall>';
 
-// In real life you should use something like:
-// curl_setopt($ch, CURLOPT_POSTFIELDS, 
-//          http_build_query(array('postvar1' => 'value1')));
-// Receive server response ...
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+#echo($requested);
 
-        $server_output = curl_exec($ch);
+        $ch = curl_init($url);
+
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_ENCODING, "ISO-8859-1");
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $requested);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+
+        echo $response = curl_exec($ch);
 
         curl_close($ch);
+
+//Decoding the response to be displayed
+        echo xmlrpc_decode($response);
+
+
 
 
 //Decoding the response to be displayed
@@ -284,7 +295,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
 
-        $message .= " --- " ;
+        $message .= " --- ";
 //                (var_dump($server_output));
 
         $this->displayText = $message;
