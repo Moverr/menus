@@ -265,7 +265,12 @@ class NCBANKUSSD extends DynamicMenuController {
         $url = 'http://my.host:5862';
 
 #$requested = xml_gen($function_name,$epos,$time);
-        $requested = '<?xml version="1.0"?><methodCall><methodName>test.echo</methodName><params><param><value><string>nbb</string></value></param><param><value><string>health check: 1436777963</string></value></param></params></methodCall>';
+        $requested = '<?xml version="1.0"?><methodCall><methodName>validatePIN</methodName>'
+                . '<params>'
+                . '<param><value><string>MSISDN:256783262929</string></value></param>'
+                . '<param><value><string>health check: 1436777963</string></value></param>'
+                . '</params>'
+                . '</methodCall>';
 
 #echo($requested);
 
@@ -290,7 +295,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
 
-        $message .= " --- " . xmlrpc_decode($response);
+        $message .= " --- " . print_r(xmlrpc_decode($response),TRUE);
 //                (var_dump($server_output));
 
         $this->displayText = $message;
