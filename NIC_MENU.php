@@ -263,30 +263,19 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $url = $this->serverURL;
 //        $url = 'http://my.host:5862';
-
 #$requested = xml_gen($function_name,$epos,$time);
-        $requested = '<?xml version="1.0"?><methodCall><methodName>validatePIN</methodName>'
-                . '<params>'
-                . '<param><value><string>MSISDN:256783262929</string></value></param>'
-                . '<param><value><string>health check: 1436777963</string></value></param>'
-                . '</params>'
-                . '</methodCall>';
+
+        $request = xmlrpc_encode_request('WALLET.validatePIN', $fields);
+
 
 #echo($requested);
 
-        $ch = curl_init($url);
-
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($ch, CURLOPT_ENCODING, "ISO-8859-1");
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $requested);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_HEADER, 1);
-
-        $response = curl_exec($ch);
-
+        curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+        $results = curl_exec($ch);
         curl_close($ch);
 
 //Decoding the response to be displayed
@@ -295,7 +284,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
 
-        $message .= " --- " . print_r(xmlrpc_decode($response),TRUE);
+        $message .= " --- " . print_r($results, TRUE);
 //                (var_dump($server_output));
 
         $this->displayText = $message;
