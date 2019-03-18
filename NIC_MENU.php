@@ -17,8 +17,7 @@ class NCBANKUSSD extends DynamicMenuController {
     private $MAX_AMOUNT = 4000000;
     private $MIN_AMOUNT = 500;
     private $STATUS_CODE = 2;
-    private $MERCHANT_WHITELIST = array(
-    );
+    private $MERCHANT_WHITELIST = array();
     private $SERVICE_DESCRIPTION = "NC BANK MENU ";
     private $walletUrl = 'http://132.147.160.57:8300/wallet/IS_APIs/CustomerRegistration/fetchCustomerData';
     private $serverURL = 'http://132.147.160.57:8300/wallet/Cloud_APIs/index';
@@ -36,7 +35,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $fields_string = null;
         $fields = null;
-        // "MSISDN" => $this->_msisdn,
+// "MSISDN" => $this->_msisdn,
         $fields = array(
             "MSISDN" => '256783262929',
             "USERNAME" => "system-user",
@@ -85,12 +84,12 @@ class NCBANKUSSD extends DynamicMenuController {
         if (is_numeric($input)) {
             switch ('' . $input) {
                 case '1':
-                    # code...
+# code...
                     $this->MerchantsMenu();
                     break;
 
                 case '2':
-                    # code...
+# code...
                     $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
 
                     $message = "\n\nChoose Account\n";
@@ -114,27 +113,27 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
                 case '3':
-                    # code...
+# code...
                     $this->BillPaymentsMenu();
                     break;
 
 
                 case '4':
-                    # code...
+# code...
                     $this->FundsTransferMenu();
                     break;
 
 
 
                 case '5':
-                    # code...
+# code...
                     $this->BankToMobileMenu();
                     break;
 
 
 
                 case '6':
-                    # code...
+# code...
                     $this->BankToMobileMenu();
 
                     break;
@@ -142,42 +141,42 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
                 case '7':
-                    # code...
+# code...
                     $this->MiniStatementMenu();
                     break;
 
 
                 case '8':
-                    # code...
+# code...
                     $this->ChequeRequestMenu();
                     break;
 
 
                 case '9':
-                    # code...
+# code...
                     $this->ChangePinMenu();
                     break;
 
 
                 case '0':
-                    # code...
+# code...
                     break;
 
 
 
                 case '00':
-                    # code...
+# code...
                     break;
 
 
                 case '000':
-                    # code...
+# code...
                     break;
 
 
 
                 default:
-                    # code...
+# code...
                     $this->displayText = "Invalid input. Please enter a menu number ";
                     $this->sessionState = "CONTINUE";
                     $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -194,11 +193,59 @@ class NCBANKUSSD extends DynamicMenuController {
         }
     }
 
+    public function call() {
+
+        ini_set("display_error", 1);
+        error_reporting(E_ALL);
+
+// get arguments
+        $params = func_get_args();
+        $method = array_shift($params);
+
+        $post = xmlrpc_encode_request($method, $params);
+
+        /*
+          $post = str_replace("\n", "", $post);
+          $post = str_replace(" ", "", $post);
+          echo $post;
+         */
+
+        $ch = curl_init();
+
+// set URL and other appropriate options
+        curl_setopt($ch, CURLOPT_URL, $this->url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+// issue the request
+        $response = curl_exec($ch);
+        $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curl_errorno = curl_errno($ch);
+        $curl_error = curl_error($ch);
+        curl_close($ch);
+
+// check for curl errors
+        if ($curl_errorno != 0) {
+            die("Curl ERROR: {$curl_errorno} - {$curl_error}n");
+        }
+
+// check for server errors
+        if ($response_code != 200) {
+            die("ERROR: non-200 response from server: {$response_code} - {$response}n");
+        }
+//    return $response;
+//    $response .= 'e>';
+        return xmlrpc_decode($response);
+    }
+
     function checkPin() {
+
+//        xmlrpc_server_call_method ( resource $server , string $xml , mixed $user_data [, array $output_options ] )
 
         $fields_string = null;
         $fields = null;
-        // "MSISDN" => $this->_msisdn,
+// "MSISDN" => $this->_msisdn,
         $fields = array(
             "MSISDN" => '256783262929',
             "PINHASH" => '1234',
@@ -211,8 +258,13 @@ class NCBANKUSSD extends DynamicMenuController {
         }
         rtrim($fields_string, '&');
 
-        $response = $this->http_post($this->serverURL, $fields, $fields_string);
-        $message = "" . var_dump($response);
+
+        $client = new XMLRPC_Client('http://132.147.160.57:8300/wallet/Cloud_APIs/index');
+        $response = $client->call('WALLET.validatePIN', $fields);
+
+
+
+        $message = "" . print_r($response);
         $this->displayText = $message;
     }
 
@@ -245,7 +297,7 @@ class NCBANKUSSD extends DynamicMenuController {
         }
     }
 
-    //todo: sprint one, Balance Inquiry
+//todo: sprint one, Balance Inquiry
     function BalanceEnquiryMenu($input) {
 
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
@@ -588,7 +640,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $ACCOUNTCBSID = $singleAccount[0];
                 $ACCOUNTNUMBER = $singleAccount[1];
                 $ACCOUNTNAME = $singleAccount[2];
-                //todo: undefined not known 
+//todo: undefined not known 
                 $ACCOUNTCURRENCYINWORDS = $singleAccount[4];
                 $ACCOUNTBALANCE = $singleAccount[5];
                 $ACCOUNTCURRENCY = $singleAccount[6];
