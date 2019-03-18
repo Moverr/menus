@@ -284,7 +284,8 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
 
-        $message .= " --- " . (var_dump($server_output));
+        $message .= " --- " ;
+//                (var_dump($server_output));
 
         $this->displayText = $message;
     }
