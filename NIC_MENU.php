@@ -419,7 +419,7 @@ class NCBANKUSSD extends DynamicMenuController {
             $message = "Choose Account ";
             $count = 0;
             foreach ($ACCOUNTS as $account) {
-                $count += $count;
+                $count = $count + 1;
                 $selectedAccount = $account;
                 $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
             }
