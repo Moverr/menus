@@ -21,7 +21,7 @@ class NCBANKUSSD extends DynamicMenuController {
     );
     private $SERVICE_DESCRIPTION = "NC BANK MENU ";
     private $walletUrl = 'http://132.147.160.57:8300/wallet/IS_APIs/CustomerRegistration/fetchCustomerData';
-     private $serverURL = 'http://132.147.160.57:8300/wallet/Cloud_APIs/index';
+     private $serverURL ='http://132.147.160.57:8300/wallet/IS_APIs/index';
                 
     
 
