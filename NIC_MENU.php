@@ -260,19 +260,32 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $message = "NBONO";
 
-//        $response = $this->http_post($this->serverURL, $fields, "");
-//xmlrpc_client
 
-        header('Content-Type: text/plain');
-        $rpc = $this->serverURL;
-//        "http://10.0.0.10/api.php";
-        $client = new xmlrpc_client($rpc, true);
-        $resp = $client->call('validatePIN', $fields);
-        $message .= print_r($resp);
+        $url = $this->serverURL;
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, "MSISDN=256783262929&PINHASH=1234&USERNAME=system-user&PINHASH=1234&PASSWORD=lipuka");
+
+// In real life you should use something like:
+// curl_setopt($ch, CURLOPT_POSTFIELDS, 
+//          http_build_query(array('postvar1' => 'value1')));
+// Receive server response ...
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $server_output = curl_exec($ch);
+
+        curl_close($ch);
+
+
+//Decoding the response to be displayed
 
 
 
-        $message .= " --- ";
+
+        $message .= " --- " . (print_r($server_output));
+
         $this->displayText = $message;
     }
 
