@@ -21,16 +21,14 @@ class NCBANKUSSD extends DynamicMenuController {
     );
     private $SERVICE_DESCRIPTION = "NC BANK MENU ";
     private $walletUrl = 'http://132.147.160.57:8300/wallet/IS_APIs/CustomerRegistration/fetchCustomerData';
-     private $serverURL ='http://132.147.160.57:8300/wallet/IS_APIs/index';
-                
-    
+    private $serverURL = 'http://132.147.160.57:8300/wallet/IS_APIs/index';
 
 //    /authenticateCustomerPin
-    
+
     function startPage() {
 
-//        $this->init();
-        $this->checkPin();
+        $this->init();
+//        $this->checkPin();
     }
 
     function init() {
@@ -52,6 +50,15 @@ class NCBANKUSSD extends DynamicMenuController {
         $response = $this->http_post($this->walletUrl, $fields, $fields_string);
         $clientProfile = json_decode($response, true);
 
+        $this->saveSessionVar("clientProfile", $clientProfile);
+
+        $this->firstMenu();
+    }
+
+    function firstMenu() {
+
+        $clientProfile = $this->getSessionVar('clientProfile');
+
         if ($clientProfile['SUCCESS'] != 1) {
 
             $error = $clientProfile['ERRORS'];
@@ -70,146 +77,6 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
             $this->nextFunction = "menuSwitcher";
             $this->previousPage = "startPage";
-        }
-    }
-    
-    function checkPin(){
-    
-            $fields_string = null;
-        $fields = null;
-        // "MSISDN" => $this->_msisdn,
-        $fields = array(
-            "MSISDN" => '256783262929',
-            "PINHASH"=>'1234',
-            "USERNAME" => "system-user",
-            "PASSWORD" => "lipuka"
-        );
-
-        foreach ($fields as $key => $value) {
-            $fields_string .= $key . '=' . $value . '&';
-        }
-        rtrim($fields_string, '&');
-
-        $response = $this->http_post($this->serverURL, $fields, $fields_string);
-        $message =  "". var_dump($response);
-         $this->displayText = $message;
-    
-    }
-    
-
-    function populateClientProfile($clientProfile) {
-        $clientProfiledata = explode('|', $clientProfile ['customerDetails']);
-
-        $clientProfile = array();
-        if ($clientProfiledata != null) {
-
-            $clientprofileID = $clientProfiledata [0];
-            $profileactive = $clientProfiledata [1];
-            $customeractive = $clientProfiledata [1];
-            $profile_pin_status = $clientProfiledata [2];
-
-            $firstName = $clientProfiledata [3] != null ? $clientProfiledata [3] : "";
-            $lastName = $clientProfiledata [4] != null ? $clientProfiledata [4] : "";
-            $customerNames = $firstName . " " . $lastName;
-
-            $clientProfile = [
-                "clientprofileID" => $clientprofileID,
-                "profileactive" => $profileactive,
-                "customeractive" => $customeractive,
-                "profile_pin_status" => $profile_pin_status,
-                "firstName" => $firstName,
-                "lastName" => $lastName,
-                "customerNames" => $customerNames
-            ];
-
-
-
-            $this->saveSessionVar('clientprofileID', $clientProfile["clientprofileID"]);
-            $this->saveSessionVar('profileactive', $clientProfile["profileactive"]);
-            $this->saveSessionVar('customeractive', $clientProfile["customeractive"]);
-            $this->saveSessionVar('profile_pin_status', $clientProfile["profile_pin_status"]);
-            $this->saveSessionVar('firstName', $clientProfile["firstName"]);
-            $this->saveSessionVar('lastName', $clientProfile["lastName"]);
-            $this->saveSessionVar('customerNames', $clientProfile["customerNames"]);
-        }
-
-
-        return $clientProfile;
-    }
-    
-    
-
-    function populateAccountDetails($clientProfile) {
-
-        $clientAccountData = explode('#', $clientProfile ['accountDetails']);
-
-//        [accountDetails] =>
-//        31|3000001968|teddy|1|Uganda Shilling |800|UGX |31
-//        #
-//        8|3000025673|TOM KAMUKAMA|1|Uganda Shilling |800|UGX |31
-//        [nominationDetails] =>
-//        hi|3000010207|Kampala|NIC
-//        [EXCEPTION] =>
-//        )
-
-        if ($clientAccountData != null) {
-
-            $ACCOUNTS = $clientAccountData;
-            $ACCOUNTSDATA = [];
-
-            $count = 0;
-            foreach ($ACCOUNTS as $ACCOUNT) {
-                $count ++;
-                $singleAccount = explode("|", $ACCOUNT);
-
-                $ACCOUNTCBSID = $singleAccount[0];
-                $ACCOUNTNUMBER = $singleAccount[1];
-                $ACCOUNTNAME = $singleAccount[2];
-                //todo: undefined not known 
-                $ACCOUNTCURRENCYINWORDS = $singleAccount[4];
-                $ACCOUNTBALANCE = $singleAccount[5];
-                $ACCOUNTCURRENCY = $singleAccount[6];
-
-                $ACCOUNTDATA = [
-                    "ID" => $count,
-                    "ACCOUNTCBSID" => $ACCOUNTCBSID,
-                    "ACCOUNTNUMBER" => $ACCOUNTNUMBER,
-                    "ACCOUNTNUMBER" => $ACCOUNTNUMBER,
-                    "ACCOUNTNAME" => $ACCOUNTNAME,
-                    "ACCOUNTCURRENCYINWORDS" => $ACCOUNTCURRENCYINWORDS,
-                    "ACCOUNTBALANCE" => $ACCOUNTBALANCE,
-                    "ACCOUNTCURRENCY" => $ACCOUNTCURRENCY
-                ];
-                $ACCOUNTSDATA [] = $ACCOUNTDATA;
-            }
-
-            $this->saveSessionVar('ACCOUNTS', $ACCOUNTSDATA);
-            return $ACCOUNTSDATA;
-        }
-    }
-
-    function http_post($url, $fields, $fields_string) {
-        try {
-////open connection
-            $ch = curl_init($url);
-//set the url, number of POST vars, POST data
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-//curl_setopt($ch, CURLOPT_MUTE,1);
-            curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
-            curl_setopt($ch, CURLOPT_POST, count($fields));
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
-//new options
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-//curl_setopt($ch, CURLOPT_CAINFO, REQUEST_SSL_CERTIFICATE);
-//execute post
-            $result = curl_exec($ch);
-//close connection
-            curl_close($ch);
-            return $result;
-        } catch (Exception $ex) {
-            return $ex->getMessage();
         }
     }
 
@@ -326,6 +193,28 @@ class NCBANKUSSD extends DynamicMenuController {
         }
     }
 
+    function checkPin() {
+
+        $fields_string = null;
+        $fields = null;
+        // "MSISDN" => $this->_msisdn,
+        $fields = array(
+            "MSISDN" => '256783262929',
+            "PINHASH" => '1234',
+            "USERNAME" => "system-user",
+            "PASSWORD" => "lipuka"
+        );
+
+        foreach ($fields as $key => $value) {
+            $fields_string .= $key . '=' . $value . '&';
+        }
+        rtrim($fields_string, '&');
+
+        $response = $this->http_post($this->serverURL, $fields, $fields_string);
+        $message = "" . var_dump($response);
+        $this->displayText = $message;
+    }
+
     function ServiceNotAvailable() {
         $message = "Service not available \n\n" . "0. Home \n" . "00. Back \n" . "000. Logout \n";
         $this->displayText = $message;
@@ -360,26 +249,47 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
 
-
-        $selectedAccount = null;
-        foreach ($ACCOUNTS as $account) {
-            if ($account['ID'] == $input) {
-                $selectedAccount = $account;
-                break;
-            }
-        }
-        $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
-        $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
-        $message .= "\nAccount Balance : " . $selectedAccount['ACCOUNTBALANCE'] . ' ' . $selectedAccount['ACCOUNTCURRENCY'] . ' ';
-
-
-        $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+        $message = "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
 
         $this->displayText = $message;
         $this->sessionState = "CONTINUE";
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
         $this->nextFunction = "BalanceEnquiryMenu";
         $this->previousPage = "startPage";
+
+
+        switch ($input) {
+            case '0':
+                break;
+
+            case '00':
+                break;
+            case '000':
+
+                break;
+            default:
+                $selectedAccount = null;
+                foreach ($ACCOUNTS as $account) {
+                    if ($account['ID'] == $input) {
+                        $selectedAccount = $account;
+                        break;
+                    }
+                }
+                $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
+                $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
+                $message .= "\nAccount Balance : " . $selectedAccount['ACCOUNTBALANCE'] . ' ' . $selectedAccount['ACCOUNTCURRENCY'] . ' ';
+
+
+                $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                $this->nextFunction = "BalanceEnquiryMenu";
+                $this->previousPage = "startPage";
+
+                break;
+        }
     }
 
     function BillPaymentsMenu() {
@@ -609,6 +519,120 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->displayText = "Sorry we are not able to process your request at "
                 . "this time. Please try again later.";
         $this->sessionState = "END";
+    }
+
+    function populateClientProfile($clientProfile) {
+        $clientProfiledata = explode('|', $clientProfile ['customerDetails']);
+
+        $clientProfile = array();
+        if ($clientProfiledata != null) {
+
+            $clientprofileID = $clientProfiledata [0];
+            $profileactive = $clientProfiledata [1];
+            $customeractive = $clientProfiledata [1];
+            $profile_pin_status = $clientProfiledata [2];
+
+            $firstName = $clientProfiledata [3] != null ? $clientProfiledata [3] : "";
+            $lastName = $clientProfiledata [4] != null ? $clientProfiledata [4] : "";
+            $customerNames = $firstName . " " . $lastName;
+
+            $clientProfile = [
+                "clientprofileID" => $clientprofileID,
+                "profileactive" => $profileactive,
+                "customeractive" => $customeractive,
+                "profile_pin_status" => $profile_pin_status,
+                "firstName" => $firstName,
+                "lastName" => $lastName,
+                "customerNames" => $customerNames
+            ];
+
+
+
+            $this->saveSessionVar('clientprofileID', $clientProfile["clientprofileID"]);
+            $this->saveSessionVar('profileactive', $clientProfile["profileactive"]);
+            $this->saveSessionVar('customeractive', $clientProfile["customeractive"]);
+            $this->saveSessionVar('profile_pin_status', $clientProfile["profile_pin_status"]);
+            $this->saveSessionVar('firstName', $clientProfile["firstName"]);
+            $this->saveSessionVar('lastName', $clientProfile["lastName"]);
+            $this->saveSessionVar('customerNames', $clientProfile["customerNames"]);
+        }
+
+
+        return $clientProfile;
+    }
+
+    function populateAccountDetails($clientProfile) {
+
+        $clientAccountData = explode('#', $clientProfile ['accountDetails']);
+
+//        [accountDetails] =>
+//        31|3000001968|teddy|1|Uganda Shilling |800|UGX |31
+//        #
+//        8|3000025673|TOM KAMUKAMA|1|Uganda Shilling |800|UGX |31
+//        [nominationDetails] =>
+//        hi|3000010207|Kampala|NIC
+//        [EXCEPTION] =>
+//        )
+
+        if ($clientAccountData != null) {
+
+            $ACCOUNTS = $clientAccountData;
+            $ACCOUNTSDATA = [];
+
+            $count = 0;
+            foreach ($ACCOUNTS as $ACCOUNT) {
+                $count ++;
+                $singleAccount = explode("|", $ACCOUNT);
+
+                $ACCOUNTCBSID = $singleAccount[0];
+                $ACCOUNTNUMBER = $singleAccount[1];
+                $ACCOUNTNAME = $singleAccount[2];
+                //todo: undefined not known 
+                $ACCOUNTCURRENCYINWORDS = $singleAccount[4];
+                $ACCOUNTBALANCE = $singleAccount[5];
+                $ACCOUNTCURRENCY = $singleAccount[6];
+
+                $ACCOUNTDATA = [
+                    "ID" => $count,
+                    "ACCOUNTCBSID" => $ACCOUNTCBSID,
+                    "ACCOUNTNUMBER" => $ACCOUNTNUMBER,
+                    "ACCOUNTNUMBER" => $ACCOUNTNUMBER,
+                    "ACCOUNTNAME" => $ACCOUNTNAME,
+                    "ACCOUNTCURRENCYINWORDS" => $ACCOUNTCURRENCYINWORDS,
+                    "ACCOUNTBALANCE" => $ACCOUNTBALANCE,
+                    "ACCOUNTCURRENCY" => $ACCOUNTCURRENCY
+                ];
+                $ACCOUNTSDATA [] = $ACCOUNTDATA;
+            }
+
+            $this->saveSessionVar('ACCOUNTS', $ACCOUNTSDATA);
+            return $ACCOUNTSDATA;
+        }
+    }
+
+    function http_post($url, $fields, $fields_string) {
+        try {
+////open connection
+            $ch = curl_init($url);
+//set the url, number of POST vars, POST data
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+//curl_setopt($ch, CURLOPT_MUTE,1);
+            curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
+            curl_setopt($ch, CURLOPT_POST, count($fields));
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+//new options
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+//curl_setopt($ch, CURLOPT_CAINFO, REQUEST_SSL_CERTIFICATE);
+//execute post
+            $result = curl_exec($ch);
+//close connection
+            curl_close($ch);
+            return $result;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
     }
 
 }
