@@ -582,7 +582,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $count = 0;
                 foreach ($leaves as $leaf) {
                     $count = $count + 1;
-                    $message .= $count . ") " . $leaf;
+                    $message .= "\n".$count . ") " . $leaf;
                 }
 
 
