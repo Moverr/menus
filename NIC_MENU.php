@@ -406,32 +406,40 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->previousPage = "TopUpAmountMenu";
     }
 
+    function finishBuyingAirtime($input){
+        $message = "Dear Customer, your airtime purchase request was failed. The reference NO. is #12891. For queries 0312388100/0312388155 or email"
+                . " ncbankcustomercare@ncgroup.com.";
+            
+        
+        $this->displayText = $message;
+        $this->sessionState = "END";
+        $this->serviceDescription = $this->SERVICE_DESCRIPTION; 
+    }
+    
     function AirtimeMerchantChooseAccount($input) {
 
-//        $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+
+        $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
 
 
-        $message = "Select Account";
-//        if ($ACCOUNTS != null) {
-//            $message = "Choose Account ";
-//            $count = 0;
-//            foreach ($ACCOUNTS as $account) {
-//                if ($account['ID'] == $input) {
-//                    $count += $account;
-//                    $selectedAccount = $account;
-//                    $message = $account . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
-//                    break;
-//                }
-//            }
-//        }
-//        $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
-//
+        $message = "Select Account"
+                . "\n";
 
+        if ($ACCOUNTS != null) {
+            $message = "Choose Account ";
+            $count = 0;
+            foreach ($ACCOUNTS as $account) {
+                $count = $count + 1;
+                $selectedAccount = $account;
+                $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
+            }
+        }
+            
 
         $this->displayText = $message;
         $this->sessionState = "CONTINUE";
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-        $this->nextFunction = "TopUpAmountMenu";
+        $this->nextFunction = "finishBuyingAirtime";
         $this->previousPage = "AirtimeMerchantChooseAccount";
     }
 
@@ -444,11 +452,23 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
                 $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-                $this->nextFunction = "TopUpAmountMenu";
+                $this->nextFunction = "AirtimeMerchantChooseAccount";
                 $this->previousPage = "AirtimePurchaseMenu";
 
                 break;
-            case '2':break;
+            case '2':
+                $message = "Enter Top Up Amount";
+                $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                $this->nextFunction = "TopUpAmountMenu";
+                $this->previousPage = "AirtimePurchaseMenu";
+
+
+
+                break;
             case '0':
                 $this->firstMenu();
                 break;
@@ -834,6 +854,15 @@ class xmlrpc_client {
     public function call($method, $params = null) {
         $post = xmlrpc_encode_request($method, $params);
         return xmlrpc_decode($this->connection->post($this->url, $post));
+    }
+
+    function getProvider($networkID) {
+        $providers = array(
+            "64110" => "MTN",
+            "64101" => "Airtel",
+            "732125" => "Africell"
+        );
+        return $providers[$networkID];
     }
 
 }
