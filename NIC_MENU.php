@@ -64,7 +64,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
 //authenticateCustomerPin
         $url = $this->serverURL;
-        $request = xmlrpc_encode_request('fetchCustomerData', $fields);
+        $request = xmlrpc_encode_request('fetchCustomerEnrollments', $fields);
 
         $results = $this->http_post($url, $fields, $request);
                 
