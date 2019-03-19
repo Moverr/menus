@@ -43,7 +43,7 @@ class NCBANKUSSD extends DynamicMenuController {
           $accountAlias = 'teddy';
           $amount = 10;
          */
- $encryptedpin = $this->encryptPin(1234,1);
+        $encryptedpin = $this->encryptPin(1234, 1);
         /*
           $fields = array(
           "serviceID" => $sid,
@@ -56,7 +56,6 @@ class NCBANKUSSD extends DynamicMenuController {
           );
          */
         $fields = array(
-                
             "MSISDN" => '256783262929'
 //            "USERNAME" => "system-user",
 //            "PASSWORD" => "lipuka",
@@ -69,7 +68,8 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
+        curl_setopt($ch, CURLOPT_POST, count($fields));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_TIMEOUT, 1);
