@@ -43,7 +43,7 @@ class NCBANKUSSD extends DynamicMenuController {
           $accountAlias = 'teddy';
           $amount = 10;
          */
-
+ $encryptedpin = $this->encryptPin(1234,1);
         /*
           $fields = array(
           "serviceID" => $sid,
@@ -58,7 +58,8 @@ class NCBANKUSSD extends DynamicMenuController {
         $fields = array(
             "MSISDN" => '256783262929',
             "USERNAME" => "system-user",
-            "PASSWORD" => "lipuka"
+            "PASSWORD" => "lipuka",
+            "PINHASH"=>$encryptedpin
         );
 
 
