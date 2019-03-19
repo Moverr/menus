@@ -59,7 +59,7 @@ class NCBANKUSSD extends DynamicMenuController {
             "MSISDN" => '256783262929',
             "USERNAME" => "system-user",
             "PASSWORD" => "lipuka",
-            "PINHASH"=>$encryptedpin
+            "PIN"=>1234
         ];
 
 //authenticateCustomerPin
