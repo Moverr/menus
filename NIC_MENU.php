@@ -159,12 +159,12 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
                     $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
-                    $message = "Choose Account \n";
+                    $message = "Choose Account ";
 
                     $count = 0;
                     foreach ($ACCOUNTS as $account) {
                         $count = $count + 1;
-                        $message .= $count . ")" . $account['ACCOUNTNUMBER'];
+                        $message .= "\n".$count . ")" . $account['ACCOUNTNUMBER'];
                     }
 
 
