@@ -157,7 +157,29 @@ class NCBANKUSSD extends DynamicMenuController {
 
                 case '7':
 # code...
-                    $this->MiniStatementMenu();
+
+
+                    $message = "Choose Account \n";
+
+                    $count = 0;
+                    foreach ($ACCOUNTS as $account) {
+                        $count = $count + 1;
+                        $message .= $count . ")" . $account['ACCOUNTNUMBER'];
+                    }
+
+
+
+
+                    $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+
+                    $this->displayText = $message;
+                    $this->sessionState = "CONTINUE";
+                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                    $this->nextFunction = "MiniStatementMenu";
+                    $this->previousPage = "startPage";
+
+
+
                     break;
 
 
@@ -406,16 +428,16 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->previousPage = "TopUpAmountMenu";
     }
 
-    function finishBuyingAirtime($input){
+    function finishBuyingAirtime($input) {
         $message = "Dear Customer, your airtime purchase request was failed. The reference NO. is #12891. For queries 0312388100/0312388155 or email"
                 . " ncbankcustomercare@ncgroup.com.";
-            
-        
+
+
         $this->displayText = $message;
         $this->sessionState = "END";
-        $this->serviceDescription = $this->SERVICE_DESCRIPTION; 
+        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
     }
-    
+
     function AirtimeMerchantChooseAccount($input) {
 
 
@@ -434,7 +456,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
             }
         }
-            
+
 
         $this->displayText = $message;
         $this->sessionState = "CONTINUE";
@@ -509,7 +531,14 @@ class NCBANKUSSD extends DynamicMenuController {
     }
 
     function MiniStatementMenu() {
-        $this->serviceNotAvailable();
+        $message = " Thank you for using NC mobile banking \n";
+
+
+        $this->displayText = $message;
+        $this->sessionState = "CONTINUE";
+        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+        $this->nextFunction = "MiniStatementMenu";
+        $this->previousPage = "startPage";
     }
 
     function ChequeRequestMenu() {
