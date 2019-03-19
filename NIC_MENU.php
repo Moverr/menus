@@ -56,46 +56,18 @@ class NCBANKUSSD extends DynamicMenuController {
           );
          */
         $fields = [
-            "MSISDN" => '256783262929'
-//            "USERNAME" => "system-user",
-//            "PASSWORD" => "lipuka",
-//            "PINHASH"=>$encryptedpin
+            "MSISDN" => '256783262929',
+            "USERNAME" => "system-user",
+            "PASSWORD" => "lipuka",
+            "PINHASH"=>$encryptedpin
         ];
 
 //authenticateCustomerPin
         $url = $this->serverURL;
-        $request = xmlrpc_encode_request('authenticateCustomerPin', $fields);
+        $request = xmlrpc_encode_request('fetchCustomerData', $fields);
 
         $results = $this->http_post($url, $fields, $request);
-
-//        
-//        $ch = curl_init($url);
-////set the url, number of POST vars, POST data
-//            curl_setopt($ch, CURLOPT_URL, $url);
-//            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-////curl_setopt($ch, CURLOPT_MUTE,1);
-//            curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
-//            curl_setopt($ch, CURLOPT_POST, count($fields));
-//            curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
-////new options
-//            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-//            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-////curl_setopt($ch, CURLOPT_CAINFO, REQUEST_SSL_CERTIFICATE);
-////execute post
-//            $result = curl_exec($ch);
-//            
-//            
-//        $ch = curl_init();
-//        curl_setopt($ch, CURLOPT_POST, count($fields));
-//        curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
-//        curl_setopt($ch, CURLOPT_URL, $url);
-//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-//        curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-//        $results = curl_exec($ch);
-//        curl_close($ch);
-
-
-
+                
 
         $message .= " --- " . print_r(xmlrpc_decode($results), TRUE);
 //                (var_dump($server_output));
