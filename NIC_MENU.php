@@ -33,21 +33,43 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function paySelfTest() {
 
-        /* $receipient = 256779820962;
-          $sid = 14;
-          $encryptedpin = 1234;
-          $accountAlias =
-          //ACCOUNT ID
-          $airtimeselfarray = array(
-          "serviceID" => $sid,
-          "flavour" => "self",
-          "pin" => $encryptedpin,
-          "accountAlias" => $accountAlias,
-          "amount" => $amount,
-          "accountID" => $accountID,
-          "columnA" => $receipient
-          );
-         */
+        $receipient = 256779820962;
+        $sid = 14;
+        $encryptedpin = 1234;
+        $accountID = 31;
+        $accountAlias = 'teddy';
+        $amount = 10;
+
+        $fields = array(
+            "serviceID" => $sid,
+            "flavour" => "self",
+            "pin" => $encryptedpin,
+            "accountAlias" => $accountAlias,
+            "amount" => $amount,
+            "accountID" => $accountID,
+            "columnA" => $receipient
+        );
+
+
+        $url = $this->serverURL;
+        $request = xmlrpc_encode_request('processCloudRequest', $fields);
+
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+        $results = curl_exec($ch);
+        curl_close($ch);
+
+
+
+
+        $message .= " --- " . print_r(xmlrpc_decode($results), TRUE);
+//                (var_dump($server_output));
+
+        $this->displayText = $message;
     }
 
     function init() {
