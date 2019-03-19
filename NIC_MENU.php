@@ -164,7 +164,7 @@ class NCBANKUSSD extends DynamicMenuController {
                     $count = 0;
                     foreach ($ACCOUNTS as $account) {
                         $count = $count + 1;
-                        $message .= "\n".$count . ")" . $account['ACCOUNTNUMBER'];
+                        $message .= "\n" . $count . ")" . $account['ACCOUNTNUMBER'];
                     }
 
 
@@ -185,7 +185,24 @@ class NCBANKUSSD extends DynamicMenuController {
 
                 case '8':
 # code...
-                    $this->ChequeRequestMenu();
+                    $message = "Account Request"
+                            . "\n1) Cheque Book Request"
+                            . "\n2) Stop Cheque ";
+
+
+
+
+                    $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+
+                    $this->displayText = $message;
+                    $this->sessionState = "CONTINUE";
+                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                    $this->nextFunction = "ChequeRequestMenu";
+                    $this->previousPage = "startPage";
+
+
+
+
                     break;
 
 
@@ -553,10 +570,73 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->previousPage = "startPage";
     }
 
-    function ChequeRequestMenu() {
-        $this->serviceNotAvailable();
+    //todo:  CHEQUE REQUESTS MENU
+    function ChequeRequestMenu($input) {
+        switch ($input) {
+            case "1":
+
+                $leaves = [50, 100];
+
+                $message = "Select number of leaves";
+
+                $count = 0;
+                foreach ($leaves as $leaf) {
+                    $count = $count + 1;
+                    $message .= $count . ") " . $leaf;
+                }
+
+
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                $this->nextFunction = "MiniStatementMenu";
+                $this->previousPage = "startPage";
+
+
+
+                break;
+
+            case "2":
+
+                 $message = "From cheque number";
+        
+
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                $this->nextFunction = "ToChequeNumber";
+                $this->previousPage = "startPage";
+
+                
+                break;
+
+
+            default:
+                break;
+        }
     }
 
+     //TODO:  TO CHEQUE NUMBER MENU \
+    function ToChequeNumber($input){
+        
+           $message = "To cheque number";
+        
+
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                $this->nextFunction = "StopChequeNumber";
+                $this->previousPage = "startPage";
+
+                
+    }
+   
+    
+    //TODO: STOP CHEQUE MENU
+    function StopChequeNumber($input){
+        
+    }
+    
     function ChangePinMenu() {
         $this->serviceNotAvailable();
     }
