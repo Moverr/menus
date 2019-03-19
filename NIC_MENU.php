@@ -598,8 +598,8 @@ class NCBANKUSSD extends DynamicMenuController {
 
             case "2":
 
-                 $message = "From cheque number";
-        
+                $message = "From cheque number";
+
 
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
@@ -607,7 +607,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->nextFunction = "ToChequeNumber";
                 $this->previousPage = "startPage";
 
-                
+
                 break;
 
 
@@ -616,27 +616,32 @@ class NCBANKUSSD extends DynamicMenuController {
         }
     }
 
-     //TODO:  TO CHEQUE NUMBER MENU \
-    function ToChequeNumber($input){
-        
-           $message = "To cheque number";
-        
+    //TODO:  TO CHEQUE NUMBER MENU \
+    function ToChequeNumber($input) {
 
-                $this->displayText = $message;
-                $this->sessionState = "CONTINUE";
-                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-                $this->nextFunction = "StopChequeNumber";
-                $this->previousPage = "startPage";
+        $message = "To cheque number";
 
-                
+        $this->displayText = $message;
+        $this->sessionState = "CONTINUE";
+        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+        $this->nextFunction = "StopChequeMenu";
+        $this->previousPage = "startPage";
     }
-   
-    
+
     //TODO: STOP CHEQUE MENU
-    function StopChequeNumber($input){
-        
+    function StopChequeMenu($input) {
+
+        $message = "Your transaction was successful #referece_idY";
+        $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+
+
+        $this->displayText = $message;
+        $this->sessionState = "CONTINUE";
+        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+        $this->nextFunction = "menuSwitcher";
+        $this->previousPage = "startPage";
     }
-    
+
     function ChangePinMenu() {
         $this->serviceNotAvailable();
     }
