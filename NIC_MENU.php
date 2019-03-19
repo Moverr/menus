@@ -56,7 +56,8 @@ class NCBANKUSSD extends DynamicMenuController {
           );
          */
         $fields = array(
-            "MSISDN" => '0783262929',
+            "IMCID" => '2',
+            "MSISDN" => '254783262929',
             "USERNAME" => "system-user",
             "PASSWORD" => "lipuka",
             "PINHASH"=>$encryptedpin
