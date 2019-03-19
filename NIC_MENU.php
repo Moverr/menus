@@ -56,16 +56,16 @@ class NCBANKUSSD extends DynamicMenuController {
           );
          */
         $fields = array(
-            "IMCID" => '2',
-            "MSISDN" => '256783262929',
-            "USERNAME" => "system-user",
-            "PASSWORD" => "lipuka",
-            "PINHASH"=>$encryptedpin
+                
+            "MSISDN" => '256783262929'
+//            "USERNAME" => "system-user",
+//            "PASSWORD" => "lipuka",
+//            "PINHASH"=>$encryptedpin
         );
 
 //authenticateCustomerPin
         $url = $this->serverURL;
-        $request = xmlrpc_encode_request('authenticateCustomerPin', $fields);
+        $request = xmlrpc_encode_request('authenticateCustomerPin', null);
 
 
         $ch = curl_init();
