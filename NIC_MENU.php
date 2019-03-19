@@ -31,26 +31,25 @@ class NCBANKUSSD extends DynamicMenuController {
 //        $this->checkPin();
     }
 
-    
-    function  paySelfTest(){
-  
-        /*$receipient = 256779820962;
-         $sid = 14;
-         $encryptedpin = 1234;
-         $accountAlias =
-        //ACCOUNT ID 
-         $airtimeselfarray = array(
-                "serviceID" => $sid,
-                "flavour" => "self",
-                "pin" => $encryptedpin,
-                "accountAlias" => $accountAlias,
-                "amount" => $amount,
-                "accountID" => $accountID,
-                "columnA" => $receipient
-            );
-*/
-         
+    function paySelfTest() {
+
+        /* $receipient = 256779820962;
+          $sid = 14;
+          $encryptedpin = 1234;
+          $accountAlias =
+          //ACCOUNT ID
+          $airtimeselfarray = array(
+          "serviceID" => $sid,
+          "flavour" => "self",
+          "pin" => $encryptedpin,
+          "accountAlias" => $accountAlias,
+          "amount" => $amount,
+          "accountID" => $accountID,
+          "columnA" => $receipient
+          );
+         */
     }
+
     function init() {
 
         $fields_string = null;
@@ -69,8 +68,8 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $response = $this->http_post($this->walletUrl, $fields, $fields_string);
         $clientProfile = json_decode($response, true);
-        
-        
+
+
 
         $this->saveSessionVar("CLIENTPROFILE", $clientProfile);
 
@@ -80,34 +79,43 @@ class NCBANKUSSD extends DynamicMenuController {
     function firstMenu() {
 
         $clientProfile = $this->getSessionVar('CLIENTPROFILE');
-        $this->displayText = "".print_r($clientProfile,true);
-        
-            
-        
+        $this->displayText = "" . print_r($clientProfile, true);
+
+
+        $clientProfiledata = $this->populateClientProfile($clientProfile);
+        $clientAccountDetails = $this->populateAccountDetails($clientProfile);
+
+        $this->displayText = "" . print_r($clientAccountDetails, true);
+
+
+
+
+
         /*
-        if ($clientProfile['SUCCESS'] != 1) {
+          if ($clientProfile['SUCCESS'] != 1) {
 
-            $error = $clientProfile['ERRORS'];
-            $this->displayText = $error;
-            $this->sessionState = "END";
-            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-        } else {
+          $error = $clientProfile['ERRORS'];
+          $this->displayText = $error;
+          $this->sessionState = "END";
+          $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+          } else {
 
 
 
-            $clientProfiledata = $this->populateClientProfile($clientProfile);
-            $clientAccountDetails = $this->populateAccountDetails($clientProfile);
+          $clientProfiledata = $this->populateClientProfile($clientProfile);
+          $clientAccountDetails = $this->populateAccountDetails($clientProfile);
+         * 
 
-            $message = $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n\n" . "Home Menu \n" . "1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
+          $message = $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n\n" . "Home Menu \n" . "1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
 
-            $this->displayText = $message;
-            
-            $this->sessionState = "CONTINUE";
-            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-            $this->nextFunction = "menuSwitcher";
-            $this->previousPage = "startPage";
-        }
-        */
+          $this->displayText = $message;
+
+          $this->sessionState = "CONTINUE";
+          $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+          $this->nextFunction = "menuSwitcher";
+          $this->previousPage = "startPage";
+          }
+         */
     }
 
     function menuSwitcher($input) {
@@ -610,7 +618,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $count = 0;
                 foreach ($leaves as $leaf) {
                     $count = $count + 1;
-                    $message .= "\n".$count . ") " . $leaf;
+                    $message .= "\n" . $count . ") " . $leaf;
                 }
 
 
