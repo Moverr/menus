@@ -411,6 +411,8 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->serviceNotAvailable();
     }
 
+    //: MENU ITEM 6 AIRTIME PURCHASE 
+    
     function TopUpAmountMenu($input) {
 
 
@@ -471,6 +473,14 @@ class NCBANKUSSD extends DynamicMenuController {
                 $message = "Enter Top Up Amount";
                 $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
 
+                $mssdn = "254779820962";
+                $mssdnarray = explode("", $mssdn);
+                
+                
+                //get the network id
+                //$networkID = $this->getProvider($this->_networkID);
+     
+                
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
                 $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -530,6 +540,8 @@ class NCBANKUSSD extends DynamicMenuController {
         }
     }
 
+    //: MENU ITEM 7 MINI STATEMENT 
+    
     function MiniStatementMenu() {
         $message = " Thank you for using NC mobile banking \n";
 
@@ -885,6 +897,7 @@ class xmlrpc_client {
         return xmlrpc_decode($this->connection->post($this->url, $post));
     }
 
+     
     function getProvider($networkID) {
         $providers = array(
             "64110" => "MTN",
