@@ -37,7 +37,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $receipient = 256779820962;
         $sid = 14;
-        $encryptedpin = 1234;
+        $encryptedpin = $this->encryptPin(1234,1);
         $accountID = 31;
         $accountAlias = 'teddy';
         $amount = 10;
