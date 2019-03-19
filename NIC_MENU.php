@@ -27,8 +27,10 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function startPage() {
 
-        $this->init();
+//        $this->init();
 //        $this->checkPin();
+        
+        $this->paySelfTest();
     }
 
     function paySelfTest() {
