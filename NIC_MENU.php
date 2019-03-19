@@ -62,9 +62,9 @@ class NCBANKUSSD extends DynamicMenuController {
             "PINHASH"=>$encryptedpin
         );
 
-
+//authenticateCustomerPin
         $url = $this->serverURL;
-        $request = xmlrpc_encode_request('authenticateCustomerPin', $fields);
+        $request = xmlrpc_encode_request('fetchCustomerAccounts', $fields);
 
 
         $ch = curl_init();
