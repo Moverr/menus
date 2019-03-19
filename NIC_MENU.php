@@ -29,32 +29,41 @@ class NCBANKUSSD extends DynamicMenuController {
 
 //        $this->init();
 //        $this->checkPin();
-        
+
         $this->paySelfTest();
     }
 
     function paySelfTest() {
 
-        $receipient = 256779820962;
-        $sid = 14;
-        $encryptedpin = $this->encryptPin(1234,1);
-        $accountID = 31;
-        $accountAlias = 'teddy';
-        $amount = 10;
+        /*
+          $receipient = 256779820962;
+          $sid = 14;
+          $encryptedpin = $this->encryptPin(1234,1);
+          $accountID = 1985;
+          $accountAlias = 'teddy';
+          $amount = 10;
+         */
 
+        /*
+          $fields = array(
+          "serviceID" => $sid,
+          "flavour" => "self",
+          "pin" => $encryptedpin,
+          "accountAlias" => $accountAlias,
+          "amount" => $amount,
+          "accountID" => $accountID,
+          "columnA" => $receipient
+          );
+         */
         $fields = array(
-            "serviceID" => $sid,
-            "flavour" => "self",
-            "pin" => $encryptedpin,
-            "accountAlias" => $accountAlias,
-            "amount" => $amount,
-            "accountID" => $accountID,
-            "columnA" => $receipient
+            "MSISDN" => '256783262929',
+            "USERNAME" => "system-user",
+            "PASSWORD" => "lipuka"
         );
 
 
         $url = $this->serverURL;
-        $request = xmlrpc_encode_request('processCloudRequest', $fields);
+        $request = xmlrpc_encode_request('authenticateCustomerPin', $fields);
 
 
         $ch = curl_init();
