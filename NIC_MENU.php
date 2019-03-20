@@ -108,9 +108,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $clientProfile = $this->getSessionVar('CLIENTPROFILE');
                 
 
-        $clientProfiledata = $this->populateClientProfile($clientProfile);
-        $clientAccountDetails = $this->populateAccountDetails($clientProfile);
-
+                
                 
 
 
