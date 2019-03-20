@@ -21,8 +21,6 @@ class NCBANKUSSD extends DynamicMenuController {
     private $SERVICE_DESCRIPTION = "NC BANK MENU ";
     private $walletUrl = 'http://132.147.160.57:8300/wallet/IS_APIs/CustomerRegistration/fetchCustomerData';
     private $serverURL = 'http://132.147.160.57:8300/wallet/Cloud_APIs/index';
-//    http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php
-        
 
 //    http://132.147.160.57:8300/wallet/Cloud_APIs/authenticateCustomerPin
 //    /authenticateCustomerPin
@@ -32,7 +30,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->init();
 //        $this->checkPin();
 
-//        $this->paySelfTest();
+        $this->paySelfTest();
     }
 
     function paySelfTest() {
@@ -106,10 +104,14 @@ class NCBANKUSSD extends DynamicMenuController {
     function firstMenu() {
 
         $clientProfile = $this->getSessionVar('CLIENTPROFILE');
-                
+//        $this->displayText = "" . print_r($clientProfile, true);
+//
+//
+//        $clientProfiledata = $this->populateClientProfile($clientProfile);
+//        $clientAccountDetails = $this->populateAccountDetails($clientProfile);
+//
+//        $this->displayText = "" . print_r($clientAccountDetails, true);
 
-                
-                
 
 
 
@@ -127,7 +129,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
           $clientProfiledata = $this->populateClientProfile($clientProfile);
           $clientAccountDetails = $this->populateAccountDetails($clientProfile);
-         * 
+         
 
           $message = $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n\n" . "Home Menu \n" . "1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
 
