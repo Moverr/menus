@@ -19,10 +19,10 @@ class NCBANKUSSD extends DynamicMenuController {
     private $STATUS_CODE = 2;
     private $MERCHANT_WHITELIST = array();
     private $SERVICE_DESCRIPTION = "NC BANK MENU ";
-    private $walletUrl = 'http://132.147.160.57:8300/wallet/IS_APIs/CustomerRegistration/fetchCustomerData';
+    private $walletUrl = 'http://132.147.160.57:8300/wahubllet/IS_APIs/CustomerRegistration/fetchCustomerData';
 //    private $serverURL = 'http://132.147.160.57:8300/wallet/Cloud_APIs/index';
     
-    private $serverURL ="http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php";
+    private $serverURL ="http://197.159.100.247:9000/wallet/Cloud_APIs/index";
         
 
 //    http://132.147.160.57:8300/wallet/Cloud_APIs/authenticateCustomerPin
