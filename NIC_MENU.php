@@ -106,19 +106,17 @@ class NCBANKUSSD extends DynamicMenuController {
     function firstMenu() {
 
         $clientProfile = $this->getSessionVar('CLIENTPROFILE');
-        $this->displayText = "" . print_r($clientProfile, true);
-
+                
 
         $clientProfiledata = $this->populateClientProfile($clientProfile);
         $clientAccountDetails = $this->populateAccountDetails($clientProfile);
 
-        $this->displayText = "" . print_r($clientAccountDetails, true);
+                
 
 
 
 
-
-        /*
+        
           if ($clientProfile['SUCCESS'] != 1) {
 
           $error = $clientProfile['ERRORS'];
@@ -142,7 +140,7 @@ class NCBANKUSSD extends DynamicMenuController {
           $this->nextFunction = "menuSwitcher";
           $this->previousPage = "startPage";
           }
-         */
+         
     }
 
     function menuSwitcher($input) {
