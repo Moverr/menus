@@ -332,8 +332,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $responseData = [
             "STATUSCODE"=>$response->STAT_CODE,
             "STATTYPE"=>$response->STAT_TYPE,
-            "STATDESCRIPTION"=>$response->STAT_DESCRIPTION, 
-            "PROFILEID"=>isset($response->DATA['profileID']) ?$response->DATA['profileID'] : null
+            "STATDESCRIPTION"=>$response->STAT_DESCRIPTION
         ];
         
         return $responseData;
