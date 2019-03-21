@@ -311,10 +311,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
             $clientProfiledata = $this->populateClientProfile($clientProfile);
             $clientAccountDetails = $this->populateAccountDetails($clientProfile);
-
-
-//        $message = $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
-
+                
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -322,20 +319,12 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->previousPage = "startPage";
         } else {
 
-            $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
-
+            $message = "Hello Client, \nSomething went wrong, kindly contact customer care";
 
             $clientProfiledata = $this->populateClientProfile($clientProfile);
             $clientAccountDetails = $this->populateAccountDetails($clientProfile);
-
-
-//        $message = $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
-
             $this->displayText = $message;
-            $this->sessionState = "CONTINUE";
-            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-            $this->nextFunction = "menuSwitcher";
-            $this->previousPage = "startPage";
+            $this->sessionState = "END";
         }
     }
 
@@ -354,7 +343,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $validationResponse = $this->postData($this->validatePinURL, $fields);
         $response = json_decode($validationResponse);
 
-        return $this->populatePinResponse($record);
+        return $this->populatePinResponse($response);
     }
 
     function populatePinResponse($record) {
