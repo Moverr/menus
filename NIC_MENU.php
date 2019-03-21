@@ -331,7 +331,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 
         
         
-        return  $this->populatePinReponse($response);
+        return  $this->populatePinReponse($validationResponse);
     }
 
     //POPULATE PIN RECORDS
