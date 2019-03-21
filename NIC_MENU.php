@@ -362,7 +362,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $response = json_decode($record);
 
 
-        return $response['DATA'];
+        return $response;
         $responseData = [
             "STATUSCODE" => $response->STAT_CODE,
             "STATTYPE" => $response->STAT_TYPE,
