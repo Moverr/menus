@@ -292,10 +292,10 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $response = $this->validateCustomerPin($input, '256783262929');
 
-        $this->displayText = print_r($response);
+        $this->displayText = "".print_r($response);
         $this->sessionState = "END";
 
-        return;
+        exit();
 
 
         if ($response['STATUSCODE'] == 100) {
