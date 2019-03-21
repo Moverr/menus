@@ -289,28 +289,54 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $clientProfile = $this->getSessionVar('CLIENTPROFILE');
         $clientProfiledata = $this->populateClientProfile($clientProfile);
-        
-        $response =  $this->validateCustomerPin($input,'256783262929');
-        
-        $message = "".print_r($response,true);
-        
-                
+
+        $response = $this->validateCustomerPin($input, '256783262929');
 
 
-//        $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
+        if ($response['STATUSCODE'] == 100) {
+
+            $message = "Hello " . ($clientProfiledata['customerNames']) . ",\n Incorrect Pin entered.";
 
 
-        $clientProfiledata = $this->populateClientProfile($clientProfile);
-        $clientAccountDetails = $this->populateAccountDetails($clientProfile);
+            $clientProfiledata = $this->populateClientProfile($clientProfile);
+            $clientAccountDetails = $this->populateAccountDetails($clientProfile);
+
+
+            $this->displayText = $message;
+            $this->sessionState = "END";
+        } else if ($response['STATUSCODE'] == 1) {
+
+            $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
+
+
+            $clientProfiledata = $this->populateClientProfile($clientProfile);
+            $clientAccountDetails = $this->populateAccountDetails($clientProfile);
 
 
 //        $message = $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
 
-        $this->displayText = $message;
-        $this->sessionState = "CONTINUE";
-        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-        $this->nextFunction = "menuSwitcher";
-        $this->previousPage = "startPage";
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+            $this->nextFunction = "menuSwitcher";
+            $this->previousPage = "startPage";
+        } else {
+
+            $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
+
+
+            $clientProfiledata = $this->populateClientProfile($clientProfile);
+            $clientAccountDetails = $this->populateAccountDetails($clientProfile);
+
+
+//        $message = $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
+
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+            $this->nextFunction = "menuSwitcher";
+            $this->previousPage = "startPage";
+        }
     }
 
     function validateCustomerPin($pin, $msidn) {
@@ -326,15 +352,15 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->logMessage("URL Used:: " . $this->validatePinURL, null, 4);
 
         $validationResponse = $this->postData($this->validatePinURL, $fields);
-        $response  =  json_decode($validationResponse);
+        $response = json_decode($validationResponse);
 //                return $response;
-        
+
         $responseData = [
-            "STATUSCODE"=>$response->STAT_CODE,
-            "STATTYPE"=>$response->STAT_TYPE,
-            "STATDESCRIPTION"=>$response->STAT_DESCRIPTION
+            "STATUSCODE" => $response->STAT_CODE,
+            "STATTYPE" => $response->STAT_TYPE,
+            "STATDESCRIPTION" => $response->STAT_DESCRIPTION
         ];
-        
+
         return $responseData;
 ////        
         $this->logMessage("Validate PIN response ", $validationResponse, 4);
