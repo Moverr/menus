@@ -289,12 +289,12 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $clientProfile = $this->getSessionVar('CLIENTPROFILE');
         $clientProfiledata = $this->populateClientProfile($clientProfile);
-        
-        $response =  $this->validateCustomerPin($input,'256783262929');
-        
-        $message = "".print_r($response,true);
-        
-                
+
+        $response = $this->validateCustomerPin($input, '256783262929');
+
+        $message = "" . print_r($response, true);
+
+
 
 
 //        $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
@@ -326,14 +326,31 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->logMessage("URL Used:: " . $this->validatePinURL, null, 4);
 
         $validationResponse = $this->postData($this->validatePinURL, $fields);
-        $response  =  json_decode($validationResponse);
+                
+        $this->logMessage("Validate PIN response ", print_r($validationResponse,true), 4);
+        
+        return  $this->populatePinReponse($validationResponse);
+    }
+
+    //POPULATE PIN RECORDS
+    function populatePinReponse($pin) {
+        $pindata = json_decode($pin);
+
+        $STATUSCODE = $pindata['STAT_CODE'];
+        $STATTYPE = $pindata['STAT_TYPE'];
+        $STATDESCRIPTION = $pindata['STAT_DESCRIPTION'];
+        $PROFILEID = isset($pindata['DATA']['profileID']) ? $pindata['DATA']['profileID'] : null;
+
+
+
+        $response = [
+            "STATUSCODE" => $STATUSCODE,
+            "STATTYPE" => $STATTYPE,
+            "STATDESCRIPTION" => $STATDESCRIPTION,
+            "PROFILEID" => $PROFILEID
+        ];
+
         return $response;
-        $this->logMessage("Validate PIN response ", $validationResponse, 4);
-        if ($validationResponse['STAT_TYPE'] == 1) {
-            return array("pinValid" => true, "message" => $validationResponse['STAT_DESCRIPTION']);
-        } else {
-            return array("pinValid" => false, "message" => $validationResponse['STAT_DESCRIPTION']);
-        }
     }
 
     function menuSwitcher($input) {
