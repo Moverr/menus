@@ -292,7 +292,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $response = $this->validateCustomerPin($input, '256783262929');
 
-
+/*
         if ($response['STATUSCODE'] == 100) {
 
             $message = "Hello " . ($clientProfiledata['customerNames']) . ",\n Incorrect Pin entered.";
@@ -326,6 +326,16 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->displayText = $message;
             $this->sessionState = "END";
         }
+ * 
+ */
+        
+         $message =  print_r($response,true);
+
+            $clientProfiledata = $this->populateClientProfile($clientProfile);
+            $clientAccountDetails = $this->populateAccountDetails($clientProfile);
+            $this->displayText = $message;
+            $this->sessionState = "END";
+            
     }
 
     function validateCustomerPin($pin, $msidn) {
