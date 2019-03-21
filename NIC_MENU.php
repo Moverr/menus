@@ -292,49 +292,40 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $response = $this->validateCustomerPin($input, '256783262929');
 
-        /*
-          if ($response['STATUSCODE'] == 100) {
 
-          $message = "Hello " . ($clientProfiledata['customerNames']) . ",\n Incorrect Pin entered.";
+        if ($response['STATUSCODE'] == 100) {
 
-
-          $clientProfiledata = $this->populateClientProfile($clientProfile);
-          $clientAccountDetails = $this->populateAccountDetails($clientProfile);
+            $message = "Hello " . ($clientProfiledata['customerNames']) . ",\n Incorrect Pin entered.";
 
 
-          $this->displayText = $message;
-          $this->sessionState = "END";
-          } else if ($response['STATUSCODE'] == 1) {
-
-          $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
+            $clientProfiledata = $this->populateClientProfile($clientProfile);
+            $clientAccountDetails = $this->populateAccountDetails($clientProfile);
 
 
-          $clientProfiledata = $this->populateClientProfile($clientProfile);
-          $clientAccountDetails = $this->populateAccountDetails($clientProfile);
+            $this->displayText = $message;
+            $this->sessionState = "END";
+        } else if ($response['STATUSCODE'] == 1) {
 
-          $this->displayText = $message;
-          $this->sessionState = "CONTINUE";
-          $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-          $this->nextFunction = "menuSwitcher";
-          $this->previousPage = "startPage";
-          } else {
+            $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
 
-          $message = "Hello Client, \nSomething went wrong, kindly contact customer care";
 
-          $clientProfiledata = $this->populateClientProfile($clientProfile);
-          $clientAccountDetails = $this->populateAccountDetails($clientProfile);
-          $this->displayText = $message;
-          $this->sessionState = "END";
-          }
-         * 
-         */
+            $clientProfiledata = $this->populateClientProfile($clientProfile);
+            $clientAccountDetails = $this->populateAccountDetails($clientProfile);
 
-        $message = print_r($response, true);
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+            $this->nextFunction = "menuSwitcher";
+            $this->previousPage = "startPage";
+        } else {
 
-        $clientProfiledata = $this->populateClientProfile($clientProfile);
-        $clientAccountDetails = $this->populateAccountDetails($clientProfile);
-        $this->displayText = $message;
-        $this->sessionState = "END";
+            $message = "Hello Client, \nSomething went wrong, kindly contact customer care";
+
+            $clientProfiledata = $this->populateClientProfile($clientProfile);
+            $clientAccountDetails = $this->populateAccountDetails($clientProfile);
+            $this->displayText = $message;
+            $this->sessionState = "END";
+        }
     }
 
     function validateCustomerPin($pin, $msidn) {
