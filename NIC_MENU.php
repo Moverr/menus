@@ -292,50 +292,49 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $response = $this->validateCustomerPin($input, '256783262929');
 
-/*
-        if ($response['STATUSCODE'] == 100) {
+        /*
+          if ($response['STATUSCODE'] == 100) {
 
-            $message = "Hello " . ($clientProfiledata['customerNames']) . ",\n Incorrect Pin entered.";
-
-
-            $clientProfiledata = $this->populateClientProfile($clientProfile);
-            $clientAccountDetails = $this->populateAccountDetails($clientProfile);
+          $message = "Hello " . ($clientProfiledata['customerNames']) . ",\n Incorrect Pin entered.";
 
 
-            $this->displayText = $message;
-            $this->sessionState = "END";
-        } else if ($response['STATUSCODE'] == 1) {
-
-            $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
+          $clientProfiledata = $this->populateClientProfile($clientProfile);
+          $clientAccountDetails = $this->populateAccountDetails($clientProfile);
 
 
-            $clientProfiledata = $this->populateClientProfile($clientProfile);
-            $clientAccountDetails = $this->populateAccountDetails($clientProfile);
-                
-            $this->displayText = $message;
-            $this->sessionState = "CONTINUE";
-            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-            $this->nextFunction = "menuSwitcher";
-            $this->previousPage = "startPage";
-        } else {
+          $this->displayText = $message;
+          $this->sessionState = "END";
+          } else if ($response['STATUSCODE'] == 1) {
 
-            $message = "Hello Client, \nSomething went wrong, kindly contact customer care";
+          $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
 
-            $clientProfiledata = $this->populateClientProfile($clientProfile);
-            $clientAccountDetails = $this->populateAccountDetails($clientProfile);
-            $this->displayText = $message;
-            $this->sessionState = "END";
-        }
- * 
- */
-        
-         $message =  print_r($response,true);
 
-            $clientProfiledata = $this->populateClientProfile($clientProfile);
-            $clientAccountDetails = $this->populateAccountDetails($clientProfile);
-            $this->displayText = $message;
-            $this->sessionState = "END";
-            
+          $clientProfiledata = $this->populateClientProfile($clientProfile);
+          $clientAccountDetails = $this->populateAccountDetails($clientProfile);
+
+          $this->displayText = $message;
+          $this->sessionState = "CONTINUE";
+          $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+          $this->nextFunction = "menuSwitcher";
+          $this->previousPage = "startPage";
+          } else {
+
+          $message = "Hello Client, \nSomething went wrong, kindly contact customer care";
+
+          $clientProfiledata = $this->populateClientProfile($clientProfile);
+          $clientAccountDetails = $this->populateAccountDetails($clientProfile);
+          $this->displayText = $message;
+          $this->sessionState = "END";
+          }
+         * 
+         */
+
+        $message = print_r($response, true);
+
+        $clientProfiledata = $this->populateClientProfile($clientProfile);
+        $clientAccountDetails = $this->populateAccountDetails($clientProfile);
+        $this->displayText = $message;
+        $this->sessionState = "END";
     }
 
     function validateCustomerPin($pin, $msidn) {
@@ -350,7 +349,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $this->logMessage("URL Used:: " . $this->validatePinURL, null, 4);
 
-        $validationResponse = $this->postData($this->validatePinURL, $fields);                
+        $validationResponse = $this->postData($this->validatePinURL, $fields);
         return $this->populatePinResponse($validationResponse);
     }
 
@@ -370,9 +369,14 @@ class NCBANKUSSD extends DynamicMenuController {
 //[enforceCaptcha] => 
 //)
 //        
+        $profileID = isset($response->DATA->profileID) ? $response->DATA->profileID : null;
+        $pinHash = isset($response->DATA->pinHash) ? $response->DATA->pinHash : null;
 
-        return $response->DATA->profileID;
+
+
         $responseData = [
+            "PROFILEID" => $profileID,
+            "PINHASH" => $pinHash,
             "STATUSCODE" => $response->STAT_CODE,
             "STATTYPE" => $response->STAT_TYPE,
             "STATDESCRIPTION" => $response->STAT_DESCRIPTION
