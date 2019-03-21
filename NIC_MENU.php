@@ -703,15 +703,39 @@ class NCBANKUSSD extends DynamicMenuController {
                         break;
                     }
                 }
-                $message = " Account Not Found";
-                if ($selectedAccount != null) {
-                    $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
-                    $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
-                    $message .= "\nAccount Balance : " . $selectedAccount['ACCOUNTBALANCE'] . ' ' . $selectedAccount['ACCOUNTCURRENCY'] . ' ';
-                }
+
+                //todo: get details  : 
+                $requestPayload = array(
+                    "serviceID" => 10,
+                    "flavour" => 'self',
+                    "pin" => "system-user",
+                    "accountAlias" => "256783262929",
+                    "accountID" => "256783262929",
+                );
 
 
-                $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+
+                $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
+
+//                invokeSyncWallet($payload, $channelRequestID)
+
+
+
+
+
+//                invokeSyncWallet//
+
+
+
+                $message = " Account Not Found".(print_r($logRequest,true));
+//                if ($selectedAccount != null) {
+//                    $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
+//                    $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
+//                    $message .= "\nAccount Balance : " . $selectedAccount['ACCOUNTBALANCE'] . ' ' . $selectedAccount['ACCOUNTCURRENCY'] . ' ';
+//                }
+//
+//
+//                $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
 
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
