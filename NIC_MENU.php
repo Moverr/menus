@@ -327,7 +327,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $validationResponse = $this->postData($this->validatePinURL, $fields);
         $response  =  (array) $validationResponse;
-        return $response[0]['DATA'];
+        return $response[0]->DATA;
         
         $this->logMessage("Validate PIN response ", $validationResponse, 4);
         if ($validationResponse['STAT_TYPE'] == 1) {
