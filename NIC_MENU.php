@@ -292,12 +292,12 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $response = $this->validateCustomerPin($input, '256783262929');
 
-        $this->displayText = "".print_r($response);
-        $this->sessionState = "END";
+        $message = var_dump($response);
+        $this->displayText = $message;
+            $this->sessionState = "END";
 
-        exit();
-
-
+            exit();
+            
         if ($response['STATUSCODE'] == 100) {
 
             $message = "Hello " . ($clientProfiledata['customerNames']) . ",\n Incorrect Pin entered.";
@@ -309,6 +309,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
             $this->displayText = $message;
             $this->sessionState = "END";
+            
         } else if ($response['STATUSCODE'] == 1) {
 
             $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
@@ -316,7 +317,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
             $clientProfiledata = $this->populateClientProfile($clientProfile);
             $clientAccountDetails = $this->populateAccountDetails($clientProfile);
-
+                
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -345,8 +346,9 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $this->logMessage("URL Used:: " . $this->validatePinURL, null, 4);
 
-        $validationResponse = $this->postData($this->validatePinURL, $fields);
-        return $this->populatePinResponse($validationResponse);
+        $validationResponse = $this->postData($this->validatePinURL, $fields);    
+        return json_decode($validationResponse);
+//        return $this->populatePinResponse($validationResponse);
     }
 
     function populatePinResponse($record) {
@@ -358,7 +360,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
         $responseData = [
-            "PIN" => $record->DATA,
+            "PIN"=>$record->DATA,
             "STATUSCODE" => $response->STAT_CODE,
             "STATTYPE" => $response->STAT_TYPE,
             "STATDESCRIPTION" => $response->STAT_DESCRIPTION
