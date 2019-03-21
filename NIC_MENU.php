@@ -290,7 +290,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $clientProfile = $this->getSessionVar('CLIENTPROFILE');
         $clientProfiledata = $this->populateClientProfile($clientProfile);
         
-        $response =  $this->validateCustomerPin('1234','256783262929');
+        $response =  $this->validateCustomerPin($input,'256783262929');
         
         $message = "".print_r($response,true);
         
