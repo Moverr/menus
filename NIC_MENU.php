@@ -279,7 +279,7 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-            $this->nextFunction = "menuSwitcher";
+            $this->nextFunction = "validatePinMenu";
             $this->previousPage = "startPage";
         }
     }
