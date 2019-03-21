@@ -328,8 +328,10 @@ class NCBANKUSSD extends DynamicMenuController {
         $validationResponse = $this->postData($this->validatePinURL, $fields);
                 
         $this->logMessage("Validate PIN response ", print_r($validationResponse,true), 4);
+                
         
-        return  $this->populatePinReponse($validationResponse);
+        
+        return  $this->populatePinReponse($response);
     }
 
     //POPULATE PIN RECORDS
@@ -339,7 +341,8 @@ class NCBANKUSSD extends DynamicMenuController {
         $STATUSCODE = $pindata['STAT_CODE'];
         $STATTYPE = $pindata['STAT_TYPE'];
         $STATDESCRIPTION = $pindata['STAT_DESCRIPTION'];
-        $PROFILEID = isset($pindata['DATA']['profileID']) ? $pindata['DATA']['profileID'] : null;
+        $PROFILEID =  null;
+                //isset($pindata['DATA']['profileID']) ? $pindata['DATA']['profileID'] : null;
 
 
 
