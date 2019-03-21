@@ -264,14 +264,21 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
         } else {
 
-            //todo validate pin :
-            $message = "Enter Customer Pin";
+            $savedData = $this->getSessionVar('AUTHENTICATEDPIN');
+            if ($savedData != null) {
+                $this->displayText = "" . print_r($savedData, true);
+                $this->sessionState = "END";
+            } else {
 
-            $this->displayText = $message;
-            $this->sessionState = "CONTINUE";
-            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-            $this->nextFunction = "validatePinMenu";
-            $this->previousPage = "startPage";
+                //todo validate pin :
+                $message = "Enter Customer Pin";
+
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                $this->nextFunction = "validatePinMenu";
+                $this->previousPage = "startPage";
+            }
         }
     }
 
@@ -284,12 +291,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
 
-        $savedData = $this->getSessionVar('AUTHENTICATEDPIN');
-        if ($savedData != null) {
-            $this->displayText = "" . print_r($savedData, true);
-            $this->sessionState = "END";
-            exit();
-        }
+
 
         $response = $this->validateCustomerPin($input, '256783262929');
 
