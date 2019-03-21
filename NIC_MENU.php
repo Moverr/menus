@@ -288,26 +288,23 @@ class NCBANKUSSD extends DynamicMenuController {
     function validatePinMenu($input) {
 
         $clientProfile = $this->getSessionVar('CLIENTPROFILE');
-//        $this->displayText = "" . print_r($clientProfile, true);
-//
-//
         $clientProfiledata = $this->populateClientProfile($clientProfile);
-//        $clientAccountDetails = $this->populateAccountDetails($clientProfile);
-//
-//        $this->displayText = "" . print_r($clientAccountDetails, true);
+        
+        $response =  $this->validateCustomerPin('1234','1234');
+        
+        $message = "".print_r($response,true);
+        
+                
 
 
-
-
-
-        $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
+//        $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
 
 
         $clientProfiledata = $this->populateClientProfile($clientProfile);
         $clientAccountDetails = $this->populateAccountDetails($clientProfile);
 
 
-        $message = $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
+//        $message = $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
 
         $this->displayText = $message;
         $this->sessionState = "CONTINUE";
