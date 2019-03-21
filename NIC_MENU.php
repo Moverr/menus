@@ -720,7 +720,7 @@ class NCBANKUSSD extends DynamicMenuController {
 //LAST_INSERT_ID
                 $message = " Account Not Found" . (print_r($logRequest, true));
                 if ($logRequest['SUCCESS'] == 1) {
-                    $result = invokeSyncWallet($payload, $logRequest['LAST_INSERT_ID']);
+                    $result = invokeSyncWallet($requestPayload, $logRequest['LAST_INSERT_ID']);
                     $message = " Account Not Found" . (print_r($result, true));
                 }
 
