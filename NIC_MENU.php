@@ -291,14 +291,9 @@ class NCBANKUSSD extends DynamicMenuController {
         $clientProfiledata = $this->populateClientProfile($clientProfile);
 
 
-        $authpinresponse = $this->getSessionVar('AUTHENTICATEDPIN');
-        if (isset($authpinresponse)) {
-            $response = $authpinresponse;
-        } else {
-            $response = $this->validateCustomerPin($input, '256783262929');
-        }
 
 
+        $response = $this->validateCustomerPin($input, '256783262929');
 
         if ($response['STATUSCODE'] == 100) {
 
