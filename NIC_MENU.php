@@ -252,16 +252,7 @@ class NCBANKUSSD extends DynamicMenuController {
     function firstMenu() {
 
         $clientProfile = $this->getSessionVar('CLIENTPROFILE');
-//        $this->displayText = "" . print_r($clientProfile, true);
-//
-//
         $clientProfiledata = $this->populateClientProfile($clientProfile);
-//        $clientAccountDetails = $this->populateAccountDetails($clientProfile);
-//
-//        $this->displayText = "" . print_r($clientAccountDetails, true);
-
-
-
 
 
 
@@ -292,6 +283,13 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
 
+
+        $savedData = $this->getSessionVar('AUTHENTICATEDPIN');
+        if ($savedData != null) {
+            $this->displayText = "" . print_r($savedData, true);
+            $this->sessionState = "END";
+            exit();
+        }
 
         $response = $this->validateCustomerPin($input, '256783262929');
 
@@ -343,7 +341,9 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->logMessage("URL Used:: " . $this->validatePinURL, null, 4);
 
         $validationResponse = $this->postData($this->validatePinURL, $fields);
-        return $this->populatePinResponse($validationResponse);
+        $response = $this->populatePinResponse($validationResponse);
+        $this->saveSessionVar("AUTHENTICATEDPIN", $response);
+        return $response;
     }
 
     function populatePinResponse($record) {
@@ -375,7 +375,7 @@ class NCBANKUSSD extends DynamicMenuController {
             "STATDESCRIPTION" => $response->STAT_DESCRIPTION
         ];
 
-        $this->saveSessionVar("AUTHENTICATEDPIN", $responseData);
+
 
         return $responseData;
     }
