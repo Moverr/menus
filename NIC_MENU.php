@@ -716,8 +716,13 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
                 $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
-
-//                invokeSyncWallet($payload, $channelRequestID)
+                //LAST_INSERT_ID
+//LAST_INSERT_ID
+                $message = " Account Not Found" . (print_r($logRequest, true));
+                if ($logRequest['SUCCESS'] == 1) {
+                    $result = invokeSyncWallet($payload, $logRequest['LAST_INSERT_ID']);
+                    $message = " Account Not Found" . (print_r($result, true));
+                }
 
 
 
@@ -727,7 +732,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
 
-                $message = " Account Not Found".(print_r($logRequest,true));
+                $message = " Account Not Found" . (print_r($logRequest, true));
 //                if ($selectedAccount != null) {
 //                    $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
 //                    $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
