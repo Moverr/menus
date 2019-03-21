@@ -360,9 +360,18 @@ class NCBANKUSSD extends DynamicMenuController {
             return null;
 
         $response = json_decode($record);
+//(
+//[DATA] => stdClass Object
+//(
+//[profileID] => 31
+//[otpOnly] => 0
+//[pinHash] => 50aa8250bd0fc69ed96a79d182e03e85
+//[newPinHash] => 
+//[enforceCaptcha] => 
+//)
+//        
 
-
-        return $response;
+        return $response->DATA;
         $responseData = [
             "STATUSCODE" => $response->STAT_CODE,
             "STATTYPE" => $response->STAT_TYPE,
