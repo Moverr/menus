@@ -340,10 +340,8 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $this->logMessage("URL Used:: " . $this->validatePinURL, null, 4);
 
-        $validationResponse = $this->postData($this->validatePinURL, $fields);
-        $response = json_decode($validationResponse);
-
-        return $this->populatePinResponse($response);
+        $validationResponse = $this->postData($this->validatePinURL, $fields);                
+        return $this->populatePinResponse($validationResponse);
     }
 
     function populatePinResponse($record) {
