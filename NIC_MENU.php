@@ -2,7 +2,7 @@
 
 /*
  * MTN UG Mula USSD Menu Payments
- * 
+ *
  * @author jennifer
  *
  */
@@ -21,16 +21,186 @@ class NCBANKUSSD extends DynamicMenuController {
     private $SERVICE_DESCRIPTION = "NC BANK MENU ";
     private $walletUrl = 'http://132.147.160.57:8300/wallet/IS_APIs/CustomerRegistration/fetchCustomerData';
     private $serverURL = 'http://132.147.160.57:8300/wallet/Cloud_APIs/index';
-
-//    http://132.147.160.57:8300/wallet/Cloud_APIs/authenticateCustomerPin
-//    /authenticateCustomerPin
+    private $validatePinURL = "http://132.147.160.57:8300/wallet/Cloud_APIs/UssdPinAuth/AuthenticateCustomer";
+    private $accessPoint = "*268#";
+    private $IMCREQUESTID = 1;
+    private $walletSyncRequestURL = 'http://132.147.160.57:8100/wallet/Cloud_APIs/CloudRequestLogger/LogSyncronousRequest';
 
     function startPage() {
 
         $this->init();
+       // $this->validateCustomerPin('22222');
 //        $this->checkPin();
-
 //        $this->paySelfTest();
+    }
+
+    function validateCustomerPin($pin) {
+        $this->logMessage("Validating PIN ", null, 4);
+
+        $fields_string = "";
+        $fields = array(
+            "MSISDN" => $this->_msisdn,
+            "PINHASH" => $this->encryptPin($pin, 1)
+        );
+
+        $this->logMessage("URL Used:: " . $this->validatePinURL, null, 4);
+
+        $validationResponse = $this->postData($this->validatePinURL, $fields);
+        $this->logMessage("Validate PIN response ", $validationResponse, 4);
+        if ($validationResponse['STAT_TYPE'] == 1) {
+            return array("pinValid" => true, "message" => $validationResponse['STAT_DESCRIPTION']);
+        } else {
+            return array("pinValid" => false, "message" => $validationResponse['STAT_DESCRIPTION']);
+        }
+    }
+
+    function postData($url, $fields) {
+        $fields_string = null;
+
+        $ch = curl_init();
+        //set the url, number of POST vars, POST data
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
+        curl_setopt($ch, CURLOPT_POST, count($fields));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+        //execute post
+        $result = curl_exec($ch);
+        //close connection
+        curl_close($ch);
+        return $result;
+    }
+
+        public function invokeAsyncWallet($payload, $channelRequestID) {
+
+        try {
+            $username = "system-user";
+            $password = "lipuka";
+            $apiUrl = $this->serverURL;
+            $apiFunction = "processCloudRequest";//logRequest;
+
+            //convert array into XML format
+            //formulate xml payload.
+            $request_xml = "";
+            $request_xml = "<Payload>";
+            foreach ($payload as $key => $value) {
+
+                $request_xml .= '<' . $key . '>' . $value . '</' . $key . '>';
+            }
+
+            $request_xml .= "</Payload>";
+
+            $payload = $request_xml;
+
+            $credentials = array(
+                'cloudUser' => $username,
+                'cloudPass' => $password,
+            );
+
+            //define cloud packet data
+            $cloudPacket = array(
+                "MSISDN" => $this->_msisdn,
+                "destination" => $this->accessPoint, //create this in accessPoints
+                "IMCID" => "2",
+                "channelRequestID" => $channelRequestID,
+                "networkID" => $this->_networkID,
+                "cloudDateReceived" => date('Y-m-d H:i:s'),
+                "payload" => base64_encode($payload),
+                "imcRequestID" => $this->IMCREQUESTID,
+                "requestMode" => "1", //0 if sync and 1 when async
+                "clientSystemID" => 77,
+                "systemName" => 'USSD',
+            );
+
+            //package our data
+            $params = array(
+                'credentials' => $credentials,
+                'cloudPacket' => $cloudPacket,
+            );
+
+            //make API call
+            $client = new IXR_Client($apiUrl);
+            if (!$client->query($apiFunction, $params)) {
+                $this->logMessage("IXR_Client error occurred - " . $client->getErrorCode() . ":" . $client->getErrorMessage(), null, 4);
+            }
+
+            //get response
+            $result = $client->getResponse();
+            $data = json_decode($result, true);
+            $this->logMessage("|Wallet URL: " . $apiUrl . " | Response from wallet:" . $client->getErrorMessage(), $data, 4);
+
+            $response = array();
+
+            return $data;
+        } catch (Exception $exception) {
+            $this->logMessage("Exception occured:" . $exception->getMessage(), null, 4);
+        }
+    }
+
+
+    public function invokeSyncWallet($payload, $channelRequestID) {
+
+        try {
+            $username = "system-user";
+            $password = "lipuka";
+            $apiUrl = $this->walletSyncRequestURL;
+            $apiFunction = "processCloudRequest";
+
+            //convert array into XML format
+            //formulate xml payload.
+            $request_xml = "";
+            $request_xml = "<Payload>";
+            foreach ($payload as $key => $value) {
+                $request_xml .= '<' . $key . '>' . $value . '</' . $key . '>';
+            }
+
+            $request_xml .= "</Payload>";
+
+            $payload = $request_xml;
+
+            $credentials = array(
+                'cloudUser' => $username,
+                'cloudPass' => $password,
+            );
+
+            //define cloud packet data
+            $cloudPacket = array(
+                "MSISDN" => $this->_msisdn,
+                "destination" => $this->accessPoint, //create this in accessPoints
+                "IMCID" => "2",
+                "channelRequestID" => $channelRequestID,
+                "networkID" => $this->_networkID,
+                "cloudDateReceived" => date('Y-m-d H:i:s'),
+                "payload" => base64_encode($payload),
+                "imcRequestID" => $this->IMCREQUESTID,
+                "requestMode" => "0", //0 if sync and 1 when async
+                "clientSystemID" => 77,
+                "systemName" => 'USSD',
+            );
+
+            //package our data
+            $params = array(
+                'credentials' => $credentials,
+                'cloudPacket' => $cloudPacket,
+            );
+
+            //make API call
+            $client = new IXR_Client($apiUrl);
+            if (!$client->query($apiFunction, $params)) {
+                $this->logMessage("IXR_Client error occurred - " . $client->getErrorCode() . ":" . $client->getErrorMessage(), null, 4);
+            }
+
+            //get response
+            $result = $client->getResponse();
+            $data = json_decode($result, true);
+            $this->logMessage("|Wallet URL: " . $apiUrl . " | Response from wallet:" . $client->getErrorMessage(), $data, 4);
+
+            $response = array();
+
+            return $data;
+        } catch (Exception $exception) {
+            $this->logMessage("Exception occured:" . $exception->getMessage(), null, 4);
+        }
     }
 
     function paySelfTest() {
@@ -59,7 +229,7 @@ class NCBANKUSSD extends DynamicMenuController {
             "MSISDN" => '256783262929',
             "USERNAME" => "system-user",
             "PASSWORD" => "lipuka",
-            "PIN"=>1234
+            "PIN" => 1234
         ];
 
 //authenticateCustomerPin
@@ -67,7 +237,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $request = xmlrpc_encode_request('validatePIN', $fields);
 
         $results = $this->http_post($url, $fields, $request);
-                
+
 
         $message .= " --- " . print_r(xmlrpc_decode($results), TRUE);
 //                (var_dump($server_output));
@@ -116,31 +286,30 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
 
-        
-          if ($clientProfile['SUCCESS'] != 1) {
 
-          $error = $clientProfile['ERRORS'];
-          $this->displayText = $error;
-          $this->sessionState = "END";
-          $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-          } else {
+        if ($clientProfile['SUCCESS'] != 1) {
+
+            $error = $clientProfile['ERRORS'];
+            $this->displayText = $error;
+            $this->sessionState = "END";
+            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+        } else {
 
 
 
-          $clientProfiledata = $this->populateClientProfile($clientProfile);
-          $clientAccountDetails = $this->populateAccountDetails($clientProfile);
-         
+            $clientProfiledata = $this->populateClientProfile($clientProfile);
+            $clientAccountDetails = $this->populateAccountDetails($clientProfile);
 
-          $message = $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n\n" . "Home Menu \n" . "1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
 
-          $this->displayText = $message;
+            $message = $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
 
-          $this->sessionState = "CONTINUE";
-          $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-          $this->nextFunction = "menuSwitcher";
-          $this->previousPage = "startPage";
-          }
-         
+            $this->displayText = $message;
+
+            $this->sessionState = "CONTINUE";
+            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+            $this->nextFunction = "menuSwitcher";
+            $this->previousPage = "startPage";
+        }
     }
 
     function menuSwitcher($input) {
@@ -340,17 +509,6 @@ class NCBANKUSSD extends DynamicMenuController {
         $curl_error = curl_error($ch);
         curl_close($ch);
 
-// check for curl errors
-//        if ($curl_errorno != 0) {
-//            die("Curl ERROR: {$curl_errorno} - {$curl_error}n");
-//        }
-//
-//// check for server errors
-//        if ($response_code != 200) {
-//            die("ERROR: non-200 response from server: {$response_code} - {$response}n");
-//        }
-//    return $response;
-//    $response .= 'e>';
         return xmlrpc_decode($response);
     }
 
@@ -489,7 +647,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->serviceNotAvailable();
     }
 
-    //: MENU ITEM 6 AIRTIME PURCHASE 
+    //: MENU ITEM 6 AIRTIME PURCHASE
 
     function TopUpAmountMenu($input) {
 
@@ -618,7 +776,7 @@ class NCBANKUSSD extends DynamicMenuController {
         }
     }
 
-    //: MENU ITEM 7 MINI STATEMENT 
+    //: MENU ITEM 7 MINI STATEMENT
 
     function MiniStatementMenu() {
         $message = " Thank you for using NC mobile banking \n";
@@ -717,7 +875,7 @@ class NCBANKUSSD extends DynamicMenuController {
     }
 
     function SignOutMenu() {
-        
+
     }
 
     function validateMobileNumber($input) {
@@ -974,7 +1132,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $ACCOUNTCBSID = $singleAccount[0];
                 $ACCOUNTNUMBER = $singleAccount[1];
                 $ACCOUNTNAME = $singleAccount[2];
-//todo: undefined not known 
+//todo: undefined not known
                 $ACCOUNTCURRENCYINWORDS = $singleAccount[4];
                 $ACCOUNTBALANCE = $singleAccount[5];
                 $ACCOUNTCURRENCY = $singleAccount[6];
@@ -1019,6 +1177,14 @@ class NCBANKUSSD extends DynamicMenuController {
             return $result;
         } catch (Exception $ex) {
             return $ex->getMessage();
+        }
+    }
+
+    function logMessage($message, $result = null, $logLevel = DTBUGconfigs::LOG_LEVEL_INFO) {
+        if ($result != null) {
+            CoreUtils::flog4php($logLevel, $this->_msisdn, array("MESSAGE" => $message . print_r($result, true)), __FILE__, __FUNCTION__, __LINE__, "ussdinfo", USSD_LOG_PROPERTIES);
+        } else {
+            CoreUtils::flog4php($logLevel, $this->_msisdn, array("MESSAGE" => $message), __FILE__, __FUNCTION__, __LINE__, "ussdinfo", USSD_LOG_PROPERTIES);
         }
     }
 
