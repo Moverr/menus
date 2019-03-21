@@ -292,6 +292,11 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $response = $this->validateCustomerPin($input, '256783262929');
 
+        $this->displayText = print_r($response);
+        $this->sessionState = "END";
+
+        return;
+
 
         if ($response['STATUSCODE'] == 100) {
 
@@ -311,7 +316,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
             $clientProfiledata = $this->populateClientProfile($clientProfile);
             $clientAccountDetails = $this->populateAccountDetails($clientProfile);
-                
+
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -340,7 +345,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $this->logMessage("URL Used:: " . $this->validatePinURL, null, 4);
 
-        $validationResponse = $this->postData($this->validatePinURL, $fields);                
+        $validationResponse = $this->postData($this->validatePinURL, $fields);
         return $this->populatePinResponse($validationResponse);
     }
 
@@ -353,6 +358,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
         $responseData = [
+            "PIN" => $record->DATA,
             "STATUSCODE" => $response->STAT_CODE,
             "STATTYPE" => $response->STAT_TYPE,
             "STATDESCRIPTION" => $response->STAT_DESCRIPTION
