@@ -264,10 +264,31 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
         } else {
 
-            $savedData = $this->getSessionVar('AUTHENTICATEDPIN');
-            if ($savedData != null) {
-                $this->displayText = "" . print_r($savedData, true);
-                $this->sessionState = "END";
+            $authenticatedPIN = $this->getSessionVar('AUTHENTICATEDPIN');
+            if ($authenticatedPIN != null) {
+                if ($authenticatedPIN['STATUSCODE'] == 1) {
+                    $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
+
+
+                    $clientProfiledata = $this->populateClientProfile($clientProfile);
+                    $clientAccountDetails = $this->populateAccountDetails($clientProfile);
+
+                    $this->displayText = $message;
+                    $this->sessionState = "CONTINUE";
+                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                    $this->nextFunction = "menuSwitcher";
+                    $this->previousPage = "startPage";
+                } else {
+
+                    //todo validate pin :
+                    $message = "Enter Customer Pin";
+
+                    $this->displayText = $message;
+                    $this->sessionState = "CONTINUE";
+                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                    $this->nextFunction = "validatePinMenu";
+                    $this->previousPage = "startPage";
+                }
             } else {
 
                 //todo validate pin :
@@ -287,9 +308,6 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $clientProfile = $this->getSessionVar('CLIENTPROFILE');
         $clientProfiledata = $this->populateClientProfile($clientProfile);
-
-
-
 
 
 
