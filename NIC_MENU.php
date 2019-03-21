@@ -382,6 +382,8 @@ class NCBANKUSSD extends DynamicMenuController {
             "STATDESCRIPTION" => $response->STAT_DESCRIPTION
         ];
 
+        $this->saveSessionVar("AUTHENTICATEDPIN", $responseData);
+
         return $responseData;
     }
 
