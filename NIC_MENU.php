@@ -83,7 +83,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 "destination" => $this->accessPoint, //create this in accessPoints
                 "IMCID" => "2",
                 "channelRequestID" => $channelRequestID,
-                "networkID" => $this->_networkID,
+                "networkID" => 1,
                 "cloudDateReceived" => date('Y-m-d H:i:s'),
                 "payload" => base64_encode($payload),
                 "imcRequestID" => $this->IMCREQUESTID,
