@@ -83,7 +83,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 "destination" => $this->accessPoint, //create this in accessPoints
                 "IMCID" => "2",
                 "channelRequestID" => $channelRequestID,
-                "networkID" => 1,
+                "networkID" => $this->_networkID,
                 "cloudDateReceived" => date('Y-m-d H:i:s'),
                 "payload" => base64_encode($payload),
                 "imcRequestID" => $this->IMCREQUESTID,
@@ -792,7 +792,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
                 
                 $requestId = $logRequest['LAST_INSERT_ID'];
-                $result = $this->invokeAsyncWallet($requestPayload,11133663);
+                $result = $this->invokeAsyncWallet($requestPayload,$requestId);
 //                $message = " Account Not Found" . (print_r(xmlrpc_decode($result), true));
 
 
