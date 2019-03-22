@@ -236,7 +236,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $this->logMessage("Payload to wallet: ", $params, DTBUGconfigs::LOG_LEVEL_INFO);
 
-        try {
+        /*try {
             
              $apiFunction = "processCloudRequest";
 
@@ -252,7 +252,7 @@ class NCBANKUSSD extends DynamicMenuController {
         } catch (Exception $exception) {
             $this->log->debug($this->INFOLOG, -1, "ERROR OCCURED: " . $exception->getMessage());
             return $exception->getMessage();
-        }
+        } */
     }
 
     
