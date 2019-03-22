@@ -97,9 +97,9 @@ class NCBANKUSSD extends DynamicMenuController {
                 'cloudPacket' => $cloudPacket,
             );
 
-            
-            
-            
+
+
+
 //            //make API call
 //            $client = new IXR_Client($apiUrl);
 //            if (!$client->query($apiFunction, $params)) {
@@ -187,15 +187,13 @@ class NCBANKUSSD extends DynamicMenuController {
         }
     }
 
-    
-    
     function synchronousProcessing($requestPayload, $channelRequestID) {
 
-      //  $this->logMessage("Making synchronous call using channelID: ", $channelRequestID, DTBUGconfigs::LOG_LEVEL_INFO);
+//       $this->logMessage("Making synchronous call using channelID: ", $channelRequestID, DTBUGconfigs::LOG_LEVEL_INFO);
 
-       /*  $username = "system-user";
-            $password = "lipuka";
-            
+        $username = "system-user";
+        $password = "lipuka";
+
         $request_xml = "<Payload>";
         foreach ($requestPayload as $key => $value) {
 
@@ -217,29 +215,29 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $cloudPacket = array(
             "MSISDN" => '256783262929',
-                "destination" => $this->accessPoint, //create this in accessPoints
-                "IMCID" => "2",
-                "channelRequestID" => $channelRequestID,
-                "networkID" => $this->_networkID,
-                "cloudDateReceived" => date('Y-m-d H:i:s'),
-                "payload" => base64_encode($payload),
-                "imcRequestID" => $this->IMCREQUESTID,
-                "requestMode" => "0", //0 if sync and 1 when async
-                "clientSystemID" => 77,
-                "systemName" => 'USSD'
+            "destination" => $this->accessPoint, //create this in accessPoints
+            "IMCID" => "2",
+            "channelRequestID" => $channelRequestID,
+            "networkID" => $this->_networkID,
+            "cloudDateReceived" => date('Y-m-d H:i:s'),
+            "payload" => base64_encode($payload),
+            "imcRequestID" => $this->IMCREQUESTID,
+            "requestMode" => "0", //0 if sync and 1 when async
+            "clientSystemID" => 77,
+            "systemName" => 'USSD'
         );
 
         $params = array(
             'credentials' => $credentials,
             'cloudPacket' => $cloudPacket,
         );
-        */
 
-  //      $this->logMessage("Payload to wallet: ", $params, DTBUGconfigs::LOG_LEVEL_INFO);
 
-        /*try {
-            
-             $apiFunction = "processCloudRequest";
+//        $this->logMessage("Payload to wallet: ", $params, DTBUGconfigs::LOG_LEVEL_INFO);
+
+        try {
+
+            $apiFunction = "processCloudRequest";
 
             $client = new IXR_Client($this->serverURL);
             $client->debug = false;
@@ -253,10 +251,9 @@ class NCBANKUSSD extends DynamicMenuController {
         } catch (Exception $exception) {
             $this->log->debug($this->INFOLOG, -1, "ERROR OCCURED: " . $exception->getMessage());
             return $exception->getMessage();
-        } */
+        }
     }
 
-    
     function paySelfTest() {
 
         /*
@@ -792,7 +789,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
                 $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
-              $result = $this->synchronousProcessing($requestPayload, $logRequest['LAST_INSERT_ID']);
+                $result = $this->synchronousProcessing($requestPayload, $logRequest['LAST_INSERT_ID']);
                 $message = " Account Not Found" . (print_r($result, true));
 
 
