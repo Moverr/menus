@@ -790,8 +790,9 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
                 $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
+                
                 $result = $this->invokeAsyncWallet($requestPayload, $logRequest['LAST_INSERT_ID']);
-                $message = " Account Not Found" . (print_r(xmlrpc_decode($result), true));
+//                $message = " Account Not Found" . (print_r(xmlrpc_decode($result), true));
 
 
 
@@ -802,14 +803,14 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
                 $message = " Account Not Found" . (print_r($logRequest, true));
-                if ($selectedAccount != null) {
-                    $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
-                    $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
-                    $message .= "\nAccount Balance : " . $selectedAccount['ACCOUNTBALANCE'] . ' ' . $selectedAccount['ACCOUNTCURRENCY'] . ' ';
-                }
-
-
-                $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+//                if ($selectedAccount != null) {
+//                    $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
+//                    $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
+//                    $message .= "\nAccount Balance : " . $selectedAccount['ACCOUNTBALANCE'] . ' ' . $selectedAccount['ACCOUNTCURRENCY'] . ' ';
+//                }
+//
+//
+//                $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
 
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
