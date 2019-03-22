@@ -109,7 +109,7 @@ class NCBANKUSSD extends DynamicMenuController {
 //            $this->logMessage("|Wallet URL: " . $apiUrl . " | Response from wallet:" . $client->getErrorMessage(), $data, 4);
 //
 //            $response = array();
-$data = "movers";
+            $data = "movers";
             return $data;
         } catch (Exception $exception) {
             $this->logMessage("Exception occured:" . $exception->getMessage(), null, 4);
@@ -163,7 +163,7 @@ $data = "movers";
                 'cloudPacket' => $cloudPacket,
             );
 
-            return  "Hello"; 
+            return "Hello";
             //make API call
             $client = new IXR_Client($apiUrl);
             if (!$client->query($apiFunction, $params)) {
@@ -180,7 +180,7 @@ $data = "movers";
             return $data;
         } catch (Exception $exception) {
             $this->logMessage("Exception occured:" . $exception->getMessage(), null, 4);
-            return  "MVERS". $exception->getMessage();
+            return "MVERS" . $exception->getMessage();
         }
     }
 
@@ -719,31 +719,26 @@ $data = "movers";
 
 
                 $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
-                //LAST_INSERT_ID
-//LAST_INSERT_ID
-                $message = " Account Not Found" . (print_r($logRequest, true));
-            
-                    $result = invokeAsyncWallet($requestPayload, $logRequest['LAST_INSERT_ID']);
-                    $message = " Account Not Found" . (print_r($result, true));
-                    
+//              $result = invokeAsyncWallet($requestPayload, $logRequest['LAST_INSERT_ID']);
+                $message = " Account Not Found" . (print_r($result, true));
 
 
 
 
 
-//                invokeSyncWallet//
+
 
 
 
                 $message = " Account Not Found" . (print_r($logRequest, true));
-//                if ($selectedAccount != null) {
-//                    $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
-//                    $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
-//                    $message .= "\nAccount Balance : " . $selectedAccount['ACCOUNTBALANCE'] . ' ' . $selectedAccount['ACCOUNTCURRENCY'] . ' ';
-//                }
-//
-//
-//                $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+                if ($selectedAccount != null) {
+                    $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
+                    $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
+                    $message .= "\nAccount Balance : " . $selectedAccount['ACCOUNTBALANCE'] . ' ' . $selectedAccount['ACCOUNTCURRENCY'] . ' ';
+                }
+
+
+                $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
 
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
