@@ -190,7 +190,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 'cloudPacket' => $cloudPacket,
             );
 
-           
+
             //make API call
             $client = new IXR_Client($apiUrl);
             if (!$client->query($apiFunction, $params)) {
@@ -799,58 +799,41 @@ class NCBANKUSSD extends DynamicMenuController {
                         break;
                     }
                 }
-
-                $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
-                //todo: get details  : 
-                $requestPayload = array(
-                    "serviceID" => 10,
-                    "flavour" => 'self',
-                    "pin" => $PINRECORD['PINHASH'],
-                    "accountAlias" => $selectedAccount['NAME'],
-                    "accountID" => $selectedAccount['ACCOUNTCBSID'],
-                );
-            
-
-
-                $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
-
-
-                $client = new IXR_Client($this->serverURL);
-                $client->debug = false;
-
-                /* $credentials = array(
-                  "username" => "dtb_mb_api_user",
-                  "password" => "dtbC3llulant!"
-                  ); */
-                $credentials = array(
-                    "username" => "admin",
-                    "password" => "admin"
-                );
-
-
-                $dataToSend = array(
-                    "credentials" => $credentials,
-                    "packet" => $requestPayload
-                );
-
-//select server process/function to call
+                /*
+                  $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
+                  //todo: get details  :
+                  $requestPayload = array(
+                  "serviceID" => 10,
+                  "flavour" => 'self',
+                  "pin" => $PINRECORD['PINHASH'],
+                  "accountAlias" => $selectedAccount['NAME'],
+                  "accountID" => $selectedAccount['ACCOUNTCBSID'],
+                  );
 
 
 
-
-                $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
-
+                  $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
 
 
+                  $client = new IXR_Client($this->serverURL);
+                  $client->debug = false;
 
-$message =  "::".(print_r($result,true));
 
+                  //select server process/function to call
+ 
 
-//                if ($selectedAccount != null) {
-//                    $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
-//                    $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
-//                    $message .= "\nAccount Balance : " . $selectedAccount['ACCOUNTBALANCE'] . ' ' . $selectedAccount['ACCOUNTCURRENCY'] . ' ';
-//                }
+                  $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
+
+                  $message = "::" . (print_r($result, true));
+                 */
+
+                $message = "Invalida account selected ";
+
+                if ($selectedAccount != null) {
+                    $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
+                    $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
+                    $message .= "\nAccount Balance : " . $selectedAccount['ACCOUNTBALANCE'] . ' ' . $selectedAccount['ACCOUNTCURRENCY'] . ' ';
+                }
 //
 //
                 $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
