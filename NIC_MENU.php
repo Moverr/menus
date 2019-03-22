@@ -22,7 +22,8 @@ class NCBANKUSSD extends DynamicMenuController {
     private $walletUrl = 'http://132.147.160.57:8300/wallet/IS_APIs/CustomerRegistration/fetchCustomerData';
     private $serverURL = 'http://132.147.160.57:8300/wallet/Cloud_APIs/index';
     private $validatePinURL = "http://132.147.160.57:8300/wallet/Cloud_APIs/UssdPinAuth/AuthenticateCustomer";
-    private $accessPoint = "*268#";
+    private $accessPoint = "*360*615#";
+//            "*268#";
     private $IMCREQUESTID = 1;
     private $walletSyncRequestURL = 'http://132.147.160.57:8100/wallet/Cloud_APIs/CloudRequestLogger/LogSyncronousRequest';
 
@@ -78,7 +79,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
             //define cloud packet data
             $cloudPacket = array(
-                "MSISDN" => $this->_msisdn,
+                "MSISDN" => '256783262929',
                 "destination" => $this->accessPoint, //create this in accessPoints
                 "IMCID" => "2",
                 "channelRequestID" => $channelRequestID,
@@ -100,19 +101,19 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
 
-//            //make API call
-//            $client = new IXR_Client($apiUrl);
-//            if (!$client->query($apiFunction, $params)) {
-//                $this->logMessage("IXR_Client error occurred - " . $client->getErrorCode() . ":" . $client->getErrorMessage(), null, 4);
-//            }
-//
-//            //get response
-//            $result = $client->getResponse();
-//            $data = json_decode($result, true);
-//            $this->logMessage("|Wallet URL: " . $apiUrl . " | Response from wallet:" . $client->getErrorMessage(), $data, 4);
-//
-//            $response = array();
-            $data = "movers";
+            //make API call
+            $client = new IXR_Client($apiUrl);
+            if (!$client->query($apiFunction, $params)) {
+                $this->logMessage("IXR_Client error occurred - " . $client->getErrorCode() . ":" . $client->getErrorMessage(), null, 4);
+            }
+
+            //get response
+            $result = $client->getResponse();
+            $data = json_decode($result, true);
+            $this->logMessage("|Wallet URL: " . $apiUrl . " | Response from wallet:" . $client->getErrorMessage(), $data, 4);
+
+            $response = array();
+                
             return $data;
         } catch (Exception $exception) {
             $this->logMessage("Exception occured:" . $exception->getMessage(), null, 4);
@@ -789,7 +790,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
                 $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
-                $result = $this->invokeSyncWallet($requestPayload, $logRequest['LAST_INSERT_ID']);
+                $result = $this->invokeAsyncWallet($requestPayload, $logRequest['LAST_INSERT_ID']);
                 $message = " Account Not Found" . (print_r(xmlrpc_decode($result), true));
 
 
