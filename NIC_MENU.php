@@ -80,10 +80,10 @@ class NCBANKUSSD extends DynamicMenuController {
             //define cloud packet data
             $cloudPacket = array(
                 "MSISDN" => '256783262929',
-                "destination" => $this->accessPoint, //create this in accessPoints
+                "destination" => "NIC_UG", //create this in accessPoints
                 "IMCID" => "2",
                 "channelRequestID" => $channelRequestID,
-                "networkID" => $this->_networkID,
+                "networkID" => 1,
                 "cloudDateReceived" => date('Y-m-d H:i:s'),
                 "payload" => base64_encode($payload),
                 "imcRequestID" => $this->IMCREQUESTID,
@@ -795,8 +795,8 @@ class NCBANKUSSD extends DynamicMenuController {
                 if ($logRequest != null) {
                     $requestId = $logRequest['LAST_INSERT_ID'];
                     $result = $this->invokeAsyncWallet($requestPayload, $requestId);
-
-
+                    
+                    
 //                $message = " Account Not Found" . (print_r(xmlrpc_decode($result), true));
 
 
@@ -807,7 +807,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
 
-                    $message = " Account Not Found" . (print_r($logRequest, true));
+                $message = " Account Not Found" . (print_r($logRequest, true));
 //                if ($selectedAccount != null) {
 //                    $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
 //                    $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
@@ -817,11 +817,13 @@ class NCBANKUSSD extends DynamicMenuController {
 //
 //                $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
 
-                    $this->displayText = $message;
-                    $this->sessionState = "CONTINUE";
-                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-                    $this->nextFunction = "BalanceEnquiryMenu";
-                    $this->previousPage = "startPage";
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                $this->nextFunction = "BalanceEnquiryMenu";
+                $this->previousPage = "startPage";
+
+                
                 }
 
                 break;
