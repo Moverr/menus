@@ -191,9 +191,9 @@ class NCBANKUSSD extends DynamicMenuController {
     
     function synchronousProcessing($requestPayload, $channelRequestID) {
 
-        $this->logMessage("Making synchronous call using channelID: ", $channelRequestID, DTBUGconfigs::LOG_LEVEL_INFO);
+      //  $this->logMessage("Making synchronous call using channelID: ", $channelRequestID, DTBUGconfigs::LOG_LEVEL_INFO);
 
-         $username = "system-user";
+       /*  $username = "system-user";
             $password = "lipuka";
             
         $request_xml = "<Payload>";
@@ -233,8 +233,9 @@ class NCBANKUSSD extends DynamicMenuController {
             'credentials' => $credentials,
             'cloudPacket' => $cloudPacket,
         );
+        */
 
-        $this->logMessage("Payload to wallet: ", $params, DTBUGconfigs::LOG_LEVEL_INFO);
+  //      $this->logMessage("Payload to wallet: ", $params, DTBUGconfigs::LOG_LEVEL_INFO);
 
         /*try {
             
