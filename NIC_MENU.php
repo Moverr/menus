@@ -113,7 +113,7 @@ class NCBANKUSSD extends DynamicMenuController {
             }
 //
 //            //get response
-            $result = $client->getResponse();
+//            $result = $client->getResponse();
 ////            $data = json_decode($result, true);
 ////            $this->logMessage("|Wallet URL: " . $apiUrl . " | Response from wallet:" . $client->getErrorMessage(), $data, 4);
 ////
