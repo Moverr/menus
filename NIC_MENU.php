@@ -109,15 +109,15 @@ class NCBANKUSSD extends DynamicMenuController {
             //make API call
             $client = new IXR_Client($apiUrl);
             if (!$client->query($apiFunction, $params)) {
-                $this->logMessage("IXR_Client error occurred - " . $client->getErrorCode() . ":" . $client->getErrorMessage(), null, 4);
+//                $this->logMessage("IXR_Client error occurred - " . $client->getErrorCode() . ":" . $client->getErrorMessage(), null, 4);
             }
-
-            //get response
-            $result = $client->getResponse();
-//            $data = json_decode($result, true);
-//            $this->logMessage("|Wallet URL: " . $apiUrl . " | Response from wallet:" . $client->getErrorMessage(), $data, 4);
 //
-//            $response = array();
+//            //get response
+            $result = $client->getResponse();
+////            $data = json_decode($result, true);
+////            $this->logMessage("|Wallet URL: " . $apiUrl . " | Response from wallet:" . $client->getErrorMessage(), $data, 4);
+////
+////            $response = array();
 
             return $result;
         } catch (Exception $exception) {
@@ -799,7 +799,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
 
-//                $result = $this->invokeAsyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
+                $result = $this->invokeAsyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
 
 
 
