@@ -799,7 +799,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
 
-                $result = $this->invokeAsyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
+//                $result = $this->invokeAsyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
 
 
 
