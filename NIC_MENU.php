@@ -241,12 +241,12 @@ class NCBANKUSSD extends DynamicMenuController {
             $client = new IXR_Client($this->serverURL);
             $client->debug = true;
             $client->query($apiFunction, $params);
-//            $result = $client->getResponse();
-//            $data = json_decode($result, true);
-//
+            $result = $client->getResponse();
+            $data = json_decode($result, true);
+
 //            $this->logMessage("Response from wallet: ", $data, DTBUGconfigs::LOG_LEVEL_INFO);
-//
-//            return $data;
+
+            return $data;
         } catch (Exception $exception) {
 //            $this->log->debug($this->INFOLOG, -1, "ERROR OCCURED: " . $exception->getMessage());
             return json_decode($exception);
