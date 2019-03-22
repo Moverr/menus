@@ -61,7 +61,7 @@ class NCBANKUSSD extends DynamicMenuController {
             $apiFunction = "processCloudRequest"; //logRequest;
             //convert array into XML format
             //formulate xml payload.
-                
+
             $request_xml = "<Payload>";
             foreach ($payload as $key => $value) {
 
@@ -108,9 +108,10 @@ class NCBANKUSSD extends DynamicMenuController {
 
             //make API call
             $client = new IXR_Client($apiUrl);
-            if (!$client->query($apiFunction, $params)) {
-                $this->logMessage("IXR_Client error occurred - " . $client->getErrorCode() . ":" . $client->getErrorMessage(), null, 4);
-            }
+            $client->query($apiFunction, $params);
+//            if (!$client->query($apiFunction, $params)) {
+//                $this->logMessage("IXR_Client error occurred - " . $client->getErrorCode() . ":" . $client->getErrorMessage(), null, 4);
+//            }
 //
 //            //get response
 //            $result = $client->getResponse();
@@ -118,7 +119,6 @@ class NCBANKUSSD extends DynamicMenuController {
 ////            $this->logMessage("|Wallet URL: " . $apiUrl . " | Response from wallet:" . $client->getErrorMessage(), $data, 4);
 ////
 ////            $response = array();
-
 //            return $result;
         } catch (Exception $exception) {
 //            $this->logMessage("Exception occured:" . $exception->getMessage(), null, 4);
@@ -797,9 +797,38 @@ class NCBANKUSSD extends DynamicMenuController {
                 $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
 
 
+                $client = new IXR_Client($this->serverURL);
+                $client->debug = false;
+
+                /* $credentials = array(
+                  "username" => "dtb_mb_api_user",
+                  "password" => "dtbC3llulant!"
+                  ); */
+                $credentials = array(
+                    "username" => "admin",
+                    "password" => "admin"
+                );
 
 
-                $result = $this->invokeAsyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
+                $dataToSend = array(
+                    "credentials" => $credentials,
+                    "packet" => $requestPayload
+                );
+
+//select server process/function to call
+                $client->query("processCloudRequest", $dataToSend);
+
+                $response = $client->getResponse();
+
+                if (!$response) {
+                    $error_message = $client->getErrorMessage();
+                    print $error_message;
+                }
+                   
+
+
+
+//                $result = $this->invokeAsyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
 
 
 
