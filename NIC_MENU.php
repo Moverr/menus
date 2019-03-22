@@ -820,9 +820,11 @@ class NCBANKUSSD extends DynamicMenuController {
 
                 $response = $client->getResponse();
 
+                $message = "  Wave ";
+                
                 if (!$response) {
                     $error_message = $client->getErrorMessage();
-                    print $error_message;
+                    $message = "   ". $error_message;
                 }
                    
 
@@ -835,7 +837,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
 
-                $message = "  Wave ";
+                
 //                if ($selectedAccount != null) {
 //                    $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
 //                    $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
