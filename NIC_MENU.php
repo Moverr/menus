@@ -109,6 +109,24 @@ class NCBANKUSSD extends DynamicMenuController {
             //make API call
             $client = new IXR_Client($apiUrl);
             $client->query($apiFunction, $params);
+
+
+            $client->query("processCloudRequest", $cloudPacket);
+
+            $response = $client->getResponse();
+
+            $message = "  Wave ";
+
+            if (!$response) {
+                $error_message = $client->getErrorMessage();
+                $message = "   " . $error_message;
+            }
+
+
+
+            return $message;
+
+
 //            if (!$client->query($apiFunction, $params)) {
 //                $this->logMessage("IXR_Client error occurred - " . $client->getErrorCode() . ":" . $client->getErrorMessage(), null, 4);
 //            }
@@ -816,28 +834,18 @@ class NCBANKUSSD extends DynamicMenuController {
                 );
 
 //select server process/function to call
-                $client->query("processCloudRequest", $dataToSend);
-
-                $response = $client->getResponse();
-
-                $message = "  Wave ";
-                
-                if (!$response) {
-                    $error_message = $client->getErrorMessage();
-                    $message = "   ". $error_message;
-                }
-                   
-
-
-
-//                $result = $this->invokeAsyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
 
 
 
 
+                $result = $this->invokeAsyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
 
 
-                
+
+
+$message =  "::";
+
+
 //                if ($selectedAccount != null) {
 //                    $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
 //                    $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
@@ -845,7 +853,7 @@ class NCBANKUSSD extends DynamicMenuController {
 //                }
 //
 //
-//                $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+                $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
 
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
