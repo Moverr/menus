@@ -776,11 +776,12 @@ class NCBANKUSSD extends DynamicMenuController {
                     }
                 }
 
+                $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
                 //todo: get details  : 
                 $requestPayload = array(
                     "serviceID" => 10,
                     "flavour" => 'self',
-                    "pin" => "system-user",
+                    "pin" => $PINRECORD['PINHASH'],
                     "accountAlias" => "256783262929",
                     "accountID" => "256783262929",
                 );
