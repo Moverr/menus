@@ -97,22 +97,22 @@ class NCBANKUSSD extends DynamicMenuController {
                 'cloudPacket' => $cloudPacket,
             );
 
-            //make API call
-            $client = new IXR_Client($apiUrl);
-            if (!$client->query($apiFunction, $params)) {
-                $this->logMessage("IXR_Client error occurred - " . $client->getErrorCode() . ":" . $client->getErrorMessage(), null, 4);
-            }
-
-            //get response
-            $result = $client->getResponse();
-            $data = json_decode($result, true);
-            $this->logMessage("|Wallet URL: " . $apiUrl . " | Response from wallet:" . $client->getErrorMessage(), $data, 4);
-
-            $response = array();
-
+//            //make API call
+//            $client = new IXR_Client($apiUrl);
+//            if (!$client->query($apiFunction, $params)) {
+//                $this->logMessage("IXR_Client error occurred - " . $client->getErrorCode() . ":" . $client->getErrorMessage(), null, 4);
+//            }
+//
+//            //get response
+//            $result = $client->getResponse();
+//            $data = json_decode($result, true);
+//            $this->logMessage("|Wallet URL: " . $apiUrl . " | Response from wallet:" . $client->getErrorMessage(), $data, 4);
+//
+//            $response = array();
+$data = "movers";
             return $data;
         } catch (Exception $exception) {
-//            $this->logMessage("Exception occured:" . $exception->getMessage(), null, 4);
+            $this->logMessage("Exception occured:" . $exception->getMessage(), null, 4);
             return "FALSE";
         }
     }
