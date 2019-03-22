@@ -241,7 +241,7 @@ class NCBANKUSSD extends DynamicMenuController {
 //
             $client = new IXR_Client($this->serverURL);
             $client->debug = true;
-//            $client->query($apiFunction, $params);
+            $client->query($apiFunction, $params);
 //            $result = $client->getResponse();
 //            $data = json_decode($result, true);
 //
