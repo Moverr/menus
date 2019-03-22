@@ -162,7 +162,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 'cloudPacket' => $cloudPacket,
             );
 
-            return  "Hello";
+            return  "Hello"; 
             //make API call
             $client = new IXR_Client($apiUrl);
             if (!$client->query($apiFunction, $params)) {
