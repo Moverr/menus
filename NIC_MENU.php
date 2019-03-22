@@ -55,8 +55,8 @@ class NCBANKUSSD extends DynamicMenuController {
     public function invokeAsyncWallet($payload, $channelRequestID) {
 
         try {
-            $username = "system-user";
-            $password = "lipuka";
+            $username = "admin";
+            $password = "admin";
             $apiUrl = $this->serverURL;
             $apiFunction = "processCloudRequest"; //logRequest;
             //convert array into XML format
