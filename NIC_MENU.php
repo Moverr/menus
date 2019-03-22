@@ -812,7 +812,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
             
 
-                    $message = " Account Not Found" . (print_r($logRequest, true));
+                    $message = " Account Not Found" . (print_r($logRequest->DATA, true));
 //                if ($selectedAccount != null) {
 //                    $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
 //                    $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
