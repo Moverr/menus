@@ -172,7 +172,7 @@ class NCBANKUSSD extends DynamicMenuController {
             //define cloud packet data
             $cloudPacket = array(
                 "MSISDN" => '256783262929',
-                "destination" => "*360*615#", //create this in accessPoints
+                "destination" => "NIC_UG", //create this in accessPoints
                 "IMCID" => "2",
                 "channelRequestID" => $channelRequestID,
                 "networkID" => 1,
@@ -806,10 +806,10 @@ class NCBANKUSSD extends DynamicMenuController {
                     "serviceID" => 10,
                     "flavour" => 'self',
                     "pin" => $PINRECORD['PINHASH'],
-                    "accountAlias" => "256783262929",
-                    "accountID" => "256783262929",
+                    "accountAlias" => $selectedAccount['NAME'],
+                    "accountID" => $selectedAccount['ACCOUNTCBSID'],
                 );
-
+            
 
 
                 $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
