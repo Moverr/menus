@@ -147,8 +147,8 @@ class NCBANKUSSD extends DynamicMenuController {
     public function invokeSyncWallet($payload, $channelRequestID) {
 
         try {
-            $username = "system-user";
-            $password = "lipuka";
+            $username = "admin";
+            $password = "admin";
             $apiUrl = $this->walletSyncRequestURL;
             $apiFunction = "processCloudRequest";
 
@@ -172,16 +172,16 @@ class NCBANKUSSD extends DynamicMenuController {
             //define cloud packet data
             $cloudPacket = array(
                 "MSISDN" => '256783262929',
-                "destination" => $this->accessPoint, //create this in accessPoints
+                "destination" => "NIC_UG", //create this in accessPoints
                 "IMCID" => "2",
                 "channelRequestID" => $channelRequestID,
-                "networkID" => $this->_networkID,
+                "networkID" => 1,
                 "cloudDateReceived" => date('Y-m-d H:i:s'),
                 "payload" => base64_encode($payload),
                 "imcRequestID" => $this->IMCREQUESTID,
-                "requestMode" => "0", //0 if sync and 1 when async
+                "requestMode" => "1", //0 if sync and 1 when async
                 "clientSystemID" => 77,
-                "systemName" => 'USSD',
+                "systemName" => 'USSD'
             );
 
             //package our data
@@ -190,7 +190,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 'cloudPacket' => $cloudPacket,
             );
 
-            return "Hello";
+           
             //make API call
             $client = new IXR_Client($apiUrl);
             if (!$client->query($apiFunction, $params)) {
@@ -838,12 +838,12 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
 
-                $result = $this->invokeAsyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
+                $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
 
 
 
 
-$message =  "::";
+$message =  "::".(print_r($result,true));
 
 
 //                if ($selectedAccount != null) {
