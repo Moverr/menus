@@ -235,23 +235,23 @@ class NCBANKUSSD extends DynamicMenuController {
 
 //        $this->logMessage("Payload to wallet: ", $params, DTBUGconfigs::LOG_LEVEL_INFO);
 
-        try {
-
-            $apiFunction = "processCloudRequest";
-
-            $client = new IXR_Client($this->serverURL);
-            $client->debug = false;
-            $client->query($apiFunction, $params);
-            $result = $client->getResponse();
-            $data = json_decode($result, true);
-
-            $this->logMessage("Response from wallet: ", $data, DTBUGconfigs::LOG_LEVEL_INFO);
-
-            return $data;
-        } catch (Exception $exception) {
-            $this->log->debug($this->INFOLOG, -1, "ERROR OCCURED: " . $exception->getMessage());
-            return $exception->getMessage();
-        }
+//        try {
+//
+//            $apiFunction = "processCloudRequest";
+//
+//            $client = new IXR_Client($this->serverURL);
+//            $client->debug = false;
+//            $client->query($apiFunction, $params);
+//            $result = $client->getResponse();
+//            $data = json_decode($result, true);
+//
+//            $this->logMessage("Response from wallet: ", $data, DTBUGconfigs::LOG_LEVEL_INFO);
+//
+//            return $data;
+//        } catch (Exception $exception) {
+//            $this->log->debug($this->INFOLOG, -1, "ERROR OCCURED: " . $exception->getMessage());
+//            return $exception->getMessage();
+//        }
     }
 
     function paySelfTest() {
