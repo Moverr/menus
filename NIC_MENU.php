@@ -112,7 +112,8 @@ class NCBANKUSSD extends DynamicMenuController {
 
             return $data;
         } catch (Exception $exception) {
-            $this->logMessage("Exception occured:" . $exception->getMessage(), null, 4);
+//            $this->logMessage("Exception occured:" . $exception->getMessage(), null, 4);
+            return "FALSE";
         }
     }
 
@@ -722,7 +723,7 @@ class NCBANKUSSD extends DynamicMenuController {
 //LAST_INSERT_ID
                 $message = " Account Not Found" . (print_r($logRequest, true));
             
-                    $result = invokeSyncWallet($requestPayload, $logRequest['LAST_INSERT_ID']);
+                    $result = invokeAsyncWallet($requestPayload, $logRequest['LAST_INSERT_ID']);
                     $message = " Account Not Found" . (print_r($result, true));
                     
 
