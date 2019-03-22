@@ -215,16 +215,15 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $cloudPacket = array(
             "MSISDN" => '256783262929',
-            "destination" => $this->accessPoint, //create this in accessPoints
+            "destination" => "NIC_UG", //create this in accessPoints
             "IMCID" => "2",
             "channelRequestID" => $channelRequestID,
-            "networkID" => $this->_networkID,
+            "networkID" => 1,
             "cloudDateReceived" => date('Y-m-d H:i:s'),
             "payload" => base64_encode($payload),
-            "imcRequestID" => $this->IMCREQUESTID,
-            "requestMode" => "0", //0 if sync and 1 when async
-            "clientSystemID" => 77,
-            "systemName" => 'USSD'
+            "imcRequestID" => 1,
+            "requestMode" => 1, //0 if sync and 1 when async
+            "clientSystemID" => 77 
         );
 
         $params = array(
