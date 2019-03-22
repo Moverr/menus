@@ -791,7 +791,8 @@ class NCBANKUSSD extends DynamicMenuController {
 
                 $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
                 
-                $result = $this->invokeAsyncWallet($requestPayload,11133660);
+                $requestId = $logRequest['LAST_INSERT_ID'];
+                $result = $this->invokeAsyncWallet($requestPayload,$requestId);
 //                $message = " Account Not Found" . (print_r(xmlrpc_decode($result), true));
 
 
