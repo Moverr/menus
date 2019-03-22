@@ -798,6 +798,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
                 if ($logRequest != null) {
+                    
             
 //                    $result = $this->invokeAsyncWallet($requestPayload, json_decode($logRequest));
 
@@ -809,10 +810,9 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
 
-$resuldd = json_decode($logRequest);
+            
 
-
-                    $message = " Account Not Found" . (print_r($resuldd, true));
+                    $message = " Account Not Found" . (print_r($logRequest, true));
 //                if ($selectedAccount != null) {
 //                    $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
 //                    $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
