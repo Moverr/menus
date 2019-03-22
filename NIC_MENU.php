@@ -797,22 +797,16 @@ class NCBANKUSSD extends DynamicMenuController {
                 $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
 
 
-                if ($logRequest != null) {
-                    
-            
-                    $result = $this->invokeAsyncWallet($requestPayload,  $logRequest['DATA']['LAST_INSERT_ID']);
 
 
-//                $message = " Account Not Found" . (print_r(xmlrpc_decode($result), true));
+                $result = $this->invokeAsyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
 
 
 
 
 
 
-            
-
-                    $message = " Account Not Found" . (print_r($result, true));
+                $message = "  Wave ";
 //                if ($selectedAccount != null) {
 //                    $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
 //                    $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
@@ -822,12 +816,12 @@ class NCBANKUSSD extends DynamicMenuController {
 //
 //                $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
 
-                    $this->displayText = $message;
-                    $this->sessionState = "CONTINUE";
-                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-                    $this->nextFunction = "BalanceEnquiryMenu";
-                    $this->previousPage = "startPage";
-                }
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                $this->nextFunction = "BalanceEnquiryMenu";
+                $this->previousPage = "startPage";
+
 
                 break;
         }
