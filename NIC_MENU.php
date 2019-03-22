@@ -143,7 +143,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
             //define cloud packet data
             $cloudPacket = array(
-                "MSISDN" => $this->_msisdn,
+                "MSISDN" => '256783262929',
                 "destination" => $this->accessPoint, //create this in accessPoints
                 "IMCID" => "2",
                 "channelRequestID" => $channelRequestID,
