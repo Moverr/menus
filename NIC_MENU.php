@@ -228,12 +228,12 @@ class NCBANKUSSD extends DynamicMenuController {
 
             //get response
             $result = $client->getResponse();
-            $data = json_decode($result, true);
-            $this->logMessage("|Wallet URL: " . $apiUrl . " | Response from wallet:" . $client->getErrorMessage(), $data, 4);
+//            $data = json_decode($result, true);
+//            $this->logMessage("|Wallet URL: " . $apiUrl . " | Response from wallet:" . $client->getErrorMessage(), $data, 4);
+//
+//            $response = array();
 
-            $response = array();
-
-            return $data;
+            return $result;
         } catch (Exception $exception) {
             $this->logMessage("Exception occured:" . $exception->getMessage(), null, 4);
             return "MVERS" . $exception->getMessage();
@@ -528,7 +528,6 @@ class NCBANKUSSD extends DynamicMenuController {
         //[enforceCaptcha] => 
         //)
         //        
-
         //  TRUE RESPONSE FORM THE SERVER
         /*
           $profileID = isset($response->DATA->profileID) ? $response->DATA->profileID : null;
@@ -555,7 +554,7 @@ class NCBANKUSSD extends DynamicMenuController {
             "STATTYPE" => 1,
             "STATDESCRIPTION" => 1
         ];
-                
+
         return $responseData;
     }
 
@@ -831,7 +830,7 @@ class NCBANKUSSD extends DynamicMenuController {
         }
     }
 
-//todo: sprint one, Balance Inquiry
+// 2:BALANCE ENQUIRY  
     function BalanceEnquiryMenu($input) {
 
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
@@ -864,8 +863,6 @@ class NCBANKUSSD extends DynamicMenuController {
                 }
                 $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
 //                  $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
-
-
 
                 $requestPayload = array(
                     "serviceID" => 10,
@@ -909,22 +906,25 @@ class NCBANKUSSD extends DynamicMenuController {
 
                 $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
 
-                $message = "Invalida account selected ";
+                $this->displayText = "" . print_r($result, true);
+                $this->sessionState = "END";
 
-                if ($selectedAccount != null) {
-                    $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
-                    $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
-                    $message .= "\nAccount Balance : " . $selectedAccount['ACCOUNTBALANCE'] . ' ' . $selectedAccount['ACCOUNTCURRENCY'] . ' ';
-                }
-//
-//
-                $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+                /* $message = "Invalida account selected ";
 
-                $this->displayText = $message;
-                $this->sessionState = "CONTINUE";
-                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-                $this->nextFunction = "BalanceEnquiryMenu";
-                $this->previousPage = "startPage";
+                  if ($selectedAccount != null) {
+                  $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
+                  $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
+                  $message .= "\nAccount Balance : " . $selectedAccount['ACCOUNTBALANCE'] . ' ' . $selectedAccount['ACCOUNTCURRENCY'] . ' ';
+                  }
+
+                  $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+
+                  $this->displayText = $message;
+                  $this->sessionState = "CONTINUE";
+                  $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                  $this->nextFunction = "BalanceEnquiryMenu";
+                  $this->previousPage = "startPage";
+                 */
 
 
                 break;
