@@ -462,12 +462,14 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->logMessage("URL Used:: " . $this->validatePinURL, null, 4);
 
         $validationResponse = $this->postData($this->validatePinURL, $fields);
-        $response = $this->populatePinResponse($validationResponse);
+        $response = $this->populatePinResponse($validationResponse,$pin);
+                
+        
         $this->saveSessionVar("AUTHENTICATEDPIN", $response);
         return $response;
     }
 
-    function populatePinResponse($record) {
+    function populatePinResponse($record,$rawpin) {
 
         if ($record == null)
             return null;
@@ -491,6 +493,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $responseData = [
             "PROFILEID" => $profileID,
             "PINHASH" => $pinHash,
+            "RAWPIN" => $rawpin,            
             "STATUSCODE" => $response->STAT_CODE,
             "STATTYPE" => $response->STAT_TYPE,
             "STATDESCRIPTION" => $response->STAT_DESCRIPTION
@@ -812,7 +815,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $requestPayload = array(
                     "serviceID" => 10,
                     "flavour" => 'self',
-                    "pin" => $PINRECORD['PINHASH'],
+                    "pin" => $PINRECORD['RAWPIN'],
                     "accountAlias" => $selectedAccount['ACCOUNTNAME'],
                     "accountID" => $selectedAccount['ACCOUNTCBSID'],
                 );
