@@ -812,7 +812,7 @@ class NCBANKUSSD extends DynamicMenuController {
                     "serviceID" => 10,
                     "flavour" => 'self',
                     "pin" => $PINRECORD['PINHASH'],
-                    "accountAlias" => $selectedAccount['NAME'],
+                    "accountAlias" => $selectedAccount['ACCOUNTNAME'],
                     "accountID" => $selectedAccount['ACCOUNTCBSID'],
                 );
 
@@ -1376,8 +1376,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $ACCOUNTDATA = [
                     "ID" => $count,
                     "ACCOUNTCBSID" => $ACCOUNTCBSID,
-                    "ACCOUNTNUMBER" => $ACCOUNTNUMBER,
-                    "ACCOUNTNUMBER" => $ACCOUNTNUMBER,
+                    "ACCOUNTNUMBER" => $ACCOUNTNUMBER, 
                     "ACCOUNTNAME" => $ACCOUNTNAME,
                     "ACCOUNTCURRENCYINWORDS" => $ACCOUNTCURRENCYINWORDS,
                     "ACCOUNTBALANCE" => $ACCOUNTBALANCE,
