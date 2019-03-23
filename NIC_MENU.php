@@ -22,7 +22,7 @@ class NCBANKUSSD extends DynamicMenuController {
     private $walletUrl = 'http://132.147.160.57:8300/wallet/IS_APIs/CustomerRegistration/fetchCustomerData';
     private $serverURL = 'http://132.147.160.57:8300/wallet/Cloud_APIs/index';
     private $validatePinURL = "http://132.147.160.57:8300/wallet/Cloud_APIs/UssdPinAuth/AuthenticateCustomer";
-    private $accessPoint = "*360*615#";
+    private $accessPoint = "*268#";
 //            "*268#";
     private $IMCREQUESTID = 1;
     private $walletSyncRequestURL = 'http://132.147.160.57:8100/wallet/Cloud_APIs/CloudRequestLogger/LogSyncronousRequest';
@@ -85,7 +85,7 @@ class NCBANKUSSD extends DynamicMenuController {
             //define cloud packet data
             $cloudPacket = array(
                 "MSISDN" => '256783262929',
-                "destination" => "NIC_UG", //create this in accessPoints
+                "destination" => $this->accessPoint, //create this in accessPoints 
                 "IMCID" => "2",
                 "channelRequestID" => $channelRequestID,
                 "networkID" => 1,
@@ -149,7 +149,8 @@ class NCBANKUSSD extends DynamicMenuController {
         try {
             $username = "admin";
             $password = "admin";
-            $apiUrl = $this->walletSyncRequestURL;
+//            $apiUrl = $this->walletSyncRequestURL;
+             $apiUrl = $this->serverURL;
             $apiFunction = "processCloudRequest";
 
             //convert array into XML format
@@ -172,14 +173,14 @@ class NCBANKUSSD extends DynamicMenuController {
             //define cloud packet data
             $cloudPacket = array(
                 "MSISDN" => '256783262929',
-                "destination" => "NIC_UG", //create this in accessPoints
+                "destination" => $this->accessPoint, //create this in accessPoints
                 "IMCID" => "2",
                 "channelRequestID" => $channelRequestID,
                 "networkID" => 1,
                 "cloudDateReceived" => date('Y-m-d H:i:s'),
                 "payload" => base64_encode($payload),
                 "imcRequestID" => $this->IMCREQUESTID,
-                "requestMode" => "1", //0 if sync and 1 when async
+                "requestMode" => "0",//this means that this is a synchronous  //0 if sync and 1 when async
                 "clientSystemID" => 77,
                 "systemName" => 'USSD'
             );
@@ -239,7 +240,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $cloudPacket = array(
             "MSISDN" => '256783262929',
-            "destination" => "NIC_UG", //create this in accessPoints
+            "destination" => $this->accessPoint, //create this in accessPoints
             "IMCID" => "2",
             "channelRequestID" => $channelRequestID,
             "networkID" => 1,
