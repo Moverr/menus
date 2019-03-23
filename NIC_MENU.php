@@ -21,12 +21,10 @@ class NCBANKUSSD extends DynamicMenuController {
     private $SERVICE_DESCRIPTION = "NC BANK MENU ";
     private $walletUrl = 'http://132.147.160.57:8300/wallet/IS_APIs/CustomerRegistration/fetchCustomerData';
     private $serverURL = 'http://132.147.160.57:8300/wallet/Cloud_APIs/index';
-    private $validatePinURL = "http://132.147.160.57:8300/wallet/Cloud_APIs/UssdPinAuth/AuthenticateCustomer";
     private $accessPoint = "*268#";
 //            "*268#";
     private $IMCREQUESTID = 1;
-    private $walletSyncRequestURL = 'http://132.147.160.57:8100/wallet/Cloud_APIs/CloudRequestLogger/LogSyncronousRequest';
-
+    
     function startPage() {
 
         $this->init();
@@ -365,7 +363,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
             $response = array();
 
-            return $data;
+            return $result;
         } catch (Exception $exception) {
             $this->logMessage("Exception occured:" . $exception->getMessage(), null, 4);
             return "MVERS" . $exception->getMessage();
