@@ -518,8 +518,10 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function populatePinResponse($record, $rawpin) {
 
+        /*
         if ($record == null)
             return null;
+        */
 
 //        $response = json_decode($record);
         //(
