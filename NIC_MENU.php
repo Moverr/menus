@@ -799,6 +799,22 @@ class NCBANKUSSD extends DynamicMenuController {
                         break;
                     }
                 }
+                $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
+//                  $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
+
+
+
+                $requestPayload = array(
+                    "serviceID" => 10,
+                    "flavour" => 'self',
+                    "pin" => $PINRECORD['PINHASH'],
+                    "accountAlias" => $selectedAccount['NAME'],
+                    "accountID" => $selectedAccount['ACCOUNTCBSID'],
+                );
+
+                $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
+
+
                 /*
                   $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
                   //todo: get details  :
@@ -820,12 +836,14 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
                   //select server process/function to call
- 
+
 
                   $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
 
                   $message = "::" . (print_r($result, true));
                  */
+
+                $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
 
                 $message = "Invalida account selected ";
 
