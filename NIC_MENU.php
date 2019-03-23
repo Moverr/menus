@@ -501,10 +501,14 @@ class NCBANKUSSD extends DynamicMenuController {
         ];
 
 
-        $this->logMessage("URL Used:: " . $this->serverURL, null, 4);
-        $validationResponse = $this->invokeWallet("authenticateCustomerPin", $pinrequest);
-        $this->logMessage("Validate PIN wallet Response:: ", $validationResponse, 4);
-
+        //todo: missing information 
+        /*
+          $this->logMessage("URL Used:: " . $this->serverURL, null, 4);
+          $validationResponse = $this->invokeWallet("authenticateCustomerPin", $pinrequest);
+          $this->logMessage("Validate PIN wallet Response:: ", $validationResponse, 4);
+         */
+        $validationResponse = null;
+        $pin = null;
         $response = $this->populatePinResponse($validationResponse, $pin);
 
 
@@ -517,7 +521,7 @@ class NCBANKUSSD extends DynamicMenuController {
         if ($record == null)
             return null;
 
-        $response = json_decode($record);
+//        $response = json_decode($record);
         //(
         //[DATA] => stdClass Object
         //(
