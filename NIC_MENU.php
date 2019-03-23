@@ -501,10 +501,14 @@ class NCBANKUSSD extends DynamicMenuController {
             "USERNAME" => "system-user",
             "PASSWORD" => "lipuka",
             "PINHASH" => $this->encryptPin($pin, 1)
-        );        
+        );    
+        
+        $pinrequest =[
+            "pinRequest"=>$payload
+        ];
 
         $this->logMessage("URL Used:: " . $this->serverURL, null, 4);
-        $validationResponse = $this->invokeWallet("authenticateCustomerPin", $payload);
+        $validationResponse = $this->invokeWallet("authenticateCustomerPin", $pinrequest);
         $this->logMessage("Validate PIN wallet Response:: ", $validationResponse, 4);
         
         $response = $this->populatePinResponse($validationResponse, $pin);
