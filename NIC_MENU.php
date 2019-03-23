@@ -815,7 +815,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $requestPayload = array(
                     "serviceID" => 10,
                     "flavour" => 'self',
-                    "pin" => $PINRECORD['RAWPIN'],
+                    "pin" => $this->encryptPin($PINRECORD['RAWPIN'],$this->IMCREQUESTID), //$this->encryptPin($PINRECORD['RAWPIN'],1)
                     "accountAlias" => $selectedAccount['ACCOUNTNAME'],
                     "accountID" => $selectedAccount['ACCOUNTCBSID'],
                 );
