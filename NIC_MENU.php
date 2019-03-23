@@ -497,7 +497,7 @@ class NCBANKUSSD extends DynamicMenuController {
     function validateCustomerPin($pin, $msidn) {
         $this->logMessage("Validating PIN " . $pin, null, 4);
         $payload = array(
-            "MSISDN" => $msisdn,
+            "MSISDN" => '256783262929',
             "USERNAME" => "system-user",
             "PASSWORD" => "lipuka",
             "PINHASH" => $this->encryptPin($pin, 1)
