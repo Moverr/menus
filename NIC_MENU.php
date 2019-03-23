@@ -24,6 +24,12 @@ class NCBANKUSSD extends DynamicMenuController {
     private $accessPoint = "*268#";
 //            "*268#";
     private $IMCREQUESTID = 1;
+    private $SAMPLEMSSDN = '256783262929';
+    
+    private $USERNAME = "system-user";
+    private $PASSWORD = "lipuka";
+    
+    
     
     function startPage() {
 
@@ -49,7 +55,33 @@ class NCBANKUSSD extends DynamicMenuController {
         curl_close($ch);
         return $result;
     }
+    
+    function invokeWallet($walletFunction, $payload) {
 
+        //Get the wallet url
+        $walletUrl = $this->serverURL;
+        try {
+            //make API call
+            $client = new IXR_Client($walletUrl);
+            if (!$client->query($walletFunction, $payload)) {
+                $this->logMessage("IXR_Client error occurred - " . $client->getErrorCode() . ":" . $client->getErrorMessage(), null, 4);
+            }
+
+            //get response
+            $result = $client->getResponse();
+            $data = json_decode($result, true);
+            $this->logMessage("|Wallet URL: " . $walletUrl . " | Response from wallet:", $data, 4);
+
+            $response = array();
+
+            return $result;
+        } catch (Exception $exception) {
+            $this->logMessage("Exception occured:" . $exception->getMessage(), null, 4);
+            return "MVERS" . $exception->getMessage();
+        }
+    }
+    
+    
     public function invokeAsyncWallet($payload, $channelRequestID) {
 
         try {
@@ -319,56 +351,28 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->displayText = $message;
     }
 
+    
     function init() {
 
         $fields_string = null;
         $fields = null;
         // "MSISDN" => $this->_msisdn,
         $fields = array(
-            "MSISDN" => '256783262929',
-            "USERNAME" => "system-user",
-            "PASSWORD" => "lipuka"
+            "MSISDN" => $this->SAMPLEMSSDN,
+            "USERNAME" => $this->USERNAME,
+            "PASSWORD" => $this->PASSWORD 
         );
 
         foreach ($fields as $key => $value) {
             $fields_string .= $key . '=' . $value . '&';
         }
         rtrim($fields_string, '&');
-
         $response = $this->http_post($this->walletUrl, $fields, $fields_string);
         $clientProfile = json_decode($response, true);
-
-
-
         $this->saveSessionVar("CLIENTPROFILE", $clientProfile);
-
         $this->firstMenu();
     }
 
-    function invokeWallet($walletFunction, $payload) {
-
-        //Get the wallet url
-        $walletUrl = $this->serverURL;
-        try {
-            //make API call
-            $client = new IXR_Client($walletUrl);
-            if (!$client->query($walletFunction, $payload)) {
-                $this->logMessage("IXR_Client error occurred - " . $client->getErrorCode() . ":" . $client->getErrorMessage(), null, 4);
-            }
-
-            //get response
-            $result = $client->getResponse();
-            $data = json_decode($result, true);
-            $this->logMessage("|Wallet URL: " . $walletUrl . " | Response from wallet:", $data, 4);
-
-            $response = array();
-
-            return $result;
-        } catch (Exception $exception) {
-            $this->logMessage("Exception occured:" . $exception->getMessage(), null, 4);
-            return "MVERS" . $exception->getMessage();
-        }
-    }
 
     function firstMenu() {
 
@@ -426,18 +430,13 @@ class NCBANKUSSD extends DynamicMenuController {
         }
     }
 
+    
     // VALIDATE PIN MENU 
     function validatePinMenu($input) {
 
         $clientProfile = $this->getSessionVar('CLIENTPROFILE');
         $clientProfiledata = $this->populateClientProfile($clientProfile);
-
-
-
-        $response = $this->validateCustomerPin($input, '256783262929');
-
-
-
+        $response = $this->validateCustomerPin($input, $THIS->SAMPLEMSSDN); 
         if ($response['STATUSCODE'] == 100) {
 
             $message = "Hello " . ($clientProfiledata['customerNames']) . ",\n Incorrect Pin entered.";
