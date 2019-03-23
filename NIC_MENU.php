@@ -409,6 +409,11 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
         $response = $this->validateCustomerPin($input, '256783262929');
+        
+        
+            $this->displayText = "".print_r($response,true);
+            $this->sessionState = "END";
+            /*
 
         if ($response['STATUSCODE'] == 100) {
 
@@ -443,6 +448,8 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->displayText = $message;
             $this->sessionState = "END";
         }
+             
+             */
     }
 
     function validateCustomerPin($pin, $msidn) {
@@ -458,9 +465,9 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->logMessage("URL Used:: " . $this->validatePinURL, null, 4);
 
         $validationResponse = $this->postData($this->validatePinURL, $fields);
-        $response = $this->populatePinResponse($validationResponse);
-        $this->saveSessionVar("AUTHENTICATEDPIN", $response);
-        return $response;
+//        $response = $this->populatePinResponse($validationResponse);
+//        $this->saveSessionVar("AUTHENTICATEDPIN", $response);
+        return $validationResponse;
     }
 
     function populatePinResponse($record) {
