@@ -150,7 +150,7 @@ class NCBANKUSSD extends DynamicMenuController {
             $username = "admin";
             $password = "admin";
 //            $apiUrl = $this->walletSyncRequestURL;
-             $apiUrl = $this->serverURL;
+            $apiUrl = $this->serverURL;
             $apiFunction = "processCloudRequest";
 
             //convert array into XML format
@@ -181,7 +181,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 "cloudDateReceived" => date('Y-m-d H:i:s'),
                 "payload" => base64_encode($payload),
                 "imcRequestID" => $this->IMCREQUESTID,
-                "requestMode" => 1,//this means that this is a synchronous  //0 if sync and 1 when async
+                "requestMode" => 1, //this means that this is a synchronous  //0 if sync and 1 when async
                 "clientSystemID" => 77,
                 "systemName" => 'USSD'
             );
@@ -347,6 +347,31 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->firstMenu();
     }
 
+    function invokeWallet($walletFunction, $payload) {
+
+        //Get the wallet url
+        $walletUrl = $this->serverURL;
+        try {
+            //make API call
+            $client = new IXR_Client($walletUrl);
+            if (!$client->query($walletFunction, $payload)) {
+                $this->logMessage("IXR_Client error occurred - " . $client->getErrorCode() . ":" . $client->getErrorMessage(), null, 4);
+            }
+
+            //get response
+            $result = $client->getResponse();
+            $data = json_decode($result, true);
+            $this->logMessage("|Wallet URL: " . $walletUrl . " | Response from wallet:", $data, 4);
+
+            $response = array();
+
+            return $data;
+        } catch (Exception $exception) {
+            $this->logMessage("Exception occured:" . $exception->getMessage(), null, 4);
+            return "MVERS" . $exception->getMessage();
+        }
+    }
+
     function firstMenu() {
 
         $clientProfile = $this->getSessionVar('CLIENTPROFILE');
@@ -363,8 +388,8 @@ class NCBANKUSSD extends DynamicMenuController {
         } else {
 
             $authenticatedPIN = $this->getSessionVar('AUTHENTICATEDPIN');
-            
-            
+
+
             if ($authenticatedPIN != null) {
                 if ($authenticatedPIN['STATUSCODE'] == 1) {
                     $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
@@ -378,7 +403,6 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->serviceDescription = $this->SERVICE_DESCRIPTION;
                     $this->nextFunction = "menuSwitcher";
                     $this->previousPage = "startPage";
-                    
                 } else {
 
                     //todo validate pin :
@@ -413,8 +437,8 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
         $response = $this->validateCustomerPin($input, '256783262929');
-        
-                
+
+
 
         if ($response['STATUSCODE'] == 100) {
 
@@ -449,30 +473,48 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->displayText = $message;
             $this->sessionState = "END";
         }
-                
     }
 
+//    function validateCustomerPin($pin, $msidn) {
+//        $this->logMessage("Validating PIN ", null, 4);
+//
+////        "MSISDN" => $this->_msisdn,
+//        $fields_string = "";
+//        $fields = array(
+//            "MSISDN" => $msidn,
+//            "PINHASH" => $this->encryptPin($pin, 1)
+//        );
+//
+//        $this->logMessage("URL Used:: " . $this->validatePinURL, null, 4);
+//
+//        $validationResponse = $this->postData($this->validatePinURL, $fields);
+//        $response = $this->populatePinResponse($validationResponse,$pin);
+//                
+//        
+//        $this->saveSessionVar("AUTHENTICATEDPIN", $response);
+//        return $response;
+//    }
     function validateCustomerPin($pin, $msidn) {
-        $this->logMessage("Validating PIN ", null, 4);
-
-//        "MSISDN" => $this->_msisdn,
-        $fields_string = "";
-        $fields = array(
-            "MSISDN" => $msidn,
+        $this->logMessage("Validating PIN " . $pin, null, 4);
+        $payload = array(
+            "MSISDN" => $msisdn,
+            "USERNAME" => "system-user",
+            "PASSWORD" => "lipuka",
             "PINHASH" => $this->encryptPin($pin, 1)
-        );
+        );        
 
-        $this->logMessage("URL Used:: " . $this->validatePinURL, null, 4);
-
-        $validationResponse = $this->postData($this->validatePinURL, $fields);
-        $response = $this->populatePinResponse($validationResponse,$pin);
-                
+        $this->logMessage("URL Used:: " . $this->serverURL, null, 4);
+        $validationResponse = $this->invokeWallet("authenticateCustomerPin", $payload);
+        $this->logMessage("Validate PIN wallet Response:: ", $validationResponse, 4);
         
+        $response = $this->populatePinResponse($validationResponse, $pin);
+
+
         $this->saveSessionVar("AUTHENTICATEDPIN", $response);
         return $response;
     }
 
-    function populatePinResponse($record,$rawpin) {
+    function populatePinResponse($record, $rawpin) {
 
         if ($record == null)
             return null;
@@ -505,12 +547,12 @@ class NCBANKUSSD extends DynamicMenuController {
         $responseData = [
             "PROFILEID" => 31,
             "PINHASH" => 12,
-            "RAWPIN" => 1199,            
+            "RAWPIN" => 1199,
             "STATUSCODE" => 1,
             "STATTYPE" => 1,
-            "STATDESCRIPTION" =>1
+            "STATDESCRIPTION" => 1
         ];
-        
+
 
 
 
@@ -828,7 +870,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $requestPayload = array(
                     "serviceID" => 10,
                     "flavour" => 'self',
-                    "pin" =>  $this->encryptPin(1199,1),
+                    "pin" => $this->encryptPin(1199, 1),
                     //$this->encryptPin($PINRECORD['RAWPIN'],$this->IMCREQUESTID), //$this->encryptPin($PINRECORD['RAWPIN'],1)
                     "accountAlias" => $selectedAccount['ACCOUNTNAME'],
                     "accountID" => $selectedAccount['ACCOUNTCBSID'],
@@ -1394,7 +1436,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $ACCOUNTDATA = [
                     "ID" => $count,
                     "ACCOUNTCBSID" => $ACCOUNTCBSID,
-                    "ACCOUNTNUMBER" => $ACCOUNTNUMBER, 
+                    "ACCOUNTNUMBER" => $ACCOUNTNUMBER,
                     "ACCOUNTNAME" => $ACCOUNTNAME,
                     "ACCOUNTCURRENCYINWORDS" => $ACCOUNTCURRENCYINWORDS,
                     "ACCOUNTBALANCE" => $ACCOUNTBALANCE,
