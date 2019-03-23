@@ -58,7 +58,7 @@ class NCBANKUSSD extends DynamicMenuController {
             $username = "admin";
             $password = "admin";
             $apiUrl = $this->serverURL;
-            $apiFunction = "logRequest"; //logRequest;
+            $apiFunction = "processCloudRequest"; //logRequest;
             //convert array into XML format
             //formulate xml payload.
 
@@ -92,7 +92,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 "cloudDateReceived" => date('Y-m-d H:i:s'),
                 "payload" => base64_encode($payload),
                 "imcRequestID" => $this->IMCREQUESTID,
-                "requestMode" => 0, //0 if sync and 1 when async
+                "requestMode" => "1", //0 if sync and 1 when async
                 "clientSystemID" => 77,
                 "systemName" => 'USSD',
             );
@@ -180,7 +180,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 "cloudDateReceived" => date('Y-m-d H:i:s'),
                 "payload" => base64_encode($payload),
                 "imcRequestID" => $this->IMCREQUESTID,
-                "requestMode" => 1,//this means that this is a synchronous  //0 if sync and 1 when async
+                "requestMode" => "0",//this means that this is a synchronous  //0 if sync and 1 when async
                 "clientSystemID" => 77,
                 "systemName" => 'USSD'
             );
@@ -411,7 +411,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $response = $this->validateCustomerPin($input, '256783262929');
         
         
-            $this->displayText = "".print_r($response);
+            $this->displayText = "".print_r($response,true);
             $this->sessionState = "END";
             /*
 
