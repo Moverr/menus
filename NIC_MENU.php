@@ -363,6 +363,8 @@ class NCBANKUSSD extends DynamicMenuController {
         } else {
 
             $authenticatedPIN = $this->getSessionVar('AUTHENTICATEDPIN');
+            
+            
             if ($authenticatedPIN != null) {
                 if ($authenticatedPIN['STATUSCODE'] == 1) {
                     $message = "Hello " . ($clientProfiledata['customerNames']) . ", Welcome to NC Bank \n1. Merchants \n" . "2. Balance Enquiry \n" . "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN \n";
@@ -376,6 +378,7 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->serviceDescription = $this->SERVICE_DESCRIPTION;
                     $this->nextFunction = "menuSwitcher";
                     $this->previousPage = "startPage";
+                    
                 } else {
 
                     //todo validate pin :
@@ -490,14 +493,24 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
 
+//        $responseData = [
+//            "PROFILEID" => $profileID,
+//            "PINHASH" => $pinHash,
+//            "RAWPIN" => $rawpin,            
+//            "STATUSCODE" => $response->STAT_CODE,
+//            "STATTYPE" => $response->STAT_TYPE,
+//            "STATDESCRIPTION" => $response->STAT_DESCRIPTION
+//        ];
+//        
         $responseData = [
-            "PROFILEID" => $profileID,
-            "PINHASH" => $pinHash,
-            "RAWPIN" => $rawpin,            
-            "STATUSCODE" => $response->STAT_CODE,
-            "STATTYPE" => $response->STAT_TYPE,
-            "STATDESCRIPTION" => $response->STAT_DESCRIPTION
+            "PROFILEID" => 31,
+            "PINHASH" => 12,
+            "RAWPIN" => 1199,            
+            "STATUSCODE" => 1,
+            "STATTYPE" => 1,
+            "STATDESCRIPTION" =>1
         ];
+        
 
 
 
@@ -815,7 +828,8 @@ class NCBANKUSSD extends DynamicMenuController {
                 $requestPayload = array(
                     "serviceID" => 10,
                     "flavour" => 'self',
-                    "pin" => $this->encryptPin($PINRECORD['RAWPIN'],$this->IMCREQUESTID), //$this->encryptPin($PINRECORD['RAWPIN'],1)
+                    "pin" =>  $this->encryptPin(1199,1),
+                    //$this->encryptPin($PINRECORD['RAWPIN'],$this->IMCREQUESTID), //$this->encryptPin($PINRECORD['RAWPIN'],1)
                     "accountAlias" => $selectedAccount['ACCOUNTNAME'],
                     "accountID" => $selectedAccount['ACCOUNTCBSID'],
                 );
