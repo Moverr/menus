@@ -227,16 +227,17 @@ class NCBANKUSSD extends DynamicMenuController {
             }
 
             //get response
-            $result = $client->getResponse();
+//            $result = $client->getResponse();
 //            $data = json_decode($result, true);
 //            $this->logMessage("|Wallet URL: " . $apiUrl . " | Response from wallet:" . $client->getErrorMessage(), $data, 4);
 //
 //            $response = array();
 
-            return $result;
+            return null;
         } catch (Exception $exception) {
-            $this->logMessage("Exception occured:" . $exception->getMessage(), null, 4);
-            return "MVERS" . $exception->getMessage();
+//            $this->logMessage("Exception occured:" . $exception->getMessage(), null, 4);
+            return "MVERS";
+//            $exception->getMessage();
         }
     }
 
@@ -910,7 +911,7 @@ class NCBANKUSSD extends DynamicMenuController {
                   $message = "::" . (print_r($result, true));
                  */
 
-//                 $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
+                $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
 
                 $this->displayText = "NAYE";
                 $this->sessionState = "END";
