@@ -208,7 +208,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 "cloudDateReceived" => date('Y-m-d H:i:s'),
                 "payload" => base64_encode($payload),
                 "imcRequestID" => $this->IMCREQUESTID,
-                "requestMode" => 1, //this means that this is a synchronous  //0 if sync and 1 when async
+                "requestMode" => 0, //this means that this is a synchronous  //0 if sync and 1 when async
                 "clientSystemID" => 77,
                 "systemName" => 'USSD'
             );
