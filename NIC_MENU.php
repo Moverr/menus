@@ -223,7 +223,7 @@ class NCBANKUSSD extends DynamicMenuController {
             //make API call
             $client = new IXR_Client($apiUrl);
             if (!$client->query($apiFunction, $params)) {
-//                $this->logMessage("IXR_Client error occurred - " . $client->getErrorCode() . ":" . $client->getErrorMessage(), null, 4);
+                $this->logMessage("IXR_Client error occurred - " . $client->getErrorCode() . ":" . $client->getErrorMessage(), null, 4);
             }
 
             //get response
@@ -913,8 +913,9 @@ class NCBANKUSSD extends DynamicMenuController {
 
                 $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
 
-                $this->displayText = "NAYE";
-                $this->sessionState = "END";
+//                $this->displayText = "NAYE";
+//                $this->sessionState = "END";
+//                
 
                 /* $message = "Invalida account selected ";
 
