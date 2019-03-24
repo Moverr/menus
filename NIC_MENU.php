@@ -233,7 +233,7 @@ class NCBANKUSSD extends DynamicMenuController {
 //
 //            $response = array();
 
-            return $result;
+            return null;
         } catch (Exception $exception) {
             $this->logMessage("Exception occured:" . $exception->getMessage(), null, 4);
             return "MVERS" . $exception->getMessage();
