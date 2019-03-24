@@ -350,6 +350,16 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function init() {
 
+        
+         $message = "Enter Customer Pin";
+
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                $this->nextFunction = "validatePinMenu";
+                $this->previousPage = "startPage";
+                
+        /*
         $fields_string = null;
         $fields = null;
         // "MSISDN" => $this->_msisdn,
@@ -367,6 +377,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $clientProfile = json_decode($response, true);
         $this->saveSessionVar("CLIENTPROFILE", $clientProfile);
         $this->firstMenu();
+        */
     }
 
     function firstMenu() {
