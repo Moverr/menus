@@ -233,7 +233,7 @@ class NCBANKUSSD extends DynamicMenuController {
 //
 //            $response = array();
 
-            return null;
+            return $result;
         } catch (Exception $exception) {
             $this->logMessage("Exception occured:" . $exception->getMessage(), null, 4);
             return "MVERS" . $exception->getMessage();
@@ -910,9 +910,9 @@ class NCBANKUSSD extends DynamicMenuController {
                   $message = "::" . (print_r($result, true));
                  */
 
-                $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
+                 $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
 
-                $this->displayText = "" . print_r($result, true);
+                $this->displayText = "NAYE";
                 $this->sessionState = "END";
 
                 /* $message = "Invalida account selected ";
