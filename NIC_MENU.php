@@ -1111,7 +1111,7 @@ class NCBANKUSSD extends DynamicMenuController {
 //                  $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
 
                 $requestPayload = array(
-                    "serviceID" => 10,
+                    "serviceID" => 11,
                     "flavour" => 'self',
                     "pin" => $this->encryptPin(1199, 1),
                     //$this->encryptPin($PINRECORD['RAWPIN'],$this->IMCREQUESTID), //$this->encryptPin($PINRECORD['RAWPIN'],1)
