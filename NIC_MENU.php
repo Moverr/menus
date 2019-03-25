@@ -400,23 +400,6 @@ class NCBANKUSSD extends DynamicMenuController {
     }
 
     function populatePinResponse($record, $rawpin) {
-        /*
-          if ($record == null)
-          return null;
-         */
-//        $response = json_decode($record);
-        //(
-        //[DATA] => stdClass Object
-        //(
-        //[profileID] => 31
-        //[otpOnly] => 0
-        //[pinHash] => 50aa8250bd0fc69ed96a79d182e03e85
-        //[newPinHash] =>
-        //[enforceCaptcha] =>
-        //)
-        //
-        //  TRUE RESPONSE FORM THE SERVER
-
         $response = json_decode($record, true);
         $profileID = isset($response['DATA']['profileID']) ? $response['DATA']['profileID'] : null;
         $pinHash = isset($response['DATA']['pinHash']) ? $response['DATA']['pinHash'] : null;
@@ -448,7 +431,7 @@ class NCBANKUSSD extends DynamicMenuController {
                         $index = $index + 1;
                         $message .= $index . ") " . $account['ACCOUNTNUMBER'] . "\n";
                     }
-                    $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+                    $message .= "\n\n0. Home \n" . "00. Back";
                     $this->displayText = $message;
                     $this->sessionState = "CONTINUE";
                     $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -471,7 +454,7 @@ class NCBANKUSSD extends DynamicMenuController {
                     $message = " Top Up"
                             . "\n1) Own Phone"
                             . "\n2) Other Phone";
-                    $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+                    $message .= "\n\n0. Home \n" . "00. Back";
                     $this->displayText = $message;
                     $this->sessionState = "CONTINUE";
                     $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -486,7 +469,7 @@ class NCBANKUSSD extends DynamicMenuController {
                         $count = $count + 1;
                         $message .= "\n" . $count . ")" . $account['ACCOUNTNUMBER'];
                     }
-                    $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+                    $message .= "\n\n0. Home \n" . "00. Back";
                     $this->displayText = $message;
                     $this->sessionState = "CONTINUE";
                     $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -498,7 +481,7 @@ class NCBANKUSSD extends DynamicMenuController {
                     $message = "Account Request"
                             . "\n1) Cheque Book Request"
                             . "\n2) Stop Cheque ";
-                    $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+                    $message .= "\n\n0. Home \n" . "00. Back";
                     $this->displayText = $message;
                     $this->sessionState = "CONTINUE";
                     $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -713,7 +696,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 . "\n2)Airtel"
                 . "\n3)Africell"
                 . "\n4)Smile";
-        $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+        $message .= "\n\n0. Home \n" . "00. Back";
         $this->displayText = $message;
         $this->sessionState = "CONTINUE";
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -816,17 +799,10 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->firstMenu();
                 break;
             default:
-                $selectedAccount = null;
-//                foreach ($ACCOUNTS as $account) {
-//                    if ($account['ID'] == $input) {
-//                        $selectedAccount = $account;
-//                        break;
-//                    }
-//                }
-                $message = " Top Up"
+                $message = "Invalid Selection\n Top Up"
                         . "\n.1 Own Phone"
                         . "\n.2 Other Phone";
-                $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+                $message .= "\n\n0. Home \n" . "00. Back";
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
                 $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -955,7 +931,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
         if (!is_numeric($input)) {
             $this->displayText = "Invalid Input, Enter correct option ";
-            $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+            $message .= "\n\n0. Home \n" . "00. Back ";
             $this->nextFunction = "finalizeCheckBookRequest";
             $this->previousPage = "finalizeCheckBookRequest";
         } else {
@@ -968,7 +944,7 @@ class NCBANKUSSD extends DynamicMenuController {
             }
             if ($selectedAccount == null) {
                 $this->displayText = "Invalid Input, Enter correct option ";
-                $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+                $message .= "\n\n0. Home \n" . "00. Back";
                 $this->nextFunction = "finalizeCheckBookRequest";
                 $this->previousPage = "finalizeCheckBookRequest";
             } else {
@@ -1082,7 +1058,7 @@ class NCBANKUSSD extends DynamicMenuController {
     }
 
     function PromptPin() {
-        $message .= "Enter Pin to confirm \n0. Home \n" . "00. Back \n" . "000. Logout \n";
+        $message .= "Enter Pin to confirm \n0. Home \n" . "00. Back ";
         $this->displayText = $message;
         $this->sessionState = "CONTINUE";
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -1400,7 +1376,7 @@ class xmlrpc_client {
         );
         return $providers[$networkID];
     }
-    
+
     function getAirtimeWalletMerchantCodes($networkID) {
         $providers = array(
             "64110" => "MTNTOPUP",
