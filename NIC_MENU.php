@@ -1099,11 +1099,10 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
         $response = json_decode($result);
-        $this->logMessage("Balance Enquiry Response:: ", print_r($response, true), 4);
-
-        if ($response->STATUS_CODE == 1) {
-            $this->displayText = "" . ($response->STAT_DESCRIPTION);
-        }
+//        $this->logMessage("Balance Enquiry Response:: ", print_r($response, true), 4);
+//        if ($response->STATUS_CODE == 1) {
+        $this->displayText = "" . ($response);
+//        }
 
 
         $this->sessionState = "END";
