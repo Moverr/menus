@@ -376,7 +376,6 @@ class NCBANKUSSD extends DynamicMenuController {
         }
     }
 
-
     function validateCustomerPin($pin) {
         $this->logMessage("Validating PIN " . $pin, null, 4);
 //        "MSISDN" => $this->_msisdn,
@@ -430,15 +429,6 @@ class NCBANKUSSD extends DynamicMenuController {
             "STATDESCRIPTION" => $response["STAT_DESCRIPTION"]
         ];
 
-        // MOCKED RESULT
-//        $responseData = [
-//            "PROFILEID" => 31,
-//            "PINHASH" => 12,
-//            "RAWPIN" => 1199,
-//            "STATUSCODE" => 1,
-//            "STATTYPE" => 1,
-//            "STATDESCRIPTION" => 1
-//        ];
         return $responseData;
     }
 
@@ -722,8 +712,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $message = "1)MTN "
                 . "\n2)Airtel"
                 . "\n3)Africell"
-                . "\n4)UTL"
-                . "\n5)Smile";
+                . "\n4)Smile";
         $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
         $this->displayText = $message;
         $this->sessionState = "CONTINUE";
@@ -733,19 +722,52 @@ class NCBANKUSSD extends DynamicMenuController {
     }
 
     function finishBuyingAirtime($input) {
-        $message = "Dear Customer, your airtime purchase request was failed. The reference NO. is #12891. For queries 0312388100/0312388155 or email"
-                . " ncbankcustomercare@ncgroup.com.";
-        $this->displayText = $message;
+        $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+        $recipientNumber = $this->getSessionVar("AirtimeRecipient");
+        $amount = $this->getSessionVar("airtimeAmount");
+        $selectedAccount = null;
+        foreach ($ACCOUNTS as $account) {
+            if ($account['ID'] == $input) {
+                $selectedAccount = $account;
+                break;
+            }
+        }
+        $this->saveSessionVar("selectedSourceAccount", $selectedAccount);
+        $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
+        $requestPayload = array(
+            "serviceID" => 10,
+            "flavour" => 'open',
+            "pin" => $this->encryptPin($PINRECORD['RAWPIN'], $this->IMCREQUESTID),
+            "columnC" => $recipientNumber,
+            "accountAlias" => $selectedAccount['ACCOUNTNAME'],
+            "accountID" => $selectedAccount['ACCOUNTCBSID'],
+            "amount" => $amount,
+            "merchantCode" => $this->getAirtimeWalletMerchantCodes($this->_networkID),
+            "columnC" => $this->getAirtimeWalletMerchantCodes($this->_networkID),
+            "enroll" => null,
+            "CBSID" => 1,
+            "columnD" => null,
+            "columnA" => $recipientNumber,
+        );
+        $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
+
+        $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
+        $response = json_decode($result);
+//                $this->displayText = "" . print_r($result, true); 
+        $this->logMessage("Airtime Purchase feedback:: ", $response, 4);
+        $this->displayText = $response->DATA->MESSAGE;
         $this->sessionState = "END";
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
     }
 
     function AirtimeMerchantChooseAccount($input) {
+
+        $this->saveSessionVar("airtimeAmount", $input);
+
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
-        $message = "Select Account"
-                . "\n";
+        $message = "Select Account \n";
         if ($ACCOUNTS != null) {
-            $message = "Choose Account ";
+            $message = "Choose Account \n";
             $count = 0;
             foreach ($ACCOUNTS as $account) {
                 $count = $count + 1;
@@ -764,10 +786,11 @@ class NCBANKUSSD extends DynamicMenuController {
         switch ($input) {
             case '1':
                 $message = "Enter Top Up Amount";
-                $message .= "\n0. Home \n" . "00. Back";               
-                $mssdnarray = explode("", $mssdn);
+                $message .= "\n0. Home \n" . "00. Back";
+
+                $this->saveSessionVar("AirtimeRecipient", $this->_msisdn);
                 //get the network id
-                //$networkID = $this->getProvider($this->_networkID);
+                $networkID = $this->getProvider($this->_networkID);
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
                 $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -846,48 +869,14 @@ class NCBANKUSSD extends DynamicMenuController {
                 );
                 $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
 
-
-
-                /*
-                  $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
-                  //todo: get details  :
-                  $requestPayload = array(
-                  "serviceID" => 10,
-                  "flavour" => 'self',
-                  "pin" => $PINRECORD['PINHASH'],
-                  "accountAlias" => $selectedAccount['NAME'],
-                  "accountID" => $selectedAccount['ACCOUNTCBSID'],
-                  );
-                  $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
-                  $client = new IXR_Client($this->serverURL);
-                  $client->debug = false;
-                  //select server process/function to call
-                  $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
-                  $message = "::" . (print_r($result, true));
-                 */
                 $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
 
                 $response = json_decode($result);
                 $this->logMessage("Balance Enquiry Response:: ", $response, 4);
                 $this->displayText = "" . ($response->DATA->MESSAGE);
 
-//                $this->displayText = "" . print_r($result, true); 
-//                $this->displayText = "" . ($response['DATA']['MESSAGE']);
-//                $this->displayText = "" . print_r($result, true);
                 $this->sessionState = "END";
-                /* $message = "Invalida account selected ";
-                  if ($selectedAccount != null) {
-                  $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
-                  $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
-                  $message .= "\nAccount Balance : " . $selectedAccount['ACCOUNTBALANCE'] . ' ' . $selectedAccount['ACCOUNTCURRENCY'] . ' ';
-                  }
-                  $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
-                  $this->displayText = $message;
-                  $this->sessionState = "CONTINUE";
-                  $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-                  $this->nextFunction = "BalanceEnquiryMenu";
-                  $this->previousPage = "startPage";
-                 */
+
                 break;
         }
     }
@@ -1324,6 +1313,15 @@ class xmlrpc_client {
             "64110" => "MTN",
             "64101" => "Airtel",
             "732125" => "Africell"
+        );
+        return $providers[$networkID];
+    }
+    
+    function getAirtimeWalletMerchantCodes($networkID) {
+        $providers = array(
+            "64110" => "MTNTOPUP",
+            "64101" => "AIRTELTOPUP",
+            "732125" => "AFRCELTOPUP"
         );
         return $providers[$networkID];
     }
