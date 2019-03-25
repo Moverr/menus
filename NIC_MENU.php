@@ -865,6 +865,9 @@ class NCBANKUSSD extends DynamicMenuController {
                     "accountID" => $selectedAccount['ACCOUNTCBSID'],
                 );
                 $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
+
+
+
                 /*
                   $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
                   //todo: get details  :
@@ -884,9 +887,12 @@ class NCBANKUSSD extends DynamicMenuController {
                  */
                 $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
 
-                $response = json_encode($result, true);
+                $response = json_decode($result);
+                $this->logMessage("Balance Enquiry Response:: ", $response, 4);
+                $this->displayText = "" . ($response->DATA->MESSAGE);
+
 //                $this->displayText = "" . print_r($result, true); 
-                $this->displayText = "" . ($response['DATA']['MESSAGE']);
+//                $this->displayText = "" . ($response['DATA']['MESSAGE']);
 //                $this->displayText = "" . print_r($result, true);
                 $this->sessionState = "END";
                 /* $message = "Invalida account selected ";
