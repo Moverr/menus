@@ -376,25 +376,7 @@ class NCBANKUSSD extends DynamicMenuController {
         }
     }
 
-//    function validateCustomerPin($pin, $msidn) {
-//        $this->logMessage("Validating PIN ", null, 4);
-//
-////        "MSISDN" => $this->_msisdn,
-//        $fields_string = "";
-//        $fields = array(
-//            "MSISDN" => $msidn,
-//            "PINHASH" => $this->encryptPin($pin, 1)
-//        );
-//
-//        $this->logMessage("URL Used:: " . $this->validatePinURL, null, 4);
-//
-//        $validationResponse = $this->postData($this->validatePinURL, $fields);
-//        $response = $this->populatePinResponse($validationResponse,$pin);
-//
-//
-//        $this->saveSessionVar("AUTHENTICATEDPIN", $response);
-//        return $response;
-//    }
+
     function validateCustomerPin($pin) {
         $this->logMessage("Validating PIN " . $pin, null, 4);
 //        "MSISDN" => $this->_msisdn,
@@ -496,7 +478,6 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->BankToMobileMenu();
                     break;
                 case '6':
-# code...
                     $message = " Top Up"
                             . "\n1) Own Phone"
                             . "\n2) Other Phone";
@@ -783,8 +764,7 @@ class NCBANKUSSD extends DynamicMenuController {
         switch ($input) {
             case '1':
                 $message = "Enter Top Up Amount";
-                $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
-                $mssdn = "254779820962";
+                $message .= "\n0. Home \n" . "00. Back";               
                 $mssdnarray = explode("", $mssdn);
                 //get the network id
                 //$networkID = $this->getProvider($this->_networkID);
@@ -796,7 +776,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 break;
             case '2':
                 $message = "Enter Top Up Amount";
-                $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+                $message .= "\n\n0. Home \n" . "00. Back \n";
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
                 $this->serviceDescription = $this->SERVICE_DESCRIPTION;
