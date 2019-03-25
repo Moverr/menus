@@ -1096,16 +1096,15 @@ class NCBANKUSSD extends DynamicMenuController {
             "columnA" => 12345,
         );
         $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
-            
+
         $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
-        $response = json_decode($result);
+//        $response = json_decode($result);
 //                $this->displayText = "" . print_r($result, true); 
-        $this->logMessage("Balance Enquiry Response:: ", $response, 4);
-        $this->displayText = "".($response);
+        $this->logMessage("Balance Enquiry Response:: ", print_r($result, true), 4);
+        $this->displayText = "" . print_r($response, true);
 //                ($response->DATA->MESSAGE);
-            
+
         $this->sessionState = "END";
-            
     }
 
     function ChangePinMenu() {
