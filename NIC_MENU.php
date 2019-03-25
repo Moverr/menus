@@ -957,14 +957,14 @@ class NCBANKUSSD extends DynamicMenuController {
                 break;
             default:
                 $selectedAccount = $ACCOUNTS[0];
-                
+
                 foreach ($ACCOUNTS as $account) {
                     if ($account['ID'] == $input) {
                         $selectedAccount = $account;
                         break;
                     }
                 }
-                
+
                 $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
 //                  $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
                 $requestPayload = array(
@@ -1037,7 +1037,7 @@ class NCBANKUSSD extends DynamicMenuController {
                         break;
                     }
                 }
-                
+
                 $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
 //                  $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
                 $requestPayload = array(
