@@ -1005,6 +1005,51 @@ class NCBANKUSSD extends DynamicMenuController {
         }
     }
 
+    function finalizeCheckBookRequest($input) {
+
+        if (is_numeric($input)) {
+            $this->displayText = "Invalid Input, Enter correct option ";
+            $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+            $this->nextFunction = "finalizeCheckBookRequest";
+            $this->previousPage = "finalizeCheckBookRequest";
+        } else {
+            $selectedAccount = null;
+            foreach ($ACCOUNTS as $account) {
+                if ($account['ID'] == $input) {
+                    $selectedAccount = $account;
+                    break;
+                }
+            }
+            if ($selectedAccount == null) {
+                $this->displayText = "Invalid Input, Enter correct option ";
+                $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+                $this->nextFunction = "finalizeCheckBookRequest";
+                $this->previousPage = "finalizeCheckBookRequest";
+            } else {
+
+                $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
+//                  $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
+                $requestPayload = array(
+                    "serviceID" => 15,
+                    "flavour" => 'noFlavour',
+                    "pin" => $this->encryptPin(1199, 1),
+                    //$this->encryptPin($PINRECORD['RAWPIN'],$this->IMCREQUESTID), //$this->encryptPin($PINRECORD['RAWPIN'],1)
+                    "accountAlias" => $selectedAccount['ACCOUNTNAME'],
+                    "accountID" => $selectedAccount['ACCOUNTCBSID'],
+                    "columnA" => 50,
+                );
+                $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
+
+                $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
+                $response = json_decode($result);
+//                $this->displayText = "" . print_r($result, true); 
+                $this->logMessage("Balance Enquiry Response:: ", $response, 4);
+                $this->displayText = "" . ($response->DATA->MESSAGE);
+                $this->sessionState = "END";
+            }
+        }
+    }
+
     //TODO:  TO CHEQUE NUMBER MENU \
     function ToChequeNumber($input) {
         $message = "To cheque number";
