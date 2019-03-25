@@ -1072,7 +1072,7 @@ class NCBANKUSSD extends DynamicMenuController {
         }
     }
 
-    function finishCheckbookCancellation() {
+    function finishCheckbookCancellation($input) {
 
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
 
@@ -1096,30 +1096,15 @@ class NCBANKUSSD extends DynamicMenuController {
             "columnA" => 12345,
         );
         $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
-
-
+            
         $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
         $response = json_decode($result);
 //                $this->displayText = "" . print_r($result, true); 
         $this->logMessage("Balance Enquiry Response:: ", $response, 4);
         $this->displayText = "" . ($response->DATA->MESSAGE);
-
-
-
+            
         $this->sessionState = "END";
-        /* $message = "Invalida account selected ";
-          if ($selectedAccount != null) {
-          $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
-          $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
-          $message .= "\nAccount Balance : " . $selectedAccount['ACCOUNTBALANCE'] . ' ' . $selectedAccount['ACCOUNTCURRENCY'] . ' ';
-          }
-          $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
-          $this->displayText = $message;
-          $this->sessionState = "CONTINUE";
-          $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-          $this->nextFunction = "BalanceEnquiryMenu";
-          $this->previousPage = "startPage";
-         */
+            
     }
 
     function ChangePinMenu() {
