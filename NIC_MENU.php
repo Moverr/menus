@@ -906,7 +906,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
                 $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-                $this->nextFunction = "MiniStatementMenu";
+                $this->nextFunction = "RequestCheckbook";
                 $this->previousPage = "startPage";
                 break;
             case "2":
@@ -918,6 +918,67 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->previousPage = "startPage";
                 break;
             default:
+                break;
+        }
+    }
+
+    function RequestCheckbook($input) {
+
+        $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+        switch ($input) {
+            case '0':
+                $this->firstMenu();
+                break;
+            case '00':
+                $this->firstMenu();
+                break;
+            case '000':
+                $this->firstMenu();
+                break;
+            default:
+                $selectedAccount = null;
+                foreach ($ACCOUNTS as $account) {
+                    if ($account['ID'] == $input) {
+                        $selectedAccount = $account;
+                        break;
+                    }
+                }
+                $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
+//                  $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
+                $requestPayload = array(
+                    "serviceID" => 15,
+                    "flavour" => 'noFlavour',
+                    "pin" => $this->encryptPin(1199, 1),
+                    //$this->encryptPin($PINRECORD['RAWPIN'],$this->IMCREQUESTID), //$this->encryptPin($PINRECORD['RAWPIN'],1)
+                    "accountAlias" => $selectedAccount['ACCOUNTNAME'],
+                    "accountID" => $selectedAccount['ACCOUNTCBSID'],
+                    "columnA" => 50,
+                );
+                $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
+
+
+                $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
+                $response = json_decode($result);
+//                $this->displayText = "" . print_r($result, true); 
+                $this->logMessage("Balance Enquiry Response:: ", $response, 4);
+                $this->displayText = "" . ($response->DATA->MESSAGE);
+
+
+
+                $this->sessionState = "END";
+                /* $message = "Invalida account selected ";
+                  if ($selectedAccount != null) {
+                  $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
+                  $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
+                  $message .= "\nAccount Balance : " . $selectedAccount['ACCOUNTBALANCE'] . ' ' . $selectedAccount['ACCOUNTCURRENCY'] . ' ';
+                  }
+                  $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
+                  $this->displayText = $message;
+                  $this->sessionState = "CONTINUE";
+                  $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                  $this->nextFunction = "BalanceEnquiryMenu";
+                  $this->previousPage = "startPage";
+                 */
                 break;
         }
     }
