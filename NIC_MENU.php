@@ -699,10 +699,11 @@ class NCBANKUSSD extends DynamicMenuController {
                   $message = "::" . (print_r($result, true));
                  */
                 $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
-                $response = json_decode($result, true);
+                $response = json_decode($result);
 //                $this->displayText = "" . print_r($result, true); 
-                 $this->logMessage("RESULT OBJECT ", $response, 4);
-                $this->displayText = "" . ($response->DATA);
+                $this->logMessage("Balance Enquiry Response:: ", $response, 4);
+                $this->displayText = "" . ($response->DATA->MESSAGE);
+
 
 
                 $this->sessionState = "END";
@@ -882,10 +883,10 @@ class NCBANKUSSD extends DynamicMenuController {
                   $message = "::" . (print_r($result, true));
                  */
                 $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
-                
-                 $response = json_encode($result, true);
+
+                $response = json_encode($result, true);
 //                $this->displayText = "" . print_r($result, true); 
-                $this->displayText = "" . ($response['DATA']['MESSAGE']); 
+                $this->displayText = "" . ($response['DATA']['MESSAGE']);
 //                $this->displayText = "" . print_r($result, true);
                 $this->sessionState = "END";
                 /* $message = "Invalida account selected ";
