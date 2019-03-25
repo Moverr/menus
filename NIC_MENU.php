@@ -960,7 +960,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $message = "Select Account"
                         . "\n";
                 if ($ACCOUNTS != null) {
-                    $message = "Choose Account ";
+                    $message = "Choose Account \n";
                     $count = 0;
                     foreach ($ACCOUNTS as $account) {
                         $count = $count + 1;
@@ -982,7 +982,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function finalizeCheckBookRequest($input) {
 
-        if (is_numeric($input)) {
+        if (!is_numeric($input)) {
             $this->displayText = "Invalid Input, Enter correct option ";
             $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
             $this->nextFunction = "finalizeCheckBookRequest";
