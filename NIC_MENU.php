@@ -881,7 +881,11 @@ class NCBANKUSSD extends DynamicMenuController {
                   $message = "::" . (print_r($result, true));
                  */
                 $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
-                $this->displayText = "" . print_r($result, true);
+                
+                 $response = json_encode($result, true);
+//                $this->displayText = "" . print_r($result, true); 
+                $this->displayText = "" . ($response['DATA']['MESSAGE']); 
+//                $this->displayText = "" . print_r($result, true);
                 $this->sessionState = "END";
                 /* $message = "Invalida account selected ";
                   if ($selectedAccount != null) {
