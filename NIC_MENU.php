@@ -370,7 +370,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 "serviceID" => 7,
                 "flavour" => 'noFlavour',
                 "pin" => $this->encryptPin($PINRECORD['RAWPIN'], 1),
-                "pin" => $this->encryptPin($NEWPIN, 1),
+                "newPin" => $this->encryptPin($NEWPIN, 1),
                 "MSISDN" => $this->_msisdn,
             );
             $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
