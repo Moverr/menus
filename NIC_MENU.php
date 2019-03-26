@@ -337,32 +337,31 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function ChangePinMenu($input) {
 
-        if ($input == null) {
-
-            $message = "Please enter Valid pin ";
+        if ($input == null || !is_numeric($input)) {
+            $message = "Please enter your current mobile banking pin ";
 
             $message .= "\n\n0. Home \n" . "00. Back";
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-            $this->nextFunction = "ChangePinMenu";
+            $this->nextFunction = "changePinMenuHandler";
             $this->previousPage = "ChangePinMenu";
         } else {
             //todo: save session 
 
             $this->saveSessionVar("NEWPIN", $input);
 
-            $message = "Please re-enter you new \n mobile banking pin";
+            $message = "Please re-enter you new mobile banking pin";
             $message .= "\n\n0. Home \n" . "00. Back";
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-            $this->nextFunction = "validatePinMenu";
+            $this->nextFunction = "changePinMenuHandler";
             $this->previousPage = "ChangePinMenu";
         }
     }
 
-    function validatePinMenu($input) {
+    function changePinMenuHandler($input) {
         $NEWPIN = $this->getSessionVar('NEWPIN');
         if ($NEWPIN == $input) {
 
@@ -380,17 +379,17 @@ class NCBANKUSSD extends DynamicMenuController {
             $response = json_decode($result);
 
 //                $this->displayText = "" . print_r($result, true); 
-            $this->logMessage("Balance Enquiry Response:: ", $response, 4);
+            $this->logMessage("Validate Customer PIN Response:: ", $response, 4);
             $this->displayText = "" . ($response->DATA->MESSAGE);
             $this->sessionState = "END";
         } else {
 
-            $message = "Invalid Pin \n Please Enter New Pin";
+            $message = "Your new Pins don't match \n Please Re-enter New Pin";
             $message .= "\n\n0. Home \n" . "00. Back";
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-            $this->nextFunction = "ChangePinMenu";
+            $this->nextFunction = "changePinMenuHandler";
             $this->previousPage = "validatePinMenu";
         }
     }
@@ -1048,7 +1047,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
     //PayTV functions
     function processStarTimes($input) {
-        $clientAccounts = $this->getSessionVar('clientAccounts');
+        $clientAccounts = $this->getSessionVar('ACCOUNTS');
 
         $selectedMenuService = $this->getSessionVar("menuOptionSelected");
 
@@ -1142,9 +1141,21 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->saveSessionVar('billEnrolmentNumber', 'NULL');
                     $this->saveSessionVar('package', $this->getSessionVar("selectedPackage"));
 
-                    $this->displayText = "Select account:\n" . $clientAccounts;
+                    $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+                    $message = "Select Account: \n";
+                    if ($ACCOUNTS != null) {
+                        $message = "Choose Account \n";
+                        $count = 0;
+                        foreach ($ACCOUNTS as $account) {
+                            $count = $count + 1;
+                            $selectedAccount = $account;
+                            $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
+                        }
+                    }
+
+                    $this->displayText = "Select account:\n" . $message;
                     $this->sessionState = "CONTINUE";
-                    $this->nextFunction = "validateAccountDetails";
+                    $this->nextFunction = "finalizeProcessingPayBill";
 
                     break;
 
@@ -1256,9 +1267,21 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->saveSessionVar('billEnrolmentNumber', 'NULL');
                     $this->saveSessionVar('package', $this->getSessionVar("selectedPackage"));
 
-                    $this->displayText = "Select account:\n" . $clientAccounts;
+                    $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+                    $message = "Select Account: \n";
+                    if ($ACCOUNTS != null) {
+                        $message = "Choose Account \n";
+                        $count = 0;
+                        foreach ($ACCOUNTS as $account) {
+                            $count = $count + 1;
+                            $selectedAccount = $account;
+                            $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
+                        }
+                    }
+
+                    $this->displayText = "Select account:\n" . $message;
                     $this->sessionState = "CONTINUE";
-                    $this->nextFunction = "validateAccountDetails";
+                    $this->nextFunction = "finalizeProcessingPayBill";
 
                     break;
 
@@ -1369,9 +1392,21 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->saveSessionVar('billEnrolmentNumber', 'NULL');
                     $this->saveSessionVar('package', $this->getSessionVar("selectedPackage"));
 
-                    $this->displayText = "Select account:\n" . $clientAccounts;
+                    $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+                    $message = "Select Account: \n";
+                    if ($ACCOUNTS != null) {
+                        $message = "Choose Account \n";
+                        $count = 0;
+                        foreach ($ACCOUNTS as $account) {
+                            $count = $count + 1;
+                            $selectedAccount = $account;
+                            $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
+                        }
+                    }
+
+                    $this->displayText = "Select account:\n" . $message;
                     $this->sessionState = "CONTINUE";
-                    $this->nextFunction = "validateAccountDetails";
+                    $this->nextFunction = "finalizeProcessingPayBill";
 
                     break;
 
@@ -1489,9 +1524,21 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->saveSessionVar('billEnrolmentNumber', 'NULL');
                     $this->saveSessionVar('package', $this->getSessionVar("selectedPackage"));
 
-                    $this->displayText = "Select account:\n" . $clientAccounts;
+                    $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+                    $message = "Select Account: \n";
+                    if ($ACCOUNTS != null) {
+                        $message = "Choose Account \n";
+                        $count = 0;
+                        foreach ($ACCOUNTS as $account) {
+                            $count = $count + 1;
+                            $selectedAccount = $account;
+                            $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
+                        }
+                    }
+
+                    $this->displayText = "Select account:\n" . $message;
                     $this->sessionState = "CONTINUE";
-                    $this->nextFunction = "validateAccountDetails";
+                    $this->nextFunction = "finalizeProcessingPayBill";
 
                     break;
 
@@ -1603,9 +1650,21 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->saveSessionVar('billEnrolmentNumber', 'NULL');
                     $this->saveSessionVar('package', $this->getSessionVar("selectedPackage"));
 
-                    $this->displayText = "Select account:\n" . $clientAccounts;
+                    $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+                    $message = "Select Account: \n";
+                    if ($ACCOUNTS != null) {
+                        $message = "Choose Account \n";
+                        $count = 0;
+                        foreach ($ACCOUNTS as $account) {
+                            $count = $count + 1;
+                            $selectedAccount = $account;
+                            $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
+                        }
+                    }
+
+                    $this->displayText = "Select account:\n" . $message;
                     $this->sessionState = "CONTINUE";
-                    $this->nextFunction = "validateAccountDetails";
+                    $this->nextFunction = "finalizeProcessingPayBill";
 
                     break;
 
@@ -1709,9 +1768,21 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->saveSessionVar('billEnrolment', "NO");
                     $this->saveSessionVar('billEnrolmentNumber', 'NULL');
 
-                    $this->displayText = "Select account:\n" . $clientAccounts;
+                    $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+                    $message = "Select Account: \n";
+                    if ($ACCOUNTS != null) {
+                        $message = "Choose Account \n";
+                        $count = 0;
+                        foreach ($ACCOUNTS as $account) {
+                            $count = $count + 1;
+                            $selectedAccount = $account;
+                            $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
+                        }
+                    }
+
+                    $this->displayText = "Select account:\n" . $message;
                     $this->sessionState = "CONTINUE";
-                    $this->nextFunction = "validateAccountDetails";
+                    $this->nextFunction = "finalizeProcessingPayBill";
                     break;
 
                 case 2:
@@ -1868,9 +1939,21 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->saveSessionVar('billEnrolment', "NO");
                     $this->saveSessionVar('billEnrolmentNumber', 'NULL');
 
-                    $this->displayText = "Select account:\n" . $clientAccounts;
+                    $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+                    $message = "Select Account: \n";
+                    if ($ACCOUNTS != null) {
+                        $message = "Choose Account \n";
+                        $count = 0;
+                        foreach ($ACCOUNTS as $account) {
+                            $count = $count + 1;
+                            $selectedAccount = $account;
+                            $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
+                        }
+                    }
+
+                    $this->displayText = "Select account:\n" . $message;
                     $this->sessionState = "CONTINUE";
-                    $this->nextFunction = "validateAccountDetails";
+                    $this->nextFunction = "finalizeProcessingPayBill";
                     break;
 
                 case 2:
@@ -1986,9 +2069,21 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->saveSessionVar('billEnrolmentNumber', 'NULL');
                     $this->saveSessionVar('NWSCarea', $this->getSessionVar("selectedArea"));
 
-                    $this->displayText = "Select account:\n" . $clientAccounts;
+                    $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+                    $message = "Select Account: \n";
+                    if ($ACCOUNTS != null) {
+                        $message = "Choose Account \n";
+                        $count = 0;
+                        foreach ($ACCOUNTS as $account) {
+                            $count = $count + 1;
+                            $selectedAccount = $account;
+                            $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
+                        }
+                    }
+
+                    $this->displayText = "Select account:\n" . $message;
                     $this->sessionState = "CONTINUE";
-                    $this->nextFunction = "validateAccountDetails";
+                    $this->nextFunction = "finalizeProcessingPayBill";
 
                     break;
 
@@ -2072,9 +2167,21 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->saveSessionVar('billEnrolment', "NO");
                     $this->saveSessionVar('billEnrolmentNumber', 'NULL');
 
-                    $this->displayText = "Select account:\n" . $clientAccounts;
+                    $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+                    $message = "Select Account: \n";
+                    if ($ACCOUNTS != null) {
+                        $message = "Choose Account \n";
+                        $count = 0;
+                        foreach ($ACCOUNTS as $account) {
+                            $count = $count + 1;
+                            $selectedAccount = $account;
+                            $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
+                        }
+                    }
+
+                    $this->displayText = "Select account:\n" . $message;
                     $this->sessionState = "CONTINUE";
-                    $this->nextFunction = "validateAccountDetails";
+                    $this->nextFunction = "finalizeProcessingPayBill";
                     break;
 
                 case 2:
@@ -2414,6 +2521,49 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->sessionState = "END";
                 break;
         }
+    }
+
+    function finalizeProcessingPayBill($input) {
+        $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+
+        $merchantAccountNumber = $this->getSessionVar("utilityBillAccountNo");
+        $merchantCode = $this->getSessionVar("merchantCode");
+        $amount = $this->getSessionVar("utilityBillAmount");
+        $flavor = $this->getSessionVar("flavour");
+        $billEnrolment = $this->getSessionVar("billEnrolment");
+
+        $selectedAccount = null;
+        foreach ($ACCOUNTS as $account) {
+            if ($account['ID'] == $input) {
+                $selectedAccount = $account;
+                break;
+            }
+        }
+        $this->saveSessionVar("selectedSourceAccount", $selectedAccount);
+        $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
+        $requestPayload = array(
+            "serviceID" => "BILL_PAY",
+            "flavour" => $flavor,
+            "pin" => $this->encryptPin($PINRECORD['RAWPIN'], $this->IMCREQUESTID),
+            "accountAlias" => $selectedAccount['ACCOUNTNAME'],
+            "accountID" => $selectedAccount['ACCOUNTCBSID'],
+            "amount" => $amount,
+            "merchantCode" => $merchantCode,
+            "columnC" => $merchantCode,
+            "enroll" => $billEnrolment,
+            "CBSID" => 1,
+            "columnD" => "NULL",
+            "columnA" => $merchantAccountNumber,
+        );
+        $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
+
+        $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
+        $response = json_decode($result);
+//                $this->displayText = "" . print_r($result, true); 
+        $this->logMessage("Bill Payment wallet Response:: ", $response, 4);
+        $this->displayText = $response->DATA->MESSAGE;
+        $this->sessionState = "END";
+        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
     }
 
     /////End Of Pay Bill and Pay TVs/////////////////
