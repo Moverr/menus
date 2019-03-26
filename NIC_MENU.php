@@ -297,7 +297,16 @@ class NCBANKUSSD extends DynamicMenuController {
                     break;
                 case '9':
 # code...
-                    $this->ChangePinMenu();
+                    $message = "Please enter you new \n mobile banking pin";
+
+                    $message .= "\n\n0. Home \n" . "00. Back";
+                    $this->displayText = $message;
+                    $this->sessionState = "CONTINUE";
+                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                    $this->nextFunction = "ChangePinMenu";
+                    $this->previousPage = "startPage";
+
+
                     break;
                 case '0':
 # code...
@@ -323,6 +332,66 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->serviceDescription = "MTN Mula";
             $this->nextFunction = "validateMobileNumber";
             $this->previousPage = "validateMobileNumber";
+        }
+    }
+
+    function ChangePinMenu($input) {
+
+        if ($input == null) {
+
+            $message = "Please enter Valid pin ";
+
+            $message .= "\n\n0. Home \n" . "00. Back";
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+            $this->nextFunction = "ChangePinMenu";
+            $this->previousPage = "ChangePinMenu";
+        } else {
+            //todo: save session 
+
+            $this->saveSessionVar("NEWPIN", $input);
+
+            $message = "Please re-enter you new \n mobile banking pin";
+            $message .= "\n\n0. Home \n" . "00. Back";
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+            $this->nextFunction = "validatePinMenu";
+            $this->previousPage = "ChangePinMenu";
+        }
+    }
+
+    function validatePinMenu($input) {
+        $NEWPIN = $this->getSessionVar('NEWPIN');
+        if ($NEWPIN == $input) {
+
+            $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
+            $requestPayload = array(
+                "serviceID" => 7,
+                "flavour" => 'noFlavour',
+                "pin" => $this->encryptPin($PINRECORD['RAWPIN'], 1),
+                "pin" => $this->encryptPin($NEWPIN, 1),
+                "MSISDN" => $this->_msisdn,
+            );
+            $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
+
+            $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
+            $response = json_decode($result);
+
+//                $this->displayText = "" . print_r($result, true); 
+            $this->logMessage("Balance Enquiry Response:: ", $response, 4);
+            $this->displayText = "" . ($response->DATA->MESSAGE);
+            $this->sessionState = "END";
+        } else {
+
+            $message = "Invalid Pin \n Please Enter New Pin";
+            $message .= "\n\n0. Home \n" . "00. Back";
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+            $this->nextFunction = "ChangePinMenu";
+            $this->previousPage = "validatePinMenu";
         }
     }
 
@@ -890,10 +959,6 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
         $this->sessionState = "END";
-    }
-
-    function ChangePinMenu() {
-        $this->serviceNotAvailable();
     }
 
     function PromptPin() {
