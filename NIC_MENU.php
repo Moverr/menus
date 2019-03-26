@@ -37,7 +37,7 @@ class NCBANKUSSD extends DynamicMenuController {
     private $utl_reg = "/^(71|071|25671)(\d{7})$/";
     private $orange_reg = "/^(079|25679|79)(\d{7})$/";
     //validation configs
-    private $hubJSONAPIUrl = "http://localhost:9001/hub/services/paymentGateway/JSON/index.php";
+//    private $hubJSONAPIUrl = "http://localhost:9001/hub/services/paymentGateway/JSON/index.php";
     private $hubValidationFunction = "BEEP.validateAccount";
     private $hubAuthSuccessCode = "131";
     private $hubValidationSuccessCode = "307";
@@ -184,7 +184,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->logMessage("Validating PIN " . $pin, null, 4);
 //        "MSISDN" => $this->_msisdn,
         $payload = array(
-            "MSISDN" => $this->SAMPLEMSSDN,
+           "MSISDN" => $this->_msisdn,
             "USERNAME" => $this->USERNAME,
             "PASSWORD" => $this->PASSWORD,
             "PINHASH" => $this->encryptPin($pin, $this->IMCREQUESTID)
@@ -411,7 +411,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $requestPayload = array(
                     "serviceID" => 10,
                     "flavour" => 'self',
-                    "pin" => $this->encryptPin(1199, 1),
+                    "pin" => $this->encryptPin($PINRECORD['RAWPIN'], 1),
                     //$this->encryptPin($PINRECORD['RAWPIN'],$this->IMCREQUESTID), //$this->encryptPin($PINRECORD['RAWPIN'],1)
                     "accountAlias" => $selectedAccount['ACCOUNTNAME'],
                     "accountID" => $selectedAccount['ACCOUNTCBSID'],
@@ -605,7 +605,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $requestPayload = array(
                     "serviceID" => 11,
                     "flavour" => 'self',
-                    "pin" => $this->encryptPin(1199, 1),
+                    "pin" => $this->encryptPin($PINRECORD['RAWPIN'], 1),
                     //$this->encryptPin($PINRECORD['RAWPIN'],$this->IMCREQUESTID), //$this->encryptPin($PINRECORD['RAWPIN'],1)
                     "accountAlias" => $selectedAccount['ACCOUNTNAME'],
                     "accountID" => $selectedAccount['ACCOUNTCBSID'],
@@ -721,7 +721,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $requestPayload = array(
                     "serviceID" => 15,
                     "flavour" => 'noFlavour',
-                    "pin" => $this->encryptPin(1199, 1),
+                    "pin" => $this->encryptPin($PINRECORD['RAWPIN'], 1),
                     //$this->encryptPin($PINRECORD['RAWPIN'],$this->IMCREQUESTID), //$this->encryptPin($PINRECORD['RAWPIN'],1)
                     "accountAlias" => $selectedAccount['ACCOUNTNAME'],
                     "accountID" => $selectedAccount['ACCOUNTCBSID'],
@@ -801,7 +801,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $requestPayload = array(
             "serviceID" => 16,
             "flavour" => 'noFlavour',
-            "pin" => $this->encryptPin(1199, 1),
+            "pin" => $this->encryptPin($PINRECORD['RAWPIN'], 1),
             //$this->encryptPin($PINRECORD['RAWPIN'],$this->IMCREQUESTID), //$this->encryptPin($PINRECORD['RAWPIN'],1)
             "accountAlias" => $selectedAccount['ACCOUNTNAME'],
             "accountID" => $selectedAccount['ACCOUNTCBSID'],
