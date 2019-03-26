@@ -614,25 +614,41 @@ class NCBANKUSSD extends DynamicMenuController {
                         break;
                     }
                 }
-                $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
+                if ($selectedAccount == null) {
+
+                    $message = "Invalid Input \n\nChoose Account\n";
+                    $index = 0;
+                    foreach ($ACCOUNTS as $account) {
+                        $index = $index + 1;
+                        $message .= $index . ") " . $account['ACCOUNTNUMBER'] . "\n";
+                    }
+                    $message .= "\n\n0. Home \n" . "00. Back";
+                    $this->displayText = $message;
+                    $this->sessionState = "CONTINUE";
+                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                    $this->nextFunction = "MiniStatementMenu";
+                    $this->previousPage = "MiniStatementMenu";
+                } else {
+                    $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
 //                  $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
-                $requestPayload = array(
-                    "serviceID" => 11,
-                    "flavour" => 'self',
-                    "pin" => $this->encryptPin($PINRECORD['RAWPIN'], 1),
-                    //$this->encryptPin($PINRECORD['RAWPIN'],$this->IMCREQUESTID), //$this->encryptPin($PINRECORD['RAWPIN'],1)
-                    "accountAlias" => $selectedAccount['ACCOUNTNAME'],
-                    "accountID" => $selectedAccount['ACCOUNTCBSID'],
-                );
-                $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
+                    $requestPayload = array(
+                        "serviceID" => 11,
+                        "flavour" => 'self',
+                        "pin" => $this->encryptPin($PINRECORD['RAWPIN'], 1),
+                        //$this->encryptPin($PINRECORD['RAWPIN'],$this->IMCREQUESTID), //$this->encryptPin($PINRECORD['RAWPIN'],1)
+                        "accountAlias" => $selectedAccount['ACCOUNTNAME'],
+                        "accountID" => $selectedAccount['ACCOUNTCBSID'],
+                    );
+                    $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
 
-                $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
+                    $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
 
-                $response = json_decode($result);
-                $this->logMessage("Balance Enquiry Response:: ", $response, 4);
-                $this->displayText = "" . ($response->DATA->MESSAGE);
+                    $response = json_decode($result);
+                    $this->logMessage("Balance Enquiry Response:: ", $response, 4);
+                    $this->displayText = "" . ($response->DATA->MESSAGE);
 
-                $this->sessionState = "END";
+                    $this->sessionState = "END";
+                }
 
                 break;
         }
