@@ -37,7 +37,7 @@ class NCBANKUSSD extends DynamicMenuController {
     private $utl_reg = "/^(71|071|25671)(\d{7})$/";
     private $orange_reg = "/^(079|25679|79)(\d{7})$/";
     //validation configs
-    private $hubJSONAPIUrl = "http://localhost:9001/hub/services/paymentGateway/JSON/index.php";
+//    private $hubJSONAPIUrl = "http://localhost:9001/hub/services/paymentGateway/JSON/index.php";
     private $hubValidationFunction = "BEEP.validateAccount";
     private $hubAuthSuccessCode = "131";
     private $hubValidationSuccessCode = "307";
@@ -339,7 +339,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->logMessage("Validating PIN " . $pin, null, 4);
 //        "MSISDN" => $this->_msisdn,
         $payload = array(
-            "MSISDN" => $this->SAMPLEMSSDN,
+           "MSISDN" => $this->_msisdn,
             "USERNAME" => $this->USERNAME,
             "PASSWORD" => $this->PASSWORD,
             "PINHASH" => $this->encryptPin($pin, $this->IMCREQUESTID)
