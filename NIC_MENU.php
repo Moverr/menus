@@ -36,6 +36,13 @@ class NCBANKUSSD extends DynamicMenuController {
     private $warid_reg = "/^(25670|70|070)(\d{7})$/";
     private $utl_reg = "/^(71|071|25671)(\d{7})$/";
     private $orange_reg = "/^(079|25679|79)(\d{7})$/";
+    //validation configs
+    private $hubJSONAPIUrl = "http://localhost:9001/hub/services/paymentGateway/JSON/index.php";
+    private $hubValidationFunction = "BEEP.validateAccount";
+    private $hubAuthSuccessCode = "131";
+    private $hubValidationSuccessCode = "307";
+    private $beepUsername = "nic_test_api_user";
+    private $beepPassword = "nic_t3st_api_us3r";
 
     function startPage() {
         $this->firstMenu();
