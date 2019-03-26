@@ -645,7 +645,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
                     $response = json_decode($result);
                     $this->logMessage("Balance Enquiry Response:: ", $response, 4);
-                    $this->displayText = "" . substr(($response->DATA->MESSAGE), 100) . "...\nfull statement coming via sms";
+                    $this->displayText = "" . ($response->DATA->MESSAGE);
 
                     $this->sessionState = "END";
                 }
@@ -665,11 +665,13 @@ class NCBANKUSSD extends DynamicMenuController {
                     $count = $count + 1;
                     $message .= "\n" . $count . ") " . $leaf;
                 }
+
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
                 $this->serviceDescription = $this->SERVICE_DESCRIPTION;
                 $this->nextFunction = "RequestCheckbook";
                 $this->previousPage = "startPage";
+
                 break;
             case "2":
                 $message = "Enter cheque number";
@@ -680,6 +682,16 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->previousPage = "startPage";
                 break;
             default:
+                $message = "Account Request"
+                        . "\n1) Cheque Book Request"
+                        . "\n2) Stop Cheque ";
+                $message .= "\n\n0. Home \n" . "00. Back";
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                $this->nextFunction = "ChequeRequestMenu";
+                $this->previousPage = "ChequeRequestMenu";
+
                 break;
         }
     }
@@ -698,25 +710,53 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->firstMenu();
                 break;
             default:
-                $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
-                $message = "Select Account"
-                        . "\n";
-                if ($ACCOUNTS != null) {
-                    $message = "Choose Account \n";
-                    $count = 0;
-                    foreach ($ACCOUNTS as $account) {
-                        $count = $count + 1;
-                        $selectedAccount = $account;
-                        $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
+
+                $leaves = [50, 100];
+                $message = "Invalid input \n Select number of leaves";
+                $count = 0;
+                $selectedLeaf = null;
+                foreach ($leaves as $leaf) {
+                    $count = $count + 1;
+                    if ($input == $leaf) {
+                        $selectedLeaf = $leaf;
                     }
                 }
-                $this->displayText = $message;
-                $this->sessionState = "CONTINUE";
-                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-                $this->nextFunction = "finalizeCheckBookRequest";
-                $this->previousPage = "RequestCheckbook";
+                if ($selectedLeaf == null) {
 
+                    $message = "Select number of leaves";
+                    $count = 0;
+                    foreach ($leaves as $leaf) {
+                        $count = $count + 1;
+                        $message .= "\n" . $count . ") " . $leaf;
+                    }
 
+                    $this->displayText = $message;
+                    $this->sessionState = "CONTINUE";
+                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                    $this->nextFunction = "RequestCheckbook";
+                    $this->previousPage = "RequestCheckbook";
+                } else {
+
+                    $this->saveSessionVar("SELECTEDLEAFNUMBER", $selectedLeaf);
+
+                    $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+                    $message = "Select Account"
+                            . "\n";
+                    if ($ACCOUNTS != null) {
+                        $message = "Choose Account \n";
+                        $count = 0;
+                        foreach ($ACCOUNTS as $account) {
+                            $count = $count + 1;
+                            $selectedAccount = $account;
+                            $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
+                        }
+                    }
+                    $this->displayText = $message;
+                    $this->sessionState = "CONTINUE";
+                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                    $this->nextFunction = "finalizeCheckBookRequest";
+                    $this->previousPage = "RequestCheckbook";
+                }
 
                 break;
         }
@@ -726,45 +766,47 @@ class NCBANKUSSD extends DynamicMenuController {
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
 
 
-        if (!is_numeric($input)) {
-            $this->displayText = "Invalid Input, Enter correct option ";
-            $message .= "\n\n0. Home \n" . "00. Back ";
-            $this->nextFunction = "finalizeCheckBookRequest";
-            $this->previousPage = "finalizeCheckBookRequest";
-        } else {
-            $selectedAccount = null;
-            foreach ($ACCOUNTS as $account) {
-                if ($account['ID'] == $input) {
+        $selectedAccount = null;
+        foreach ($ACCOUNTS as $account) {
+            if ($account['ID'] == $input) {
+                $selectedAccount = $account;
+                break;
+            }
+        }
+        if ($selectedAccount == null) {
+
+            $message = "Select Account"
+                    . "\n";
+            if ($ACCOUNTS != null) {
+                $message = "Choose Account \n";
+                $count = 0;
+                foreach ($ACCOUNTS as $account) {
+                    $count = $count + 1;
                     $selectedAccount = $account;
-                    break;
+                    $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
                 }
             }
-            if ($selectedAccount == null) {
-                $this->displayText = "Invalid Input, Enter correct option ";
-                $message .= "\n\n0. Home \n" . "00. Back";
-                $this->nextFunction = "finalizeCheckBookRequest";
-                $this->previousPage = "finalizeCheckBookRequest";
-            } else {
+            $this->displayText = $message;
+        } else {
 
-                $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
+            $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
 
-                $requestPayload = array(
-                    "serviceID" => 15,
-                    "flavour" => 'noFlavour',
-                    "pin" => $this->encryptPin($PINRECORD['RAWPIN'], 1),
-                    //$this->encryptPin($PINRECORD['RAWPIN'],$this->IMCREQUESTID), //$this->encryptPin($PINRECORD['RAWPIN'],1)
-                    "accountAlias" => $selectedAccount['ACCOUNTNAME'],
-                    "accountID" => $selectedAccount['ACCOUNTCBSID'],
-                    "columnA" => 50,
-                );
-                $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
-                $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
-                $response = json_decode($result);
+            $requestPayload = array(
+                "serviceID" => 15,
+                "flavour" => 'noFlavour',
+                "pin" => $this->encryptPin($PINRECORD['RAWPIN'], 1),
+                //$this->encryptPin($PINRECORD['RAWPIN'],$this->IMCREQUESTID), //$this->encryptPin($PINRECORD['RAWPIN'],1)
+                "accountAlias" => $selectedAccount['ACCOUNTNAME'],
+                "accountID" => $selectedAccount['ACCOUNTCBSID'],
+                "columnA" => $this->getSessionVar('SELECTEDLEAFNUMBER'),
+            );
+            $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
+            $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
+            $response = json_decode($result);
 //                $this->displayText = "" . print_r($result, true); 
-                $this->logMessage("Balance Enquiry Response:: ", $response, 4);
-                $this->displayText = "" . ($response->DATA->MESSAGE);
-                $this->sessionState = "END";
-            }
+            $this->logMessage("Balance Enquiry Response:: ", $response, 4);
+            $this->displayText = "" . ($response->DATA->MESSAGE);
+            $this->sessionState = "END";
         }
     }
 
