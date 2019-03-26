@@ -944,7 +944,7 @@ class NCBANKUSSD extends DynamicMenuController {
             );
             $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
             $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
-            $this->displayText = "" . print_r($result['STAT_DESCRIPTION'], true);
+            $this->displayText = "" . $result['STAT_DESCRIPTION'];
             $this->sessionState = "END";
         }
     }
