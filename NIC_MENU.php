@@ -717,7 +717,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $selectedLeaf = null;
                 foreach ($leaves as $leaf) {
                     $count = $count + 1;
-                    if ($input == $leaf) {
+                    if ($input == $count) {
                         $selectedLeaf = $leaf;
                     }
                 }
