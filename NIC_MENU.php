@@ -629,7 +629,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $requestPayload = array(
                     "serviceID" => 10,
                     "flavour" => 'self',
-                    "pin" => $this->encryptPin(1199, 1),
+                    "pin" => $this->encryptPin($PINRECORD['RAWPIN'], 1),
                     //$this->encryptPin($PINRECORD['RAWPIN'],$this->IMCREQUESTID), //$this->encryptPin($PINRECORD['RAWPIN'],1)
                     "accountAlias" => $selectedAccount['ACCOUNTNAME'],
                     "accountID" => $selectedAccount['ACCOUNTCBSID'],
@@ -838,7 +838,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $requestPayload = array(
                     "serviceID" => 11,
                     "flavour" => 'self',
-                    "pin" => $this->encryptPin(1199, 1),
+                    "pin" => $this->encryptPin($PINRECORD['RAWPIN'], 1),
                     //$this->encryptPin($PINRECORD['RAWPIN'],$this->IMCREQUESTID), //$this->encryptPin($PINRECORD['RAWPIN'],1)
                     "accountAlias" => $selectedAccount['ACCOUNTNAME'],
                     "accountID" => $selectedAccount['ACCOUNTCBSID'],
@@ -954,7 +954,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $requestPayload = array(
                     "serviceID" => 15,
                     "flavour" => 'noFlavour',
-                    "pin" => $this->encryptPin(1199, 1),
+                    "pin" => $this->encryptPin($PINRECORD['RAWPIN'], 1),
                     //$this->encryptPin($PINRECORD['RAWPIN'],$this->IMCREQUESTID), //$this->encryptPin($PINRECORD['RAWPIN'],1)
                     "accountAlias" => $selectedAccount['ACCOUNTNAME'],
                     "accountID" => $selectedAccount['ACCOUNTCBSID'],
@@ -1034,7 +1034,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $requestPayload = array(
             "serviceID" => 16,
             "flavour" => 'noFlavour',
-            "pin" => $this->encryptPin(1199, 1),
+            "pin" => $this->encryptPin($PINRECORD['RAWPIN'], 1),
             //$this->encryptPin($PINRECORD['RAWPIN'],$this->IMCREQUESTID), //$this->encryptPin($PINRECORD['RAWPIN'],1)
             "accountAlias" => $selectedAccount['ACCOUNTNAME'],
             "accountID" => $selectedAccount['ACCOUNTCBSID'],
