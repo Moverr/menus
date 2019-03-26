@@ -8,6 +8,7 @@
  */
 error_reporting(0);
 include 'DynamicMenuController.php';
+include './DTBUGconfigs.php';
 
 class NCBANKUSSD extends DynamicMenuController {
 
@@ -21,7 +22,6 @@ class NCBANKUSSD extends DynamicMenuController {
     private $SERVICE_DESCRIPTION = "NC BANK MENU ";
     private $walletUrl = 'http://132.147.160.57:8300/wallet/IS_APIs/CustomerRegistration/fetchCustomerData';
     private $serverURL = 'http://132.147.160.57:8300/wallet/Cloud_APIs/index';
-    private $hubJSONAPIUrl = "http://localhost:9001/hub/services/paymentGateway/JSON/index.php";
 //    private $accessPoint = "*268#";
     private $accessPoint = "NIC_UG";
 //            "*268#";
@@ -37,7 +37,7 @@ class NCBANKUSSD extends DynamicMenuController {
     private $utl_reg = "/^(71|071|25671)(\d{7})$/";
     private $orange_reg = "/^(079|25679|79)(\d{7})$/";
     //validation configs
-//    private $hubJSONAPIUrl = "http://localhost:9001/hub/services/paymentGateway/JSON/index.php";
+    private $hubJSONAPIUrl = "http://localhost:9001/hub/services/paymentGateway/JSON/index.php";
     private $hubValidationFunction = "BEEP.validateAccount";
     private $hubAuthSuccessCode = "131";
     private $hubValidationSuccessCode = "307";
@@ -49,161 +49,6 @@ class NCBANKUSSD extends DynamicMenuController {
         // $this->validateCustomerPin('22222');
 //        $this->checkPin();
 //        $this->paySelfTest();
-    }
-
-    function postData($url, $fields) {
-        $fields_string = null;
-        $ch = curl_init();
-        //set the url, number of POST vars, POST data
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
-        curl_setopt($ch, CURLOPT_POST, count($fields));
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
-        //execute post
-        $result = curl_exec($ch);
-        //close connection
-        curl_close($ch);
-        return $result;
-    }
-
-    function invokeWallet($walletFunction, $payload) {
-        //Get the wallet url
-        $walletUrl = $this->serverURL;
-        try {
-            //make API call
-            $client = new IXR_Client($walletUrl);
-            $client->debug = false;
-            if (!$client->query($walletFunction, $payload)) {
-                $this->logMessage("IXR_Client error occurred - " . $client->getErrorCode() . ":" . $client->getErrorMessage(), null, 4);
-            }
-            //get response
-            $result = $client->getResponse();
-            $data = json_decode($result, true);
-            $this->logMessage("|Wallet URL: " . $walletUrl . " | Response from wallet:", $data, 4);
-
-            return $result;
-        } catch (Exception $exception) {
-            $this->logMessage("Exception occured:" . $exception->getMessage(), null, 4);
-            return "MVERS" . $exception->getMessage();
-        }
-    }
-
-    public function invokeAsyncWallet($payload, $channelRequestID) {
-        try {
-            $username = "admin";
-            $password = "admin";
-            $apiUrl = $this->serverURL;
-            $apiFunction = "processCloudRequest"; //logRequest;
-            //convert array into XML format
-            //formulate xml payload.
-            $request_xml = "<Payload>";
-            foreach ($payload as $key => $value) {
-                $request_xml .= '<' . $key . '>' . $value . '</' . $key . '>';
-            }
-            $request_xml .= "</Payload>";
-            $payload = $request_xml;
-            $credentials = array(
-                'cloudUser' => $username,
-                'cloudPass' => $password,
-            );
-            if (is_array($channelRequestID)) {
-                $channelRequestID = $channelRequestID['LAST_INSERT_ID'];
-            }
-            //define cloud packet data
-            $cloudPacket = array(
-                "MSISDN" => $this->_msisdn,
-                "destination" => $this->accessPoint, //create this in accessPoints
-                "IMCID" => "2",
-                "channelRequestID" => $channelRequestID,
-                "networkID" => 1,
-                "cloudDateReceived" => date('Y-m-d H:i:s'),
-                "payload" => base64_encode($payload),
-                "imcRequestID" => $this->IMCREQUESTID,
-                "requestMode" => "0", //0 if sync and 1 when async
-                "clientSystemID" => 77,
-                "systemName" => 'USSD',
-            );
-            //package our data
-            $params = array(
-                'credentials' => $credentials,
-                'cloudPacket' => $cloudPacket,
-            );
-            //make API call
-            $client = new IXR_Client($apiUrl);
-            $client->debug = false;
-            $client->query($apiFunction, $params);
-            $client->query("processCloudRequest", $cloudPacket);
-            $response = $client->getResponse();
-
-            if (!$response) {
-                $error_message = $client->getErrorMessage();
-
-                $this->logMessage("IXR_Client error occurred - " . $client->getErrorCode() . ":" . $error_message, null, 4);
-                return $error_message;
-            }
-            $this->logMessage("|Wallet URL: " . $apiUrl . " | Response from wallet: ", $response, 4);
-            return $response;
-        } catch (Exception $exception) {
-            $this->logMessage("Exception occured: " . $exception->getMessage(), null, 4);
-            return FALSE;
-        }
-    }
-
-    public function invokeSyncWallet($payload, $channelRequestID) {
-        try {
-            $username = "admin";
-            $password = "admin";
-//            $apiUrl = $this->walletSyncRequestURL;
-            $apiUrl = $this->serverURL;
-            $apiFunction = "processCloudRequest";
-            //convert array into XML format
-            //formulate xml payload.
-            $request_xml = "";
-            $request_xml = "<Payload>";
-            foreach ($payload as $key => $value) {
-                $request_xml .= '<' . $key . '>' . $value . '</' . $key . '>';
-            }
-            $request_xml .= "</Payload>";
-            $payload = $request_xml;
-            $credentials = array(
-                'cloudUser' => $username,
-                'cloudPass' => $password,
-            );
-            //define cloud packet data
-            $cloudPacket = array(
-                "MSISDN" => $this->_msisdn,
-                "destination" => $this->accessPoint,
-                //$this->accessPoint, //create this in accessPoints
-                "IMCID" => "2",
-                "channelRequestID" => $channelRequestID,
-                "networkID" => 1,
-                "cloudDateReceived" => date('Y-m-d H:i:s'),
-                "payload" => base64_encode($payload),
-                "imcRequestID" => $this->IMCREQUESTID,
-                "requestMode" => 1, //this means that this is a synchronous  //0 if sync and 1 when async
-                "clientSystemID" => 77,
-                "systemName" => 'USSD'
-            );
-            //package our data
-            $params = array(
-                'credentials' => $credentials,
-                'cloudPacket' => $cloudPacket,
-            );
-            //make API call
-            $client = new IXR_Client($apiUrl);
-            $client->debug = false;
-            if (!$client->query($apiFunction, $params)) {
-                $this->logMessage("IXR_Client error occurred - " . $client->getErrorCode() . ":" . $client->getErrorMessage(), null, 4);
-            }
-            //get response
-            $result = $client->getResponse();
-
-            return $result;
-        } catch (Exception $exception) {
-            $this->logMessage("Exception occured:" . $exception->getMessage(), null, 4);
-            return $exception->getMessage();
-        }
     }
 
     function paySelfTest() {
@@ -375,6 +220,7 @@ class NCBANKUSSD extends DynamicMenuController {
     }
 
     function menuSwitcher($input) {
+
         if (is_numeric($input)) {
             switch ('' . $input) {
                 case '1':
@@ -398,7 +244,8 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->previousPage = "startPage";
                     break;
                 case '3':
-# code...
+                    $service = $this->getSessionVar('selectedService');
+                    $this->previousPage = "startPage";
                     $this->processPayBill($input);
                     break;
 
@@ -477,67 +324,6 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->nextFunction = "validateMobileNumber";
             $this->previousPage = "validateMobileNumber";
         }
-    }
-
-    public function call($url, $params) {
-        error_reporting(E_ALL);
-// get arguments
-        $method = array_shift($params);
-        $post = xmlrpc_encode_request($method, $params);
-        $ch = curl_init();
-// set URL and other appropriate options
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-// issue the request
-        $response = curl_exec($ch);
-        $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $curl_errorno = curl_errno($ch);
-        $curl_error = curl_error($ch);
-        curl_close($ch);
-        return xmlrpc_decode($response);
-    }
-
-    function getRecipientNetworkID($msisdn) {
-        if (preg_match($this->mtn_reg, $msisdn)) {
-            return "MTN";
-        } else if (preg_match($this->airtel_reg, $msisdn)) {
-            return "AIRTEL";
-        } else if (preg_match($this->orange_reg, $msisdn)) {
-            return "ORANGE";
-        } else if (preg_match($this->utl_reg, $msisdn)) {
-            return "UTL";
-        } else if (preg_match($this->warid_reg, $msisdn)) {
-            return "WARID";
-        } else {
-            return "UNSupportedNetwork";
-        }
-    }
-
-    function getAirtimeWalletMerchantCodes($msisdn) {
-        if (preg_match($this->mtn_reg, $msisdn)) {
-            return "MTNTOPUP";
-        } else if (preg_match($this->airtel_reg, $msisdn)) {
-            return "AIRTELTOPUP";
-        } else if (preg_match($this->orange_reg, $msisdn)) {
-            return "AFRCELTOPUP";
-        } else if (preg_match($this->utl_reg, $msisdn)) {
-            return "UTL";
-        } else if (preg_match($this->warid_reg, $msisdn)) {
-            return "AIRTELTOPUP";
-        } else {
-            return "NULL";
-        }
-    }
-
-    function getProvider($networkID) {
-        $providers = array(
-            "64110" => "MTN",
-            "64101" => "Airtel",
-            "732125" => "Africell"
-        );
-        return $providers[$networkID];
     }
 
     function checkPin() {
@@ -1068,7 +854,7 @@ class NCBANKUSSD extends DynamicMenuController {
     ////////////Process Pay Bill and Pay TVs
     function processPayBill($input) {
 
-        if ($this->previousPage == "selectBankingService") {
+        if ($this->previousPage == "startPage") {
             $this->displayText = "Select Utility. \n1: UMEME \n2: NWSC \n3: Pay TV";
             $this->sessionState = "CONTINUE";
             $this->nextFunction = "processPayBill";
@@ -2765,6 +2551,161 @@ class NCBANKUSSD extends DynamicMenuController {
         }
     }
 
+    function postData($url, $fields) {
+        $fields_string = null;
+        $ch = curl_init();
+        //set the url, number of POST vars, POST data
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
+        curl_setopt($ch, CURLOPT_POST, count($fields));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+        //execute post
+        $result = curl_exec($ch);
+        //close connection
+        curl_close($ch);
+        return $result;
+    }
+
+    function invokeWallet($walletFunction, $payload) {
+        //Get the wallet url
+        $walletUrl = $this->serverURL;
+        try {
+            //make API call
+            $client = new IXR_Client($walletUrl);
+            $client->debug = false;
+            if (!$client->query($walletFunction, $payload)) {
+                $this->logMessage("IXR_Client error occurred - " . $client->getErrorCode() . ":" . $client->getErrorMessage(), null, 4);
+            }
+            //get response
+            $result = $client->getResponse();
+            $data = json_decode($result, true);
+            $this->logMessage("|Wallet URL: " . $walletUrl . " | Response from wallet:", $data, 4);
+
+            return $result;
+        } catch (Exception $exception) {
+            $this->logMessage("Exception occured:" . $exception->getMessage(), null, 4);
+            return "MVERS" . $exception->getMessage();
+        }
+    }
+
+    public function invokeAsyncWallet($payload, $channelRequestID) {
+        try {
+            $username = "admin";
+            $password = "admin";
+            $apiUrl = $this->serverURL;
+            $apiFunction = "processCloudRequest"; //logRequest;
+            //convert array into XML format
+            //formulate xml payload.
+            $request_xml = "<Payload>";
+            foreach ($payload as $key => $value) {
+                $request_xml .= '<' . $key . '>' . $value . '</' . $key . '>';
+            }
+            $request_xml .= "</Payload>";
+            $payload = $request_xml;
+            $credentials = array(
+                'cloudUser' => $username,
+                'cloudPass' => $password,
+            );
+            if (is_array($channelRequestID)) {
+                $channelRequestID = $channelRequestID['LAST_INSERT_ID'];
+            }
+            //define cloud packet data
+            $cloudPacket = array(
+                "MSISDN" => $this->_msisdn,
+                "destination" => $this->accessPoint, //create this in accessPoints
+                "IMCID" => "2",
+                "channelRequestID" => $channelRequestID,
+                "networkID" => 1,
+                "cloudDateReceived" => date('Y-m-d H:i:s'),
+                "payload" => base64_encode($payload),
+                "imcRequestID" => $this->IMCREQUESTID,
+                "requestMode" => "0", //0 if sync and 1 when async
+                "clientSystemID" => 77,
+                "systemName" => 'USSD',
+            );
+            //package our data
+            $params = array(
+                'credentials' => $credentials,
+                'cloudPacket' => $cloudPacket,
+            );
+            //make API call
+            $client = new IXR_Client($apiUrl);
+            $client->debug = false;
+            $client->query($apiFunction, $params);
+            $client->query("processCloudRequest", $cloudPacket);
+            $response = $client->getResponse();
+
+            if (!$response) {
+                $error_message = $client->getErrorMessage();
+
+                $this->logMessage("IXR_Client error occurred - " . $client->getErrorCode() . ":" . $error_message, null, 4);
+                return $error_message;
+            }
+            $this->logMessage("|Wallet URL: " . $apiUrl . " | Response from wallet: ", $response, 4);
+            return $response;
+        } catch (Exception $exception) {
+            $this->logMessage("Exception occured: " . $exception->getMessage(), null, 4);
+            return FALSE;
+        }
+    }
+
+    public function invokeSyncWallet($payload, $channelRequestID) {
+        try {
+            $username = "admin";
+            $password = "admin";
+//            $apiUrl = $this->walletSyncRequestURL;
+            $apiUrl = $this->serverURL;
+            $apiFunction = "processCloudRequest";
+            //convert array into XML format
+            //formulate xml payload.
+            $request_xml = "";
+            $request_xml = "<Payload>";
+            foreach ($payload as $key => $value) {
+                $request_xml .= '<' . $key . '>' . $value . '</' . $key . '>';
+            }
+            $request_xml .= "</Payload>";
+            $payload = $request_xml;
+            $credentials = array(
+                'cloudUser' => $username,
+                'cloudPass' => $password,
+            );
+            //define cloud packet data
+            $cloudPacket = array(
+                "MSISDN" => $this->_msisdn,
+                "destination" => $this->accessPoint,
+                //$this->accessPoint, //create this in accessPoints
+                "IMCID" => "2",
+                "channelRequestID" => $channelRequestID,
+                "networkID" => 1,
+                "cloudDateReceived" => date('Y-m-d H:i:s'),
+                "payload" => base64_encode($payload),
+                "imcRequestID" => $this->IMCREQUESTID,
+                "requestMode" => 1, //this means that this is a synchronous  //0 if sync and 1 when async
+                "clientSystemID" => 77,
+                "systemName" => 'USSD'
+            );
+            //package our data
+            $params = array(
+                'credentials' => $credentials,
+                'cloudPacket' => $cloudPacket,
+            );
+            //make API call
+            $client = new IXR_Client($apiUrl);
+            $client->debug = false;
+            if (!$client->query($apiFunction, $params)) {
+                $this->logMessage("IXR_Client error occurred - " . $client->getErrorCode() . ":" . $client->getErrorMessage(), null, 4);
+            }
+            //get response
+            $result = $client->getResponse();
+
+            return $result;
+        } catch (Exception $exception) {
+            $this->logMessage("Exception occured:" . $exception->getMessage(), null, 4);
+            return $exception->getMessage();
+        }
+    }
+
     function http_post($url, $fields, $fields_string) {
         try {
 ////open connection
@@ -2788,6 +2729,67 @@ class NCBANKUSSD extends DynamicMenuController {
         } catch (Exception $ex) {
             return $ex->getMessage();
         }
+    }
+
+    public function call($url, $params) {
+        error_reporting(E_ALL);
+// get arguments
+        $method = array_shift($params);
+        $post = xmlrpc_encode_request($method, $params);
+        $ch = curl_init();
+// set URL and other appropriate options
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+// issue the request
+        $response = curl_exec($ch);
+        $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curl_errorno = curl_errno($ch);
+        $curl_error = curl_error($ch);
+        curl_close($ch);
+        return xmlrpc_decode($response);
+    }
+
+    function getRecipientNetworkID($msisdn) {
+        if (preg_match($this->mtn_reg, $msisdn)) {
+            return "MTN";
+        } else if (preg_match($this->airtel_reg, $msisdn)) {
+            return "AIRTEL";
+        } else if (preg_match($this->orange_reg, $msisdn)) {
+            return "ORANGE";
+        } else if (preg_match($this->utl_reg, $msisdn)) {
+            return "UTL";
+        } else if (preg_match($this->warid_reg, $msisdn)) {
+            return "WARID";
+        } else {
+            return "UNSupportedNetwork";
+        }
+    }
+
+    function getAirtimeWalletMerchantCodes($msisdn) {
+        if (preg_match($this->mtn_reg, $msisdn)) {
+            return "MTNTOPUP";
+        } else if (preg_match($this->airtel_reg, $msisdn)) {
+            return "AIRTELTOPUP";
+        } else if (preg_match($this->orange_reg, $msisdn)) {
+            return "AFRCELTOPUP";
+        } else if (preg_match($this->utl_reg, $msisdn)) {
+            return "UTL";
+        } else if (preg_match($this->warid_reg, $msisdn)) {
+            return "AIRTELTOPUP";
+        } else {
+            return "NULL";
+        }
+    }
+
+    function getProvider($networkID) {
+        $providers = array(
+            "64110" => "MTN",
+            "64101" => "Airtel",
+            "732125" => "Africell"
+        );
+        return $providers[$networkID];
     }
 
     function logMessage($message, $result = null, $logLevel = DTBUGconfigs::LOG_LEVEL_INFO) {
