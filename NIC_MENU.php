@@ -879,16 +879,6 @@ class NCBANKUSSD extends DynamicMenuController {
         }
     }
 
-    //TODO:  TO CHEQUE NUMBER MENU \
-    function ToChequeNumber($input) {
-        $message = "To cheque number";
-        $this->displayText = $message;
-        $this->sessionState = "CONTINUE";
-        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-        $this->nextFunction = "StopChequeMenu";
-        $this->previousPage = "startPage";
-    }
-
     //TODO: STOP CHEQUE MENU
     function StopChequeMenu($input) {
 
@@ -904,6 +894,8 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->firstMenu();
                 break;
             default:
+                //todo: checkbook number
+                $this->saveSessionVar("CHECKBOOKNUMBER", $input);
 
                 $message = "Select Account"
                         . "\n";
@@ -938,27 +930,24 @@ class NCBANKUSSD extends DynamicMenuController {
             }
         }
 
-        $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
-        $requestPayload = array(
-            "serviceID" => 16,
-            "flavour" => 'noFlavour',
-            "pin" => $this->encryptPin($PINRECORD['RAWPIN'], 1),
-            //$this->encryptPin($PINRECORD['RAWPIN'],$this->IMCREQUESTID), //$this->encryptPin($PINRECORD['RAWPIN'],1)
-            "accountAlias" => $selectedAccount['ACCOUNTNAME'],
-            "accountID" => $selectedAccount['ACCOUNTCBSID'],
-            "columnA" => 12345,
-        );
-        $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
-
-        $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
-//        $response = json_decode($result);
-//        $this->logMessage("Balance Enquiry Response:: ", print_r($response, true), 4);
-//        if ($response->STATUS_CODE == 1) {
-        $this->displayText = "" . print_r($result->STAT_DESCRIPTION, true);
-//        }
-
-
-        $this->sessionState = "END";
+        if ($selectedAccount == null) {
+            
+        } else {
+            $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
+            $CHECKBOOKNUMBER = $this->getSessionVar("CHECKBOOKNUMBER");
+            $requestPayload = array(
+                "serviceID" => 16,
+                "flavour" => 'noFlavour',
+                "pin" => $this->encryptPin($PINRECORD['RAWPIN'], 1),
+                "accountAlias" => $selectedAccount['ACCOUNTNAME'],
+                "accountID" => $selectedAccount['ACCOUNTCBSID'],
+                "columnA" => $CHECKBOOKNUMBER,
+            );
+            $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
+            $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
+            $this->displayText = "" . print_r($result, true);
+            $this->sessionState = "END";
+        }
     }
 
     function PromptPin() {
