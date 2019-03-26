@@ -21,6 +21,7 @@ class NCBANKUSSD extends DynamicMenuController {
     private $SERVICE_DESCRIPTION = "NC BANK MENU ";
     private $walletUrl = 'http://132.147.160.57:8300/wallet/IS_APIs/CustomerRegistration/fetchCustomerData';
     private $serverURL = 'http://132.147.160.57:8300/wallet/Cloud_APIs/index';
+    private $hubJSONAPIUrl = "http://localhost:9001/hub/services/paymentGateway/JSON/index.php";
 //    private $accessPoint = "*268#";
     private $accessPoint = "NIC_UG";
 //            "*268#";
@@ -28,6 +29,20 @@ class NCBANKUSSD extends DynamicMenuController {
     private $SAMPLEMSSDN = '256783262929';
     private $USERNAME = "system-user";
     private $PASSWORD = "lipuka";
+    //regex configs
+    private $phone_reg = "/^(25677|25678|25639|25671|25670|25675|25679|77|78|39|71|70|75|79|077|078|039|071|070|075|079)[0-9]{7}$/";
+    private $mtn_reg = "/^(77|78|39|25677|25678|25639|077|078|039)(\d{7})$/";
+    private $airtel_reg = "/^(075|25675|75|25670|70|070)(\d{7})$/";
+    private $warid_reg = "/^(25670|70|070)(\d{7})$/";
+    private $utl_reg = "/^(71|071|25671)(\d{7})$/";
+    private $orange_reg = "/^(079|25679|79)(\d{7})$/";
+    //validation configs
+    private $hubJSONAPIUrl = "http://localhost:9001/hub/services/paymentGateway/JSON/index.php";
+    private $hubValidationFunction = "BEEP.validateAccount";
+    private $hubAuthSuccessCode = "131";
+    private $hubValidationSuccessCode = "307";
+    private $beepUsername = "nic_test_api_user";
+    private $beepPassword = "nic_t3st_api_us3r";
 
     function startPage() {
         $this->firstMenu();
@@ -105,7 +120,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 "cloudDateReceived" => date('Y-m-d H:i:s'),
                 "payload" => base64_encode($payload),
                 "imcRequestID" => $this->IMCREQUESTID,
-                "requestMode" => "1", //0 if sync and 1 when async
+                "requestMode" => "0", //0 if sync and 1 when async
                 "clientSystemID" => 77,
                 "systemName" => 'USSD',
             );
@@ -158,7 +173,7 @@ class NCBANKUSSD extends DynamicMenuController {
             //define cloud packet data
             $cloudPacket = array(
                 "MSISDN" => $this->_msisdn,
-                "destination" => 'NIC_UG',
+                "destination" => $this->accessPoint,
                 //$this->accessPoint, //create this in accessPoints
                 "IMCID" => "2",
                 "channelRequestID" => $channelRequestID,
@@ -183,65 +198,11 @@ class NCBANKUSSD extends DynamicMenuController {
             }
             //get response
             $result = $client->getResponse();
-//            $data = json_decode($result, true);
-//            $this->logMessage("|Wallet URL: " . $apiUrl . " | Response from wallet:" . $client->getErrorMessage(), $data, 4);
-//
-//            $response = array();
+
             return $result;
         } catch (Exception $exception) {
             $this->logMessage("Exception occured:" . $exception->getMessage(), null, 4);
             return $exception->getMessage();
-        }
-    }
-
-    function synchronousProcessing($requestPayload, $channelRequestID) {
-//       $this->logMessage("Making synchronous call using channelID: ", $channelRequestID, DTBUGconfigs::LOG_LEVEL_INFO);
-        $username = "system-user";
-        $password = "lipuka";
-        $request_xml = "<Payload>";
-        foreach ($requestPayload as $key => $value) {
-            $request_xml .= '<' . $key . '>' . $value . '</' . $key . '>';
-        }
-        $request_xml .= "</Payload>";
-        $payload = $request_xml;
-        $credentials = array(
-            'cloudUser' => $username,
-            'cloudPass' => $password
-        );
-        if (is_array($channelRequestID)) {
-            $channelRequestID = $channelRequestID['LAST_INSERT_ID'];
-        }
-        $cloudPacket = array(
-            "MSISDN" => $this->_msisdn,
-            "destination" => $this->accessPoint, //create this in accessPoints
-            "IMCID" => "2",
-            "channelRequestID" => $channelRequestID,
-            "networkID" => 1,
-            "cloudDateReceived" => date('Y-m-d H:i:s'),
-            "payload" => base64_encode($payload),
-            "imcRequestID" => 1,
-            "requestMode" => 1, //0 if sync and 1 when async
-            "clientSystemID" => 77
-        );
-        $params = array(
-            'credentials' => $credentials,
-            'cloudPacket' => $cloudPacket,
-        );
-//        $this->logMessage("Payload to wallet: ", $params, DTBUGconfigs::LOG_LEVEL_INFO);
-        try {
-//
-            $apiFunction = "processCloudRequest";
-//
-            $client = new IXR_Client($this->serverURL);
-            $client->debug = true;
-            $client->query($apiFunction, $params);
-            $result = $client->getResponse();
-            $data = json_decode($result, true);
-//            $this->logMessage("Response from wallet: ", $data, DTBUGconfigs::LOG_LEVEL_INFO);
-            return $data;
-        } catch (Exception $exception) {
-//            $this->log->debug($this->INFOLOG, -1, "ERROR OCCURED: " . $exception->getMessage());
-            return json_decode($exception);
         }
     }
 
@@ -369,8 +330,6 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->previousPage = "startPage";
         } else {
             $message = "Hello Client, \nSomething went wrong, kindly contact customer care";
-            $clientProfiledata = $this->populateClientProfile($clientProfile);
-            $clientAccountDetails = $this->populateAccountDetails($clientProfile);
             $this->displayText = $message;
             $this->sessionState = "END";
         }
@@ -440,8 +399,9 @@ class NCBANKUSSD extends DynamicMenuController {
                     break;
                 case '3':
 # code...
-                    $this->BillPaymentsMenu();
+                    $this->processPayBill($input);
                     break;
+
                 case '4':
 # code...
                     $this->FundsTransferMenu();
@@ -524,11 +484,6 @@ class NCBANKUSSD extends DynamicMenuController {
 // get arguments
         $method = array_shift($params);
         $post = xmlrpc_encode_request($method, $params);
-        /*
-          $post = str_replace("\n", "", $post);
-          $post = str_replace(" ", "", $post);
-          echo $post;
-         */
         $ch = curl_init();
 // set URL and other appropriate options
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -542,6 +497,47 @@ class NCBANKUSSD extends DynamicMenuController {
         $curl_error = curl_error($ch);
         curl_close($ch);
         return xmlrpc_decode($response);
+    }
+
+    function getRecipientNetworkID($msisdn) {
+        if (preg_match($this->mtn_reg, $msisdn)) {
+            return "MTN";
+        } else if (preg_match($this->airtel_reg, $msisdn)) {
+            return "AIRTEL";
+        } else if (preg_match($this->orange_reg, $msisdn)) {
+            return "ORANGE";
+        } else if (preg_match($this->utl_reg, $msisdn)) {
+            return "UTL";
+        } else if (preg_match($this->warid_reg, $msisdn)) {
+            return "WARID";
+        } else {
+            return "UNSupportedNetwork";
+        }
+    }
+
+    function getAirtimeWalletMerchantCodes($msisdn) {
+        if (preg_match($this->mtn_reg, $msisdn)) {
+            return "MTNTOPUP";
+        } else if (preg_match($this->airtel_reg, $msisdn)) {
+            return "AIRTELTOPUP";
+        } else if (preg_match($this->orange_reg, $msisdn)) {
+            return "AFRCELTOPUP";
+        } else if (preg_match($this->utl_reg, $msisdn)) {
+            return "UTL";
+        } else if (preg_match($this->warid_reg, $msisdn)) {
+            return "AIRTELTOPUP";
+        } else {
+            return "NULL";
+        }
+    }
+
+    function getProvider($networkID) {
+        $providers = array(
+            "64110" => "MTN",
+            "64101" => "Airtel",
+            "732125" => "Africell"
+        );
+        return $providers[$networkID];
     }
 
     function checkPin() {
@@ -575,7 +571,7 @@ class NCBANKUSSD extends DynamicMenuController {
     }
 
     function ServiceNotAvailable() {
-        $message = "Service not available \n\n" . "0. Home \n" . "00. Back \n" . "000. Logout \n";
+        $message = "Service not available \n\n" . "0. Home \n" . "00. Back ";
         $this->displayText = $message;
         $this->sessionState = "CONTINUE";
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -635,45 +631,15 @@ class NCBANKUSSD extends DynamicMenuController {
                     "accountID" => $selectedAccount['ACCOUNTCBSID'],
                 );
                 $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
-                /*
-                  $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
-                  //todo: get details  :
-                  $requestPayload = array(
-                  "serviceID" => 10,
-                  "flavour" => 'self',
-                  "pin" => $PINRECORD['PINHASH'],
-                  "accountAlias" => $selectedAccount['NAME'],
-                  "accountID" => $selectedAccount['ACCOUNTCBSID'],
-                  );
-                  $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
-                  $client = new IXR_Client($this->serverURL);
-                  $client->debug = false;
-                  //select server process/function to call
-                  $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
-                  $message = "::" . (print_r($result, true));
-                 */
+
                 $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
                 $response = json_decode($result);
 //                $this->displayText = "" . print_r($result, true); 
                 $this->logMessage("Balance Enquiry Response:: ", $response, 4);
                 $this->displayText = "" . ($response->DATA->MESSAGE);
-
-
-
                 $this->sessionState = "END";
-                /* $message = "Invalida account selected ";
-                  if ($selectedAccount != null) {
-                  $message = "Account Number : " . $selectedAccount['ACCOUNTNUMBER'];
-                  $message .= "\nAccount Names : " . $selectedAccount['ACCOUNTNAME'];
-                  $message .= "\nAccount Balance : " . $selectedAccount['ACCOUNTBALANCE'] . ' ' . $selectedAccount['ACCOUNTCURRENCY'] . ' ';
-                  }
-                  $message .= "\n\n0. Home \n" . "00. Back \n" . "000. Logout \n";
-                  $this->displayText = $message;
-                  $this->sessionState = "CONTINUE";
-                  $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-                  $this->nextFunction = "BalanceEnquiryMenu";
-                  $this->previousPage = "startPage";
-                 */
+
+
                 break;
         }
     }
@@ -692,16 +658,25 @@ class NCBANKUSSD extends DynamicMenuController {
 
     //: MENU ITEM 6 AIRTIME PURCHASE
     function TopUpAmountMenu($input) {
-        $message = "1)MTN "
-                . "\n2)Airtel"
-                . "\n3)Africell"
-                . "\n4)Smile";
-        $message .= "\n\n0. Home \n" . "00. Back";
+        if (!is_numeric($input)) {
+            $message = "Invalid Number Entered. Please enter number again";
+            $message .= "\n\n0. Home \n" . "00. Back";
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+            $this->nextFunction = "TopUpAmountMenu";
+            $this->previousPage = "TopUpAmountMenu";
+        }
+
+        $this->saveSessionVar("AirtimeRecipient", $input);
+        $message = "Enter Top Up Amount";
+        $message .= "\n0. Home \n" . "00. Back";
+
         $this->displayText = $message;
         $this->sessionState = "CONTINUE";
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
         $this->nextFunction = "AirtimeMerchantChooseAccount";
-        $this->previousPage = "TopUpAmountMenu";
+        $this->previousPage = "AirtimePurchaseMenu";
     }
 
     function finishBuyingAirtime($input) {
@@ -717,19 +692,23 @@ class NCBANKUSSD extends DynamicMenuController {
         }
         $this->saveSessionVar("selectedSourceAccount", $selectedAccount);
         $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
+
+        //dynamically get a recipient network ID
+        $networkID = $this->getRecipientNetworkID($recipientNumber);
+
         $requestPayload = array(
-            "serviceID" => 10,
+            "serviceID" => "BILL_PAY",
             "flavour" => 'open',
             "pin" => $this->encryptPin($PINRECORD['RAWPIN'], $this->IMCREQUESTID),
             "columnC" => $recipientNumber,
             "accountAlias" => $selectedAccount['ACCOUNTNAME'],
             "accountID" => $selectedAccount['ACCOUNTCBSID'],
             "amount" => $amount,
-            "merchantCode" => $this->getAirtimeWalletMerchantCodes($this->_networkID),
-            "columnC" => $this->getAirtimeWalletMerchantCodes($this->_networkID),
-            "enroll" => null,
+            "merchantCode" => $this->getAirtimeWalletMerchantCodes($recipientNumber),
+            "columnC" => $this->getAirtimeWalletMerchantCodes($recipientNumber),
+            "enroll" => "No",
             "CBSID" => 1,
-            "columnD" => null,
+            "columnD" => "NULL",
             "columnA" => $recipientNumber,
         );
         $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
@@ -774,6 +753,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->saveSessionVar("AirtimeRecipient", $this->_msisdn);
                 //get the network id
                 $networkID = $this->getProvider($this->_networkID);
+
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
                 $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -781,8 +761,9 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->previousPage = "AirtimePurchaseMenu";
                 break;
             case '2':
-                $message = "Enter Top Up Amount";
-                $message .= "\n\n0. Home \n" . "00. Back \n";
+//                $this->TopUpAmountMenu($input);
+                $message = "Enter Other number to send Airtime";
+                $message .= "\n0. Home \n" . "00. Back \n";
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
                 $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -1070,6 +1051,1462 @@ class NCBANKUSSD extends DynamicMenuController {
         
     }
 
+    ////////////Process Pay Bill and Pay TVs
+    function processPayBill($input) {
+
+        if ($this->previousPage == "selectBankingService") {
+            $this->displayText = "Select Utility. \n1: UMEME \n2: NWSC \n3: Pay TV";
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processPayBill";
+            $this->previousPage = "utilitySelected";
+        } else if ($this->previousPage == "utilitySelected") {
+            switch ($input) {
+                case 1:
+                    $this->processUmeme($input);
+                    break;
+
+                case 2:
+                    $this->processNwsc($input);
+                    break;
+
+                case 3:
+                    $this->processPayTV($input);
+                    break;
+
+                default:
+                    $this->displayText = "Select Utility. \n1: UMEME \n2: NWSC \n3: Pay TV";
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "processPayBill";
+                    $this->previousPage = "utilitySelected";
+                    break;
+            }
+        }
+    }
+
+    function processPayTV($input) {
+
+        if ($this->previousPage == "utilitySelected") {
+            $this->displayText = "Select TV Merchant. \n1: GoTV \n2: DSTV \n3: Startimes \n4: Azam"
+                    . "\n5: Zuku TV \n6: Kwese TV";
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processPayTV";
+            $this->previousPage = "payTVSelected";
+        } else if ($this->previousPage == "payTVSelected") {
+            switch ($input) {
+                case 1:
+                    $this->saveSessionVar("menuOptionSelected", DTBUGconfigs::GOTV_CODE);
+                    $this->processMultiChoiceTV($input);
+                    break;
+
+                case 2:
+                    $this->saveSessionVar("menuOptionSelected", DTBUGconfigs::DSTVUG_CODE);
+                    $this->processMultiChoiceTV($input);
+                    break;
+
+                case 3:
+                    $this->saveSessionVar("menuOptionSelected", DTBUGconfigs::STARTIMES_CODE);
+                    $this->processStarTimes($input);
+                    break;
+
+                case 4:
+                    $this->saveSessionVar("menuOptionSelected", DTBUGconfigs::AZAM_CODE);
+                    $this->processAzamTV($input);
+                    break;
+
+                case 5:
+                    $this->saveSessionVar("menuOptionSelected", DTBUGconfigs::ZUKU_CODE);
+                    $this->processZukuTV($input);
+                    break;
+
+                case 6:
+                    $this->saveSessionVar("menuOptionSelected", DTBUGconfigs::KWESE_CODE);
+                    $this->processKweseTV($input);
+                    break;
+
+                default:
+                    $this->displayText = "Select TV Merchant. \n1: GoTV \n2: DSTV \n3: Startimes \n4: Azam"
+                            . "\n5: Zuku TV \n6: Kwese TV";
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "processPayTV";
+                    $this->previousPage = "payTVSelected";
+                    break;
+            }
+        }
+    }
+
+    //PayTV functions
+    function processStarTimes($input) {
+        $clientAccounts = $this->getSessionVar('clientAccounts');
+
+        $selectedMenuService = $this->getSessionVar("menuOptionSelected");
+
+        if ($this->previousPage == "payTVSelected") {
+            $this->displayText = "Enter Your Startimes Account Number";
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processStarTimes";
+            $this->previousPage = "enterAccNumber";
+        } elseif ($this->previousPage == "enterAccNumber") {
+
+            $this->saveSessionVar("startimesAccountNumber", $input);
+
+            $packageText = "Select package \n";
+            $starttimesPackages = explode(",", DTBUGconfigs::STARTIMES_PACKAGES);
+
+            for ($i = 0; $i < sizeof($starttimesPackages); $i++) {
+                $packageText .= $i + 1 . ". " . $this->getPackageName($starttimesPackages[$i]) . " - " . $this->getPackagePrice($starttimesPackages[$i]) . "\n";
+            }
+
+            $this->displayText = $packageText;
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processStarTimes";
+            $this->previousPage = "selectPackage";
+        } elseif ($this->previousPage == "selectPackage") {
+
+            $starttimesPackages = explode(",", DTBUGconfigs::AZAM_PACKAGES);
+            $input = (int) $input;
+
+#check for array index out of bounds
+            if ($input > sizeof($starttimesPackages) || $input < 1) {
+#prompt user to enter select package again
+                $this->previousPage = "enterAccNumber";
+                $this->processStarTimes($this->getSessionVar("startimesAccountNumber"));
+            } else {
+#valid index has been selected
+                $selectedIndex = $input - 1;
+                $selectedPackage = trim($this->getPackageName($starttimesPackages[$selectedIndex]));
+                $selectedPackagePrice = trim($this->getPackagePrice($starttimesPackages[$selectedIndex]));
+                $this->saveSessionVar("selectedPackage", $selectedPackage);
+                $this->saveSessionVar("selectedPackagePrice", $selectedPackagePrice);
+                $accountNumber = $this->getSessionVar("startimesAccountNumber");
+
+                $accountDetails = $this->validatePayTVAccount(DTBUGconfigs::STARTIMES_CODE, DTBUGconfigs::STARTIMES_SERVICE_ID, DTBUGconfigs::STARTIMES_SERVICE_CODE, $accountNumber);
+
+                if ($accountDetails == "") {
+
+                    $this->displayText = "Invalid Startimes Account Number. Please try again";
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "processStarTimes";
+                    $this->previousPage = "enterAccNumber";
+                } else {
+                    $customerName = $accountDetails['customerName'];
+
+                    $this->saveSessionVar("startimesCustomerName", $customerName);
+
+                    $this->displayText = "Name: {$customerName}, Account No: " . $accountNumber . " Package selected: " . $selectedPackage . " Amount: " . number_format($selectedPackagePrice) . ". Enter Amount to pay";
+
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "processStarTimes";
+                    $this->previousPage = "enterAmount";
+                }
+            }
+        } elseif ($this->previousPage == "enterAmount") {
+
+            if ($this->getSessionVar("startimesAmount") == null) {
+                $amount = (int) $input;
+                $this->saveSessionVar("startimesAmount", $amount);
+            }
+
+            $message = "You are paying " . DTBUGconfigs::STARTIMES_CODE . "UGX. " . $this->getSessionVar("startimesAmount");
+            $message .= ". Account name: " . $this->getSessionVar("startimesCustomerName") . ". ";
+            $message .= "Account " . $this->getSessionVar("startimesAccountNumber");
+            $message .= "\n1: Confirm \n2: Cancel";
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processStarTimes";
+            $this->previousPage = "confirmPayment";
+        } elseif ($this->previousPage == "confirmPayment") {
+            switch ($input) {
+                case 1:
+
+                    $this->saveSessionvar('serviceID', DTBUGconfigs::BILLPAY_SERVICE);
+
+                    $this->saveSessionVar('amount', $this->getSessionVar("startimesAmount"));
+                    $this->saveSessionVar('nomination', 'no');
+                    $this->saveSessionVar('utilityBillAmount', $this->getSessionVar("startimesAmount"));
+                    $this->saveSessionVar('merchantCode', DTBUGconfigs::STARTIMES_WALLET_MERCHANT_CODE);
+                    $this->saveSessionVar('utilityBillAccountNo', $this->getSessionVar("startimesAccountNumber"));
+                    $this->saveSessionVar('flavour', 'open');
+                    $this->saveSessionVar('billEnrolment', "NO");
+                    $this->saveSessionVar('billEnrolmentNumber', 'NULL');
+                    $this->saveSessionVar('package', $this->getSessionVar("selectedPackage"));
+
+                    $this->displayText = "Select account:\n" . $clientAccounts;
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "validateAccountDetails";
+
+                    break;
+
+                case 2:
+                    $this->startPage();
+                    break;
+
+                default:
+                    $this->previousPage = "enterAmount";
+                    $this->processStarTimes($input);
+                    break;
+            }
+        }
+    }
+
+    function processZukuTV($input) {
+
+        $clientAccounts = $this->getSessionVar('clientAccounts');
+
+        $selectedMenuService = $this->getSessionVar("menuOptionSelected");
+
+        if ($this->previousPage == "payTVSelected") {
+            $this->displayText = "Enter Your Zuku Account Number";
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processZukuTV";
+            $this->previousPage = "enterAccNumber";
+        } elseif ($this->previousPage == "enterAccNumber") {
+
+            $this->saveSessionVar("zukuAccountNumber", $input);
+
+            $packageText = "Select package \n";
+            $zukuPackages = explode(",", DTBUGconfigs::ZUKU_PACKAGES);
+
+            for ($i = 0; $i < sizeof($zukuPackages); $i++) {
+                $packageText .= $i + 1 . ". " . $this->getPackageName($zukuPackages[$i]) . " - " . $this->getPackagePrice($zukuPackages[$i]) . "\n";
+            }
+
+            $this->displayText = $packageText;
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processZukuTV";
+            $this->previousPage = "selectPackage";
+        } elseif ($this->previousPage == "selectPackage") {
+
+            $zukuPackages = explode(",", DTBUGconfigs::ZUKU_PACKAGES);
+            $input = (int) $input;
+
+#check for array index out of bounds
+            if ($input > sizeof($zukuPackages) || $input < 1) {
+#prompt user to enter select package again
+                $this->previousPage = "enterAccNumber";
+                $this->processZukuTV($this->getSessionVar("zukuAccountNumber"));
+            } else {
+#valid index has been selected
+                $selectedIndex = $input - 1;
+                $selectedPackage = trim($this->getPackageName($zukuPackages[$selectedIndex]));
+                $selectedPackagePrice = trim($this->getPackagePrice($zukuPackages[$selectedIndex]));
+                $this->saveSessionVar("selectedPackage", $selectedPackage);
+                $this->saveSessionVar("selectedPackagePrice", $selectedPackagePrice);
+                $accountNumber = $this->getSessionVar("zukuAccountNumber");
+
+                $accountDetails = $this->validatePayTVAccount(DTBUGconfigs::ZUKU_CODE, DTBUGconfigs::ZUKU_SERVICE_ID, DTBUGconfigs::ZUKU_SERVICE_CODE, $accountNumber);
+
+                if ($accountDetails == "") {
+
+                    $this->displayText = "Invalid Zuku Account Number. Please try again";
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "processZukuTV";
+                    $this->previousPage = "enterAccNumber";
+                } else {
+                    $customerName = $accountDetails['customerName'];
+
+                    $this->saveSessionVar("zukuCustomerName", $customerName);
+
+                    $this->displayText = "Name: {$customerName}, Account No: " . $accountNumber . " Package selected: " . $selectedPackage . " Amount: " . number_format($selectedPackagePrice) . ". Enter Amount to pay";
+
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "processZukuTV";
+                    $this->previousPage = "enterAmount";
+                }
+            }
+        } elseif ($this->previousPage == "enterAmount") {
+
+            if ($this->getSessionVar("zukuAmount") == null) {
+                $amount = (int) $input;
+                $this->saveSessionVar("zukuAmount", $amount);
+            }
+
+            $message = "You are paying " . DTBUGconfigs::ZUKU_CODE . "UGX. " . $this->getSessionVar("zukuAmount");
+            $message .= ". Account name: " . $this->getSessionVar("zukuCustomerName") . ". ";
+            $message .= "Account " . $this->getSessionVar("zukuAccountNumber");
+            $message .= "\n1: Confirm \n2: Cancel";
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processZukuTV";
+            $this->previousPage = "confirmPayment";
+        } elseif ($this->previousPage == "confirmPayment") {
+            switch ($input) {
+                case 1:
+
+                    $this->saveSessionvar('serviceID', DTBUGconfigs::BILLPAY_SERVICE);
+
+                    $this->saveSessionVar('amount', $this->getSessionVar("zukuAmount"));
+                    $this->saveSessionVar('nomination', 'no');
+                    $this->saveSessionVar('utilityBillAmount', $this->getSessionVar("zukuAmount"));
+                    $this->saveSessionVar('merchantCode', DTBUGconfigs::ZUKU_WALLET_MERCHANT_CODE);
+                    $this->saveSessionVar('utilityBillAccountNo', $this->getSessionVar("zukuAccountNumber"));
+                    $this->saveSessionVar('flavour', 'open');
+                    $this->saveSessionVar('billEnrolment', "NO");
+                    $this->saveSessionVar('billEnrolmentNumber', 'NULL');
+                    $this->saveSessionVar('package', $this->getSessionVar("selectedPackage"));
+
+                    $this->displayText = "Select account:\n" . $clientAccounts;
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "validateAccountDetails";
+
+                    break;
+
+                case 2:
+                    $this->startPage();
+                    break;
+
+                default:
+                    $this->previousPage = "enterAmount";
+                    $this->processZukuTV($input);
+                    break;
+            }
+        }
+    }
+
+    function processKweseTV($input) {
+        $clientAccounts = $this->getSessionVar('clientAccounts');
+
+        $selectedMenuService = $this->getSessionVar("menuOptionSelected");
+
+        if ($this->previousPage == "payTVSelected") {
+            $this->displayText = "Enter Your Kwese Account Number";
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processKweseTV";
+            $this->previousPage = "enterAccNumber";
+        } elseif ($this->previousPage == "enterAccNumber") {
+
+            $this->saveSessionVar("kweseAccountNumber", $input);
+
+            $packageText = "Select package \n";
+            $kwesePackages = explode(",", DTBUGconfigs::KWESE_PACKAGES);
+
+            for ($i = 0; $i < sizeof($kwesePackages); $i++) {
+                $packageText .= $i + 1 . ". " . $this->getPackageName($kwesePackages[$i]) . " - " . $this->getPackagePrice($kwesePackages[$i]) . "\n";
+            }
+
+            $this->displayText = $packageText;
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processKweseTV";
+            $this->previousPage = "selectPackage";
+        } elseif ($this->previousPage == "selectPackage") {
+
+            $kwesePackages = explode(",", DTBUGconfigs::KWESE_PACKAGES);
+            $input = (int) $input;
+
+#check for array index out of bounds
+            if ($input > sizeof($kwesePackages) || $input < 1) {
+#prompt user to enter select package again
+                $this->previousPage = "enterAccNumber";
+                $this->processKweseTV($this->getSessionVar("kweseAccountNumber"));
+            } else {
+#valid index has been selected
+                $selectedIndex = $input - 1;
+                $selectedPackage = trim($this->getPackageName($kwesePackages[$selectedIndex]));
+                $selectedPackagePrice = trim($this->getPackagePrice($kwesePackages[$selectedIndex]));
+                $this->saveSessionVar("selectedPackage", $selectedPackage);
+                $this->saveSessionVar("selectedPackagePrice", $selectedPackagePrice);
+                $accountNumber = $this->getSessionVar("kweseAccountNumber");
+
+                $accountDetails = $this->validatePayTVAccount(DTBUGconfigs::KWESE_CODE, DTBUGconfigs::KWESE_SERVICE_ID, DTBUGconfigs::KWESE_SERVICE_CODE, $accountNumber);
+
+                if ($accountDetails == "") {
+
+                    $this->displayText = "Invalid Kwese Account Number. Please try again";
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "processKweseTV";
+                    $this->previousPage = "enterAccNumber";
+                } else {
+                    $customerName = $accountDetails['customerName'];
+
+                    $this->saveSessionVar("kweseCustomerName", $customerName);
+
+                    $this->displayText = "Name: {$customerName}, Account No: " . $accountNumber . " Package selected: " . $selectedPackage . " Amount: " . number_format($selectedPackagePrice) . ". Enter Amount to pay";
+
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "processKweseTV";
+                    $this->previousPage = "enterAmount";
+                }
+            }
+        } elseif ($this->previousPage == "enterAmount") {
+
+            if ($this->getSessionVar("kweseAmount") == null) {
+                $amount = (int) $input;
+                $this->saveSessionVar("kweseAmount", $amount);
+            }
+
+            $message = "You are paying " . DTBUGconfigs::KWESE_CODE . "UGX. " . $this->getSessionVar("kweseAmount");
+            $message .= ". Account name: " . $this->getSessionVar("kweseCustomerName") . ". ";
+            $message .= "Account " . $this->getSessionVar("kweseAccountNumber");
+            $message .= "\n1: Confirm \n2: Cancel";
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processKweseTV";
+            $this->previousPage = "confirmPayment";
+        } elseif ($this->previousPage == "confirmPayment") {
+            switch ($input) {
+                case 1:
+
+                    $this->saveSessionvar('serviceID', DTBUGconfigs::BILLPAY_SERVICE);
+
+                    $this->saveSessionVar('amount', $this->getSessionVar("kweseAmount"));
+                    $this->saveSessionVar('nomination', 'no');
+                    $this->saveSessionVar('utilityBillAmount', $this->getSessionVar("kweseAmount"));
+                    $this->saveSessionVar('merchantCode', DTBUGconfigs::KWESE_WALLET_MERCHANT_CODE);
+                    $this->saveSessionVar('utilityBillAccountNo', $this->getSessionVar("kweseAccountNumber"));
+                    $this->saveSessionVar('flavour', 'open');
+                    $this->saveSessionVar('billEnrolment', "NO");
+                    $this->saveSessionVar('billEnrolmentNumber', 'NULL');
+                    $this->saveSessionVar('package', $this->getSessionVar("selectedPackage"));
+
+                    $this->displayText = "Select account:\n" . $clientAccounts;
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "validateAccountDetails";
+
+                    break;
+
+                case 2:
+                    $this->startPage();
+                    break;
+
+                default:
+                    $this->previousPage = "enterAmount";
+                    $this->processKweseTV($input);
+                    break;
+            }
+        }
+    }
+
+    //Going to use this function for both gotv and dstv
+    function processMultiChoiceTV($input) {
+
+        $clientAccounts = $this->getSessionVar('clientAccounts');
+
+        $selectedMenuService = $this->getSessionVar("menuOptionSelected");
+
+        if ($this->previousPage == "payTVSelected") {
+            $this->displayText = "Enter Smart Card /IUC Number";
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processMultiChoiceTV";
+            $this->previousPage = "enterIUCNumber";
+        } elseif ($this->previousPage == "enterIUCNumber") {
+
+            $this->saveSessionVar("multichoiceAccount", $input);
+
+            $packageText = "Select package \n";
+            $gotvPackage = explode(",", $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_PACKAGES : DTBUGconfigs::DSTV_PACKAGES);
+
+            for ($i = 0; $i < sizeof($gotvPackage); $i++) {
+                $packageText .= $i + 1 . ". " . $this->getPackageName($gotvPackage[$i]) . " - " . $this->getPackagePrice($gotvPackage[$i]) . "\n";
+            }
+
+            $this->displayText = $packageText;
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processMultiChoiceTV";
+            $this->previousPage = "selectPackage";
+        } elseif ($this->previousPage == "selectPackage") {
+
+            $gotvPackage = explode(",", $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_PACKAGES : DTBUGconfigs::DSTV_PACKAGES);
+            $input = (int) $input;
+
+#check for array index out of bounds
+            if ($input > sizeof($gotvPackage) || $input < 1) {
+#prompt user to enter select package again
+                $this->previousPage = "enterIUCNumber";
+                $this->processMultiChoiceTV($this->getSessionVar("multichoiceAccount"));
+            } else {
+#valid index has been selected
+                $selectedIndex = $input - 1;
+                $selectedPackage = trim($this->getPackageName($gotvPackage[$selectedIndex]));
+                $selectedPackagePrice = trim($this->getPackagePrice($gotvPackage[$selectedIndex]));
+                $this->saveSessionVar("selectedPackage", $selectedPackage);
+                $this->saveSessionVar("selectedPackagePrice", $selectedPackagePrice);
+                $accountNumber = $this->getSessionVar("multichoiceAccount");
+
+                $serviceID = $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_SERVICE_ID : DTBUGconfigs::DSTV_SERVICE_ID;
+                $serviceCode = $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_SERVICE_CODE : DTBUGconfigs::DSTV_SERVICE_CODE;
+
+                $accountDetails = $this->validatePayTVAccount($selectedMenuService, $serviceID, $serviceCode, $accountNumber);
+
+                if ($accountDetails == "") {
+
+                    $this->displayText = "Invalid account UIC Number. Please enter it again";
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "processMultiChoiceTV";
+                    $this->previousPage = "enterIUCNumber";
+                } else {
+                    $customerName = $accountDetails['customerName'];
+
+                    $this->saveSessionVar("MCCustomerName", $customerName);
+
+                    $this->displayText = "Name: {$customerName}, Smart Card No: " . $accountNumber . " Package selected: " . $selectedPackage . " Amount: " . number_format($selectedPackagePrice) . ". Enter Amount to pay";
+
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "processMultiChoiceTV";
+                    $this->previousPage = "enterAmount";
+                }
+            }
+        } elseif ($this->previousPage == "enterAmount") {
+
+            if ($this->getSessionVar("MCAmount") == null) {
+                $amount = (int) $input;
+                $this->saveSessionVar("MCAmount", $amount);
+            }
+
+            $message = "You are paying " . $selectedMenuService . " UGX. " . $this->getSessionVar("MCAmount");
+            $message .= ". Account name: " . $this->getSessionVar("MCCustomerName") . ". ";
+            $message .= "UIC Number " . $this->getSessionVar("multichoiceAccount");
+            $message .= "\n1: Confirm \n2: Cancel";
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processMultiChoiceTV";
+            $this->previousPage = "confirmGoTVPayment";
+        } elseif ($this->previousPage == "confirmGoTVPayment") {
+            switch ($input) {
+                case 1:
+
+                    $walletMerchantCode = $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_WALLET_MERCHANT_CODE : DTBUGconfigs::DSTV_WALLET_MERCHANT_CODE;
+
+                    $this->saveSessionvar('serviceID', 'BILL_PAY');
+
+                    $this->saveSessionVar('amount', $this->getSessionVar("MCAmount"));
+                    $this->saveSessionVar('nomination', 'no');
+                    $this->saveSessionVar('utilityBillAmount', $this->getSessionVar("MCAmount"));
+                    $this->saveSessionVar('merchantCode', $walletMerchantCode);
+                    $this->saveSessionVar('utilityBillAccountNo', $this->getSessionVar("multichoiceAccount"));
+                    $this->saveSessionVar('flavour', 'open');
+                    $this->saveSessionVar('billEnrolment', "NO");
+                    $this->saveSessionVar('billEnrolmentNumber', 'NULL');
+                    $this->saveSessionVar('package', $this->getSessionVar("selectedPackage"));
+
+                    $this->displayText = "Select account:\n" . $clientAccounts;
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "validateAccountDetails";
+
+                    break;
+
+                case 2:
+                    $this->startPage();
+                    break;
+
+                default:
+                    $this->previousPage = "enterAmount";
+                    $this->processMultiChoiceTV($input);
+                    break;
+            }
+        }
+    }
+
+    function processAzamTV($input) {
+
+        $clientAccounts = $this->getSessionVar('clientAccounts');
+
+        $selectedMenuService = $this->getSessionVar("menuOptionSelected");
+
+        if ($this->previousPage == "payTVSelected") {
+            $this->displayText = "Enter Your Azam Account number";
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processAzamTV";
+            $this->previousPage = "enterAccNumber";
+        } elseif ($this->previousPage == "enterAccNumber") {
+
+            $this->saveSessionVar("azamAccountNumber", $input);
+
+            $packageText = "Select package \n";
+            $azamPackages = explode(",", DTBUGconfigs::AZAM_PACKAGES);
+
+            for ($i = 0; $i < sizeof($azamPackages); $i++) {
+                $packageText .= $i + 1 . ". " . $this->getPackageName($azamPackages[$i]) . " - " . $this->getPackagePrice($azamPackages[$i]) . "\n";
+            }
+
+            $this->displayText = $packageText;
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processAzamTV";
+            $this->previousPage = "selectPackage";
+        } elseif ($this->previousPage == "selectPackage") {
+
+            $azamPackages = explode(",", DTBUGconfigs::AZAM_PACKAGES);
+            $input = (int) $input;
+
+#check for array index out of bounds
+            if ($input > sizeof($azamPackages) || $input < 1) {
+#prompt user to enter select package again
+                $this->previousPage = "enterAccNumber";
+                $this->processAzamTV($this->getSessionVar("azamAccountNumber"));
+            } else {
+#valid index has been selected
+                $selectedIndex = $input - 1;
+                $selectedPackage = trim($this->getPackageName($azamPackages[$selectedIndex]));
+                $selectedPackagePrice = trim($this->getPackagePrice($azamPackages[$selectedIndex]));
+                $this->saveSessionVar("selectedPackage", $selectedPackage);
+                $this->saveSessionVar("selectedPackagePrice", $selectedPackagePrice);
+                $accountNumber = $this->getSessionVar("azamAccountNumber");
+
+                $accountDetails = $this->validatePayTVAccount(DTBUGconfigs::AZAM_CODE, DTBUGconfigs::AZAM_SERVICE_ID, DTBUGconfigs::AZAM_SERVICE_CODE, $accountNumber);
+
+                if ($accountDetails == "") {
+
+                    $this->displayText = "Invalid Azam Account Number. Please try again";
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "processAzamTV";
+                    $this->previousPage = "enterAccNumber";
+                } else {
+                    $customerName = $accountDetails['customerName'];
+
+                    $this->saveSessionVar("azamCustomerName", $customerName);
+
+                    $this->displayText = "Name: {$customerName}, Account No: " . $accountNumber . " Package selected: " . $selectedPackage . " Amount: " . number_format($selectedPackagePrice) . ". Enter Amount to pay";
+
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "processAzamTV";
+                    $this->previousPage = "enterAmount";
+                }
+            }
+        } elseif ($this->previousPage == "enterAmount") {
+
+            if ($this->getSessionVar("azamAmount") == null) {
+                $amount = (int) $input;
+                $this->saveSessionVar("azamAmount", $amount);
+            }
+
+            $message = "You are paying " . DTBUGconfigs::AZAM_CODE . "UGX. " . $this->getSessionVar("azamAmount");
+            $message .= ". Account name: " . $this->getSessionVar("azamCustomerName") . ". ";
+            $message .= "Account " . $this->getSessionVar("azamAccountNumber");
+            $message .= "\n1: Confirm \n2: Cancel";
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processAzamTV";
+            $this->previousPage = "confirmAzamPayment";
+        } elseif ($this->previousPage == "confirmAzamPayment") {
+            switch ($input) {
+                case 1:
+
+                    $this->saveSessionvar('serviceID', DTBUGconfigs::BILLPAY_SERVICE);
+
+                    $this->saveSessionVar('amount', $this->getSessionVar("azamAmount"));
+                    $this->saveSessionVar('nomination', 'no');
+                    $this->saveSessionVar('utilityBillAmount', $this->getSessionVar("azamAmount"));
+                    $this->saveSessionVar('merchantCode', DTBUGconfigs::AZAM_WALLET_MERCHANT_CODE);
+                    $this->saveSessionVar('utilityBillAccountNo', $this->getSessionVar("azamAccountNumber"));
+                    $this->saveSessionVar('flavour', 'open');
+                    $this->saveSessionVar('billEnrolment', "NO");
+                    $this->saveSessionVar('billEnrolmentNumber', 'NULL');
+                    $this->saveSessionVar('package', $this->getSessionVar("selectedPackage"));
+
+                    $this->displayText = "Select account:\n" . $clientAccounts;
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "validateAccountDetails";
+
+                    break;
+
+                case 2:
+                    $this->startPage();
+                    break;
+
+                default:
+                    $this->previousPage = "enterAmount";
+                    $this->processAzamTV($input);
+                    break;
+            }
+        }
+    }
+
+    function getPackageName($fullPackageCombined) {
+        $packageName = DTBUGconfigs::DEFAULT_PACKAGE_NAME;
+        $array = explode("=", $fullPackageCombined);
+        if (isset($array[1])) {
+            $packageName = $array[0];
+        }
+
+        return $packageName;
+    }
+
+    function getPackagePrice($fullPackageCombined) {
+        $packagePrice = 0;
+        $array = explode("=", $fullPackageCombined);
+        if (isset($array[1])) {
+            $packagePrice = $array[1];
+        }
+        return $packagePrice;
+    }
+
+    //End of PayTV functions
+
+
+
+    function processURA($input) {
+        $clientAccounts = $this->getSessionVar('clientAccounts');
+
+        if ($this->previousPage == "utilitySelected") {
+
+            $this->displayText = "Enter TIN Number";
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processURA";
+            $this->previousPage = "enterTinNumber";
+        } elseif ($this->previousPage == "enterTinNumber") {
+
+            if ($this->getSessionVar("URACustomerName") != null) { //we have already validated the tin
+                $message = "Invalid input. You are paying " . $this->getSessionVar("URABalance");
+                $message .= ". Customer name: " . $this->getSessionVar("URACustomerName") . ". ";
+                $message .= "Account " . $this->getSessionVar("URA_TIN");
+                $message .= "\n1: Confirm \n2: Cancel";
+
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processURA";
+                $this->previousPage = "confirmURAPayment";
+            } else {
+                $uraTin = $input;
+                $accountDetails = $this->validateURATin($uraTin);
+
+                if ($accountDetails == "") {
+                    $this->displayText = "Invalid TIN, Please try again";
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "processURA";
+                    $this->previousPage = "enterTinNumber";
+                } else {
+
+                    $customerName = $accountDetails['customerName'];
+                    $balance = $accountDetails['balance'];
+
+                    $this->saveSessionVar("URACustomerName", $customerName);
+                    $this->saveSessionVar("URABalance", $balance);
+                    $this->saveSessionVar("URA_TIN", $uraTin);
+
+                    $message = "You are paying " . $balance;
+                    $message .= ". Customer name: " . $customerName . ". ";
+                    $message .= "Account " . $uraTin;
+                    $message .= "\n1: Confirm \n2: Cancel";
+                    $this->displayText = $message;
+
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "processURA";
+                    $this->previousPage = "confirmURAPayment";
+                }
+            }
+        } elseif ($this->previousPage == "confirmURAPayment") {
+            switch ($input) {
+                case 1:
+
+                    $this->saveSessionvar('serviceID', 'BILL_PAY');
+
+                    $this->saveSessionVar('amount', $this->getSessionVar("URABalance"));
+                    $this->saveSessionVar('nomination', 'no');
+                    $this->saveSessionVar('utilityBillAmount', $this->getSessionVar("URABalance"));
+                    $this->saveSessionVar('merchantCode', $this->uraServiceCode);
+                    $this->saveSessionVar('utilityBillAccountNo', $this->getSessionVar("URA_TIN"));
+                    $this->saveSessionVar('flavour', 'open');
+                    $this->saveSessionVar('billEnrolment', "NO");
+                    $this->saveSessionVar('billEnrolmentNumber', 'NULL');
+
+                    $this->displayText = "Select account:\n" . $clientAccounts;
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "validateAccountDetails";
+                    break;
+
+                case 2:
+                    $this->startPage();
+                    break;
+
+                default:
+                    $this->previousPage = "enterAmount";
+                    $this->processUmeme($input);
+                    break;
+            }
+        }
+    }
+
+    function validateURATin($accountNumber) {
+
+        $this->logMessage("Validate URA TIN...", NULL, DTBUGconfigs::LOG_LEVEL_INFO);
+
+        $credentials = array(
+            "username" => $this->beepUsername,
+            "password" => $this->beepPassword
+        );
+
+        $packet = array(
+            'serviceID' => $this->uraServiceID,
+            'serviceCode' => $this->uraServiceCode,
+            'accountNumber' => $accountNumber,
+            'requestExtraData' => ''
+        );
+
+        $data[] = $packet;
+        $payload = array(
+            "credentials" => $credentials,
+            "packet" => $data
+        );
+
+        $spayload = array(
+            "function" => $this->hubValidationFunction,
+            "payload" => json_encode($payload)
+        );
+
+        $this->logMessage("payload to send to hub: ", $spayload, DTBUGconfigs::LOG_LEVEL_INFO);
+
+
+//$response = post("http://127.0.0.1/BeepJsonAPI/index.php",json_encode($spayload));
+        $response = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
+        $this->logMessage("Response from hub: ", $response, DTBUGconfigs::LOG_LEVEL_INFO);
+        $responseArray = json_decode($response, true);
+
+
+        $authStatusCode = $responseArray['authStatus']['authStatusCode'];
+        $authStatusDesc = $responseArray['authStatus']['authStatusDescription'];
+
+        if ($authStatusCode != $this->hubAuthSuccessCode) {
+            $this->logMessage("Authentication Failed !!!!!!! ", NULL, DTBUGconfigs::LOG_LEVEL_INFO);
+            return "";
+        }
+
+        $statusCode = $responseArray['results'][0]['statusCode'];
+        $responseData = $responseArray['results'][0]['responseExtraData'];
+
+        if ($statusCode != $this->hubValidationSuccessCode) {
+            $this->logMessage("INVALID account !!!!!!! ", NULL, DTBUGconfigs::LOG_LEVEL_INFO);
+            return "";
+        }
+
+        $responseDataArray = json_decode($responseData, true);
+        $this->logMessage("Response from validate URA TIN: ", $responseDataArray, DTBUGconfigs::LOG_LEVEL_INFO);
+
+        return $responseDataArray;
+    }
+
+    function processUmeme($input) {
+
+        $clientAccounts = $this->getSessionVar('clientAccounts');
+
+        if ($this->previousPage == "utilitySelected") {
+
+            $this->displayText = "Enter meter number";
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processUmeme";
+            $this->previousPage = "enterMeterNumber";
+        } elseif ($this->previousPage == "enterMeterNumber") {
+
+            $meterNumber = $input;
+            $accountDetails = $this->validateUMEMECustomerAccount($meterNumber);
+
+            if ($accountDetails == "") {
+
+                $this->displayText = "Invalid account Meter number. Please enter meter number again";
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processUmeme";
+                $this->previousPage = "enterMeterNumber";
+            } else {
+
+                $customerName = $accountDetails['customerName'];
+                $balance = $accountDetails['balance'];
+                $customerType = $accountDetails['customerType'];
+
+                $this->saveSessionVar("umemeCustomerName", $customerName);
+                $this->saveSessionVar("umemeBalance", $balance);
+                $this->saveSessionVar("umemeCustomerType", $customerType);
+                $this->saveSessionVar("umemeMeterNumber", $meterNumber);
+
+                if ($customerType == "POSTPAID" && $balance != 0) {
+//     $this->displayText = "Your balance is UGX " . $balance . ". Enter Amount to pay";
+                    $this->displayText = "Dear {$customerName}, your balance is " . number_format($balance) . ". Meter number {$meterNumber}.\n Enter amount to pay";
+                } else {
+// $this->displayText = "Enter Amount to pay";
+                    $this->displayText = "Dear {$customerName}, your balance is " . number_format($balance) . "  Meter number {$meterNumber}.\n Enter amount to pay";
+                }
+
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processUmeme";
+                $this->previousPage = "enterAmount";
+            }
+        } elseif ($this->previousPage == "enterAmount") {
+
+            if ($this->getSessionVar("umemeAmount") == null) {
+                $amount = (int) $input;
+                $this->saveSessionVar("umemeAmount", $amount);
+            }
+
+            $umemeBalance = $this->getSessionVar("umemeBalance") == NULL ? 0 : $this->getSessionVar("umemeBalance");
+            $this->logMessage("Comparing balance " . $umemeBalance . " and the entered amount " . $this->getSessionVar("umemeAmount"), NULL, DTBUGconfigs::LOG_LEVEL_INFO);
+            if (($this->getSessionVar("umemeCustomerType") == 'PREPAID') && $this->getSessionVar("umemeAmount") < ($umemeBalance + $this->umemeMinimum)) {
+                $this->saveSessionVar("umemeAmount", NULL);
+                $this->displayText = "Invalid amount\n Please enter an amount greater than your balance of " . round($umemeBalance);
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processUmeme";
+                $this->previousPage = "enterAmount";
+            } else {
+                $message = "You are paying " . $this->getSessionVar("umemeAmount");
+                $message .= ". Account name: " . $this->getSessionVar("umemeCustomerName") . ". ";
+                $message .= "Meter number " . $this->getSessionVar("umemeMeterNumber");
+                $message .= "\n1: Confirm \n2: Cancel";
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processUmeme";
+                $this->previousPage = "confirmUmemePay";
+            }
+        } elseif ($this->previousPage == "confirmUmemePay") {
+            switch ($input) {
+                case 1:
+
+                    $this->saveSessionvar('serviceID', 'BILL_PAY');
+
+                    $this->saveSessionVar('amount', $this->getSessionVar("umemeAmount"));
+                    $this->saveSessionVar('nomination', 'no');
+                    $this->saveSessionVar('utilityBillAmount', $this->getSessionVar("umemeAmount"));
+                    $this->saveSessionVar('merchantCode', 'UMEME');
+                    $this->saveSessionVar('utilityBillAccountNo', $this->getSessionVar("umemeMeterNumber"));
+                    $this->saveSessionVar('flavour', 'open');
+                    $this->saveSessionVar('billEnrolment', "NO");
+                    $this->saveSessionVar('billEnrolmentNumber', 'NULL');
+
+                    $this->displayText = "Select account:\n" . $clientAccounts;
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "validateAccountDetails";
+                    break;
+
+                case 2:
+                    $this->startPage();
+                    break;
+
+                default:
+                    $this->previousPage = "enterAmount";
+                    $this->processUmeme($input);
+                    break;
+            }
+        }
+    }
+
+    function processNwsc($input) {
+
+        $clientAccounts = $this->getSessionVar('clientAccounts');
+
+        if ($this->previousPage == "utilitySelected") {
+
+            $this->displayText = "Enter meter number";
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processNwsc";
+            $this->previousPage = "enterMeterNumber";
+        } elseif ($this->previousPage == "enterMeterNumber") {
+
+            $this->saveSessionVar("nwscMeterNumber", $input);
+
+            $text = "Select area \n";
+            $areasArray = explode(",", $this->nwscAreas);
+
+            for ($i = 0; $i < sizeof($areasArray); $i++) {
+                $text .= $i + 1 . ". " . $areasArray[$i] . "\n";
+            }
+
+            $this->displayText = $text;
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processNwsc";
+            $this->previousPage = "selectArea";
+        } elseif ($this->previousPage == "selectArea") {
+
+            $areasArray = explode(",", $this->nwscAreas);
+            $input = (int) $input;
+
+#check for array index out of bounds
+            if ($input > sizeof($areasArray) || $input < 1) {
+#prompt user to enter select area again
+                $this->previousPage = "enterMeterNumber";
+                $this->processNwsc($this->getSessionVar("nwscMeterNumber"));
+            } else {
+#valid index has been selected
+                $selectedIndex = $input - 1;
+                $selectedArea = trim($areasArray[$selectedIndex]);
+                $this->saveSessionVar("selectedArea", $selectedArea);
+                $meterNumber = $this->getSessionVar("nwscMeterNumber");
+
+                $accountDetails = $this->validateNWSCCustomerAccount($meterNumber, $selectedArea);
+
+                if ($accountDetails == "") {
+
+                    $this->displayText = "Invalid account Meter number. Please enter meter number again";
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "processNwsc";
+                    $this->previousPage = "enterMeterNumber";
+                } else {
+
+                    $customerName = $accountDetails['customerName'];
+                    $balance = $accountDetails['balance'];
+                    $customerType = $accountDetails['customerType'];
+
+                    $this->saveSessionVar("nwscCustomerName", $customerName);
+
+                    if ($balance == 0) {
+//$this->displayText = "Enter Amount to pay";
+                        $this->displayText = "Dear {$customerName}, Your balance is UGX " . number_format($balance) . ". Enter Amount to pay";
+                    } else {
+                        $this->displayText = "Dear {$customerName}, Your balance is UGX " . number_format($balance) . ". Enter Amount to pay";
+                    }
+
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "processNwsc";
+                    $this->previousPage = "enterAmount";
+                }
+            }
+        } elseif ($this->previousPage == "enterAmount") {
+
+            if ($this->getSessionVar("nwscAmount") == null) {
+                $amount = (int) $input;
+                $this->saveSessionVar("nwscAmount", $amount);
+            }
+
+            $message = "You are paying NWSC UGX. " . $this->getSessionVar("nwscAmount");
+            $message .= ". Account name: " . $this->getSessionVar("nwscCustomerName") . ". ";
+            $message .= "Meter number " . $this->getSessionVar("nwscMeterNumber");
+            $message .= "\n1: Confirm \n2: Cancel";
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processNwsc";
+            $this->previousPage = "confirmNwscPay";
+        } elseif ($this->previousPage == "confirmNwscPay") {
+            switch ($input) {
+                case 1:
+
+                    $this->saveSessionvar('serviceID', 'BILL_PAY');
+
+                    $this->saveSessionVar('amount', $this->getSessionVar("nwscAmount"));
+                    $this->saveSessionVar('nomination', 'no');
+                    $this->saveSessionVar('utilityBillAmount', $this->getSessionVar("nwscAmount"));
+                    $this->saveSessionVar('merchantCode', 'NWSC');
+                    $this->saveSessionVar('utilityBillAccountNo', $this->getSessionVar("nwscMeterNumber"));
+                    $this->saveSessionVar('flavour', 'open');
+                    $this->saveSessionVar('billEnrolment', "NO");
+                    $this->saveSessionVar('billEnrolmentNumber', 'NULL');
+                    $this->saveSessionVar('NWSCarea', $this->getSessionVar("selectedArea"));
+
+                    $this->displayText = "Select account:\n" . $clientAccounts;
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "validateAccountDetails";
+
+                    break;
+
+                case 2:
+                    $this->startPage();
+                    break;
+
+                default:
+                    $this->previousPage = "enterAmount";
+                    $this->processNwsc($input);
+                    break;
+            }
+        }
+    }
+
+    function processKCCA($input) {
+
+        $clientAccounts = $this->getSessionVar('clientAccounts');
+
+        if ($this->previousPage == "utilitySelected") {
+
+            $this->displayText = "Enter Payment Reference Number. PRN";
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processKCCA";
+            $this->previousPage = "enterMeterNumber";
+        } elseif ($this->previousPage == "enterMeterNumber") {
+
+            if ($this->getSessionVar("KCCACustomerName") != null) { //we have already validated the account
+                $message = "Invalid input. You are paying " . $this->getSessionVar("KCCABalance");
+                $message .= ". Customer name: " . $this->getSessionVar("KCCACustomerName") . ". ";
+                $message .= "PRN " . $this->getSessionVar("KCCAPRN");
+                $message .= "\n1: Confirm \n2: Cancel";
+
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processKCCA";
+                $this->previousPage = "confirmKCCAPay";
+            } else {
+
+                $meterNumber = $input;
+                $accountDetails = $this->validateKCCACustomerAccount($meterNumber);
+
+                if ($accountDetails == "") {
+
+                    $this->displayText = "Invalid PRN, Please try again";
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "processKCCA";
+                    $this->previousPage = "enterMeterNumber";
+                } else {
+
+                    $customerName = $accountDetails['customerName'];
+                    $balance = $accountDetails['balance'];
+
+                    $this->saveSessionVar("KCCACustomerName", $customerName);
+                    $this->saveSessionVar("KCCABalance", $balance);
+                    $this->saveSessionVar("KCCAPRN", $meterNumber);
+
+                    $message = "You are paying " . $balance;
+                    $message .= ". Customer name: " . $customerName . ". ";
+                    $message .= "PRN " . $meterNumber;
+                    $message .= "\n1: Confirm \n2: Cancel";
+                    $this->displayText = $message;
+
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "processKCCA";
+                    $this->previousPage = "confirmKCCAPay";
+                }
+            }
+        } elseif ($this->previousPage == "confirmKCCAPay") {
+            switch ($input) {
+                case 1:
+
+                    $this->saveSessionvar('serviceID', 'BILL_PAY');
+
+                    $this->saveSessionVar('amount', $this->getSessionVar("KCCABalance"));
+                    $this->saveSessionVar('nomination', 'no');
+                    $this->saveSessionVar('utilityBillAmount', $this->getSessionVar("KCCABalance"));
+                    $this->saveSessionVar('merchantCode', $this->kccaServiceCode);
+                    $this->saveSessionVar('utilityBillAccountNo', $this->getSessionVar("KCCAPRN"));
+                    $this->saveSessionVar('flavour', 'open');
+                    $this->saveSessionVar('billEnrolment', "NO");
+                    $this->saveSessionVar('billEnrolmentNumber', 'NULL');
+
+                    $this->displayText = "Select account:\n" . $clientAccounts;
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "validateAccountDetails";
+                    break;
+
+                case 2:
+                    $this->startPage();
+                    break;
+
+                default:
+                    $this->previousPage = "enterAmount";
+                    $this->processUmeme($input);
+                    break;
+            }
+        }
+    }
+
+    function validateUMEMECustomerAccount($accountNumber) {
+
+        $this->logMessage("Validate Umeme meter number: " . $accountNumber, NULL, DTBUGconfigs::LOG_LEVEL_INFO);
+
+        $credentials = array(
+            "username" => $this->beepUsername,
+            "password" => $this->beepPassword
+        );
+
+        $packet = array(
+            'serviceID' => $this->umemeServiceID,
+            'serviceCode' => $this->umemeServiceCode,
+            'accountNumber' => $accountNumber,
+            'requestExtraData' => ''
+        );
+
+        $data[] = $packet;
+        $payload = array(
+            "credentials" => $credentials,
+            "packet" => $data
+        );
+
+        $spayload = array(
+            "function" => $this->hubValidationFunction,
+            "payload" => json_encode($payload)
+        );
+
+        $this->logMessage("payload to send to hub: ", $spayload, DTBUGconfigs::LOG_LEVEL_INFO);
+
+//$response = post("http://127.0.0.1/BeepJsonAPI/index.php",json_encode($spayload));
+        $response = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
+        $this->logMessage("Response from hub: ", $response, DTBUGconfigs::LOG_LEVEL_INFO);
+        $responseArray = json_decode($response, true);
+
+
+        $authStatusCode = $responseArray['authStatus']['authStatusCode'];
+        $authStatusDesc = $responseArray['authStatus']['authStatusDescription'];
+
+        if ($authStatusCode != $this->hubAuthSuccessCode) {
+            $this->logMessage("Authentication Failed !!!!!!!", NULL, DTBUGconfigs::LOG_LEVEL_INFO);
+
+            return "";
+        }
+
+        $statusCode = $responseArray['results'][0]['statusCode'];
+        $responseData = $responseArray['results'][0]['responseExtraData'];
+
+        if ($statusCode != $this->hubValidationSuccessCode) {
+            $this->logMessage("INVALID account !!!!!!!", NULL, DTBUGconfigs::LOG_LEVEL_INFO);
+            return "";
+        }
+
+        $responseDataArray = json_decode($responseData, true);
+        $this->logMessage("Response from validate UMEME: ", $responseDataArray, DTBUGconfigs::LOG_LEVEL_INFO);
+
+        return $responseDataArray;
+    }
+
+    function validateKCCACustomerAccount($accountNumber) {
+        $this->logMessage("Validate KCCA PRN: " . $accountNumber, NULL, DTBUGconfigs::LOG_LEVEL_INFO);
+
+        $credentials = array(
+            "username" => $this->beepUsername,
+            "password" => $this->beepPassword
+        );
+
+        $packet = array(
+            'serviceID' => $this->kccaServiceID,
+            'serviceCode' => $this->kccaServiceCode,
+            'accountNumber' => $accountNumber,
+            'requestExtraData' => ''
+        );
+
+        $data[] = $packet;
+        $payload = array(
+            "credentials" => $credentials,
+            "packet" => $data
+        );
+
+        $spayload = array(
+            "function" => $this->hubValidationFunction,
+            "payload" => json_encode($payload)
+        );
+
+        $this->logMessage("payload to send to hub: ", $spayload);
+
+
+//$response = post("http://127.0.0.1/BeepJsonAPI/index.php",json_encode($spayload));
+        $response = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
+        $this->logMessage("Response from hub: ", $response, DTBUGconfigs::LOG_LEVEL_INFO);
+        $responseArray = json_decode($response, true);
+
+
+        $authStatusCode = $responseArray['authStatus']['authStatusCode'];
+        $authStatusDesc = $responseArray['authStatus']['authStatusDescription'];
+
+        if ($authStatusCode != $this->hubAuthSuccessCode) {
+            $this->logMessage("Authentication Failed !!!!!!!", NULL, DTBUGconfigs::LOG_LEVEL_INFO);
+
+            return "";
+        }
+
+        $statusCode = $responseArray['results'][0]['statusCode'];
+        $responseData = $responseArray['results'][0]['responseExtraData'];
+
+        if ($statusCode != $this->hubValidationSuccessCode) {
+            $this->logMessage("INVALID account !!!!!!!", NULL, DTBUGconfigs::LOG_LEVEL_INFO);
+
+            return "";
+        }
+
+        $responseDataArray = json_decode($responseData, true);
+        $this->logMessage("Response from validate KCCA: ", $responseDataArray, DTBUGconfigs::LOG_LEVEL_INFO);
+
+        return $responseDataArray;
+    }
+
+    function validateNWSCCustomerAccount($accountNumber, $area) {
+        $this->logMessage("Validate NWSC meter number: " . $accountNumber, NULL, DTBUGconfigs::LOG_LEVEL_INFO);
+
+        $credentials = array(
+            "username" => $this->beepUsername,
+            "password" => $this->beepPassword
+        );
+
+        $packet = array(
+            'serviceID' => $this->nwscServiceID,
+            'serviceCode' => $this->nwscServiceCode,
+            'accountNumber' => $accountNumber,
+            'requestExtraData' => "{\"area\": \"$area\"}"
+        );
+
+        $data[] = $packet;
+        $payload = array(
+            "credentials" => $credentials,
+            "packet" => $data
+        );
+
+        $spayload = array(
+            "function" => $this->hubValidationFunction,
+            "payload" => json_encode($payload)
+        );
+
+        $this->logMessage("payload to send to hub: ", $spayload, DTBUGconfigs::LOG_LEVEL_INFO);
+
+
+//$response = post("http://127.0.0.1/BeepJsonAPI/index.php",json_encode($spayload));
+        $response = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
+        $this->logMessage("Response from hub: ", $response, DTBUGconfigs::LOG_LEVEL_INFO);
+        $responseArray = json_decode($response, true);
+
+
+        $authStatusCode = $responseArray['authStatus']['authStatusCode'];
+        $authStatusDesc = $responseArray['authStatus']['authStatusDescription'];
+
+        if ($authStatusCode != $this->hubAuthSuccessCode) {
+            $this->logMessage("Authentication Failed !!!!!!!", NULL, DTBUGconfigs::LOG_LEVEL_INFO);
+
+            return "";
+        }
+
+        $statusCode = $responseArray['results'][0]['statusCode'];
+        $responseData = $responseArray['results'][0]['responseExtraData'];
+
+        if ($statusCode != $this->hubValidationSuccessCode) {
+            $this->logMessage("INVALID account !!!!!!!", NULL, DTBUGconfigs::LOG_LEVEL_INFO);
+
+            return "";
+        }
+
+        $responseDataArray = json_decode($responseData, true);
+        $this->logMessage("Response from validate NWSC: ", $responseDataArray, DTBUGconfigs::LOG_LEVEL_INFO);
+
+        return $responseDataArray;
+    }
+
+    /* ================== end bill processing ========== */
+
+    function validateCustomerAccount($merchantCode, $serviceID, $serviceCode, $meterNumber, $area) {
+
+        $credentials = array(
+            "username" => $this->beepUsername,
+            "password" => $this->beepPassword
+        );
+
+        $packet = array();
+
+        if ($merchantCode == "NWSC") {
+
+            $packet = array(
+                'serviceID' => $serviceID,
+                'serviceCode' => $serviceCode,
+                'accountNumber' => $meterNumber,
+                'requestExtraData' => "{\"area\": \"$area\"}"
+            );
+        } else {
+            $packet = array(
+                'serviceID' => $serviceID,
+                'serviceCode' => $serviceCode,
+                'accountNumber' => $meterNumber,
+                'requestExtraData' => ''
+            );
+        }
+
+        $data[] = $packet;
+        $payload = array(
+            "credentials" => $credentials,
+            "packet" => $data
+        );
+
+        $spayload = array(
+            "function" => $this->hubValidationFunction,
+            "payload" => json_encode($payload)
+        );
+
+        $response = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
+
+        $responseArray = json_decode($response, true);
+
+        $responseData = $responseArray['results'][0]['responseExtraData'];
+
+        $responseDataArray = json_decode($responseData, true);
+
+
+        return $responseDataArray;
+    }
+
+    function validatePayTVAccount($merchantCode, $serviceID, $serviceCode, $accountNumber) {
+
+        $credentials = array(
+            "username" => $this->beepUsername,
+            "password" => $this->beepPassword
+        );
+
+        $packet = array();
+
+
+        $extraData = json_encode(array(
+            "area" => "",
+            "customerMobile" => $this->_msisdn,
+            "merchantCode" => $merchantCode)
+        );
+
+        $packet = array(
+            'serviceID' => $serviceID,
+            'serviceCode' => $serviceCode,
+            'accountNumber' => $accountNumber,
+            'requestExtraData' => $extraData,
+            'extraData' => $extraData,
+        );
+
+
+        $data[] = $packet;
+        $payload = array(
+            "credentials" => $credentials,
+            "packet" => $data
+        );
+
+        $spayload = array(
+            "function" => $this->hubValidationFunction,
+            "payload" => json_encode($payload)
+        );
+
+        $response = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
+
+        $responseArray = json_decode($response, true);
+
+        $responseData = $responseArray['results'][0]['responseExtraData'];
+
+        $responseDataArray = json_decode($responseData, true);
+
+
+        return $responseDataArray;
+    }
+
+    function postValidationRequestToHUB($url, $fields) {
+        $fields_string = null;
+
+        $ch = curl_init();
+//set the url, number of POST vars, POST data
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
+        curl_setopt($ch, CURLOPT_POST, count($fields));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+//execute post
+        $result = curl_exec($ch);
+//close connection
+        curl_close($ch);
+        return $result;
+    }
+
+    function reload($input) {
+        switch ($input) {
+
+            case 0:
+                $this->displayText = "Thank you for using DTB mobile";
+                $this->sessionState = "END";
+                break;
+
+            case 1:
+                $this->displayText = "Please select a service.\n" . $this->CBSservices;
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processRequest";
+                break;
+            default:
+                $this->displayText = "Thank you for using DTB mobile";
+                $this->sessionState = "END";
+                break;
+        }
+    }
+
+    function servicesOff($input) {
+        switch ($input) {
+            case 1 :
+                $this->displayText = "Select:\n$this->CBSservices";
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "selectBankAccount";
+                break;
+
+            default :
+                $this->displayText = "Thank you for banking with" . DTBUGconfigs::BANK_SIGNATURE;
+                $this->sessionState = "END";
+                break;
+        }
+    }
+
+    /////End Of Pay Bill and Pay TVs/////////////////
+
+
     function validateMobileNumber($input) {
         if (strlen($input) == 12 && is_numeric($input)) {
             $this->saveSessionVar($this->KEY_CUSTOMER_MOBILE_NUMBER, $input);
@@ -1345,45 +2782,6 @@ class NCBANKUSSD extends DynamicMenuController {
         } else {
             CoreUtils::flog4php($logLevel, $this->_msisdn, array("MESSAGE" => $message), __FILE__, __FUNCTION__, __LINE__, "ussdinfo", USSD_LOG_PROPERTIES);
         }
-    }
-
-}
-
-class xmlrpc_client {
-
-    private $url;
-
-    function __construct($url, $autoload = true) {
-        $this->url = $url;
-        $this->connection = new curl;
-        $this->methods = array();
-        if ($autoload) {
-            $resp = $this->call('system.listMethods', null);
-            $this->methods = $resp;
-        }
-    }
-
-    public function call($method, $params = null) {
-        $post = xmlrpc_encode_request($method, $params);
-        return xmlrpc_decode($this->connection->post($this->url, $post));
-    }
-
-    function getProvider($networkID) {
-        $providers = array(
-            "64110" => "MTN",
-            "64101" => "Airtel",
-            "732125" => "Africell"
-        );
-        return $providers[$networkID];
-    }
-
-    function getAirtimeWalletMerchantCodes($networkID) {
-        $providers = array(
-            "64110" => "MTNTOPUP",
-            "64101" => "AIRTELTOPUP",
-            "732125" => "AFRCELTOPUP"
-        );
-        return $providers[$networkID];
     }
 
 }
