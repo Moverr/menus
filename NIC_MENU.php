@@ -1820,7 +1820,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function validateURATin($accountNumber) {
 
-        $this->logMessage("Validate URA TIN...", NULL, DTBUGconfigs::LOG_LEVEL_INFO);
+        $this->logMessage("Validate URA TIN...", NULL, 4);
 
         $credentials = array(
             "username" => $this->beepUsername,
@@ -1845,12 +1845,12 @@ class NCBANKUSSD extends DynamicMenuController {
             "payload" => json_encode($payload)
         );
 
-        $this->logMessage("payload to send to hub: ", $spayload, DTBUGconfigs::LOG_LEVEL_INFO);
+        $this->logMessage("payload to send to hub: ", $spayload, 4);
 
 
 //$response = post("http://127.0.0.1/BeepJsonAPI/index.php",json_encode($spayload));
         $response = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
-        $this->logMessage("Response from hub: ", $response, DTBUGconfigs::LOG_LEVEL_INFO);
+        $this->logMessage("Response from hub: ", $response, 4);
         $responseArray = json_decode($response, true);
 
 
@@ -1858,7 +1858,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $authStatusDesc = $responseArray['authStatus']['authStatusDescription'];
 
         if ($authStatusCode != $this->hubAuthSuccessCode) {
-            $this->logMessage("Authentication Failed !!!!!!! ", NULL, DTBUGconfigs::LOG_LEVEL_INFO);
+            $this->logMessage("Authentication Failed !!!!!!! ", NULL, 4);
             return "";
         }
 
@@ -1866,12 +1866,12 @@ class NCBANKUSSD extends DynamicMenuController {
         $responseData = $responseArray['results'][0]['responseExtraData'];
 
         if ($statusCode != $this->hubValidationSuccessCode) {
-            $this->logMessage("INVALID account !!!!!!! ", NULL, DTBUGconfigs::LOG_LEVEL_INFO);
+            $this->logMessage("INVALID account !!!!!!! ", NULL, 4);
             return "";
         }
 
         $responseDataArray = json_decode($responseData, true);
-        $this->logMessage("Response from validate URA TIN: ", $responseDataArray, DTBUGconfigs::LOG_LEVEL_INFO);
+        $this->logMessage("Response from validate URA TIN: ", $responseDataArray, 4);
 
         return $responseDataArray;
     }
@@ -1880,43 +1880,61 @@ class NCBANKUSSD extends DynamicMenuController {
         $clientAccounts = $this->getSessionVar('clientAccounts');
         $meterNumber = $input;
         $accountDetails = $this->validateUMEMECustomerAccount($meterNumber);
-        $this->displayText = "" . print_r($accountDetails, true);
-        $this->sessionState = "CONTINUE";
-        $this->nextFunction = "processUmeme";
-        $this->previousPage = "enterMeterNumber";
 
-        /*
 
-          if ($accountDetails == "") {
 
-          $this->displayText = "Invalid account Meter number. Please enter meter number again";
-          $this->sessionState = "CONTINUE";
-          $this->nextFunction = "processUmeme";
-          $this->previousPage = "enterMeterNumber";
-          } else {
-          $customerName = $accountDetails['customerName'];
-          $balance = $accountDetails['balance'];
-          $customerType = $accountDetails['customerType'];
+        if ($accountDetails == "" || $accountDetails == null) {
 
-          $this->saveSessionVar("umemeCustomerName", $customerName);
-          $this->saveSessionVar("umemeBalance", $balance);
-          $this->saveSessionVar("umemeCustomerType", $customerType);
-          $this->saveSessionVar("umemeMeterNumber", $meterNumber);
+            $this->displayText = "Invalid account Meter number. Please enter meter number again";
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processUmeme";
+            $this->previousPage = "enterMeterNumber";
+        } else {
 
-          if ($customerType == "POSTPAID" && $balance != 0) {
-          //     $this->displayText = "Your balance is UGX " . $balance . ". Enter Amount to pay";
-          $this->displayText = "Dear {$customerName}, your balance is " . number_format($balance) . ". Meter number {$meterNumber}.\n Enter amount to pay";
-          } else {
-          // $this->displayText = "Enter Amount to pay";
-          $this->displayText = "Dear {$customerName}, your balance is " . number_format($balance) . "  Meter number {$meterNumber}.\n Enter amount to pay";
-          }
+            //VALIDATE IF THE ACCOUNT EXISTS, OF IF THE ACCOUNT IS VALID 
+            $authStatusCode = $accountDetails['authStatus']['authStatusCode'];
+            $authStatusDesc = $accountDetails['authStatus']['authStatusDescription'];
 
-          $this->sessionState = "CONTINUE";
-          $this->nextFunction = "enterUmemeAmount";
-          $this->previousPage = "processUmeme";
-          }
+            $statusCode = $accountDetails['results'][0]['statusCode'];
+            $responseData = $accountDetails['results'][0]['responseExtraData'];
 
-         */
+
+
+            if ($authStatusCode != $this->hubAuthSuccessCode) {
+                $this->logMessage("Authentication Failed !!!!!!!", NULL, 4);
+
+                $this->displayText = "Account number has failed authentication ";
+                $this->sessionState = "END";
+            } elseif ($statusCode != $this->hubValidationSuccessCode) {
+
+                $this->logMessage("Invalid Account !!!!!!", NULL, 4);
+                $this->displayText = "Invalid account ";
+                $this->sessionState = "END";
+            } else {
+                $accountDetails = json_decode($accountDetails['results'][0]['responseExtraData'], true);
+                
+                $customerName = $accountDetails['customerName'];
+                $balance = $accountDetails['balance'];
+                $customerType = $accountDetails['customerType'];
+
+                $this->saveSessionVar("umemeCustomerName", $customerName);
+                $this->saveSessionVar("umemeBalance", $balance);
+                $this->saveSessionVar("umemeCustomerType", $customerType);
+                $this->saveSessionVar("umemeMeterNumber", $meterNumber);
+
+                if ($customerType == "POSTPAID" && $balance != 0) {
+                    //     $this->displayText = "Your balance is UGX " . $balance . ". Enter Amount to pay";
+                    $this->displayText = "Dear {$customerName}, your balance is " . number_format($balance) . ". Meter number {$meterNumber}.\n Enter amount to pay";
+                } else {
+                    // $this->displayText = "Enter Amount to pay";
+                    $this->displayText = "Dear {$customerName}, your balance is " . number_format($balance) . "  Meter number {$meterNumber}.\n Enter amount to pay";
+                }
+
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "enterUmemeAmount";
+                $this->previousPage = "processUmeme";
+            }
+        }
     }
 
     function enterUmemeAmount($input) {
@@ -1935,7 +1953,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
             $umemeBalance = $this->getSessionVar("umemeBalance") == NULL ? 0 : $this->getSessionVar("umemeBalance");
-            $this->logMessage("Comparing balance " . $umemeBalance . " and the entered amount " . $this->getSessionVar("umemeAmount"), NULL, DTBUGconfigs::LOG_LEVEL_INFO);
+            $this->logMessage("Comparing balance " . $umemeBalance . " and the entered amount " . $this->getSessionVar("umemeAmount"), NULL, 4);
             if (($this->getSessionVar("umemeCustomerType") == 'PREPAID') && $this->getSessionVar("umemeAmount") < ($umemeBalance + $this->umemeMinimum)) {
                 $this->saveSessionVar("umemeAmount", NULL);
                 $this->displayText = "Invalid amount\n Please enter an amount greater than your balance of " . round($umemeBalance);
@@ -2229,7 +2247,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function validateUMEMECustomerAccount($accountNumber) {
 
-        $this->logMessage("Validate Umeme meter number: " . $accountNumber, NULL, DTBUGconfigs::LOG_LEVEL_INFO);
+        $this->logMessage("Validate Umeme meter number: " . $accountNumber, NULL, 4);
 
         $credentials = array(
             "username" => $this->beepUsername,
@@ -2254,44 +2272,20 @@ class NCBANKUSSD extends DynamicMenuController {
             "payload" => json_encode($payload)
         );
 
-        $this->logMessage("payload to send to hub: ", $spayload, DTBUGconfigs::LOG_LEVEL_INFO);
+        $this->logMessage("payload to send to hub: ", $spayload, 4);
 
 //$response = post("http://127.0.0.1/BeepJsonAPI/index.php",json_encode($spayload));
         $response = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
 
-
-        $this->logMessage("Response from hub: ", $response, DTBUGconfigs::LOG_LEVEL_INFO);
+        $this->logMessage("Response from hub: ", $response, 4);
         $responseArray = json_decode($response, true);
-        
+        $this->saveSessionVar("UMEMEACCOUNT", $responseArray);
+
         return $responseArray;
-
-        /*
-          //todo: test me here ::
-          $authStatusCode = $responseArray['authStatus']['authStatusCode'];
-          $authStatusDesc = $responseArray['authStatus']['authStatusDescription'];
-
-          if ($authStatusCode != $this->hubAuthSuccessCode) {
-          $this->logMessage("Authentication Failed !!!!!!!", NULL, DTBUGconfigs::LOG_LEVEL_INFO);
-
-          return "";
-          }
-
-          $statusCode = $responseArray['results'][0]['statusCode'];
-          $responseData = $responseArray['results'][0]['responseExtraData'];
-
-          if ($statusCode != $this->hubValidationSuccessCode) {
-          $this->logMessage("INVALID account !!!!!!!", NULL, DTBUGconfigs::LOG_LEVEL_INFO);
-          return "";
-          }
-
-          $responseDataArray = json_decode($responseData, true);
-          $this->logMessage("Response from validate UMEME: ", $responseDataArray, DTBUGconfigs::LOG_LEVEL_INFO);
-
-          return $responseDataArray; */
     }
 
     function validateKCCACustomerAccount($accountNumber) {
-        $this->logMessage("Validate KCCA PRN: " . $accountNumber, NULL, DTBUGconfigs::LOG_LEVEL_INFO);
+        $this->logMessage("Validate KCCA PRN: " . $accountNumber, NULL, 4);
 
         $credentials = array(
             "username" => $this->beepUsername,
@@ -2321,7 +2315,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
 //$response = post("http://127.0.0.1/BeepJsonAPI/index.php",json_encode($spayload));
         $response = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
-        $this->logMessage("Response from hub: ", $response, DTBUGconfigs::LOG_LEVEL_INFO);
+        $this->logMessage("Response from hub: ", $response, 4);
         $responseArray = json_decode($response, true);
 
 
@@ -2329,7 +2323,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $authStatusDesc = $responseArray['authStatus']['authStatusDescription'];
 
         if ($authStatusCode != $this->hubAuthSuccessCode) {
-            $this->logMessage("Authentication Failed !!!!!!!", NULL, DTBUGconfigs::LOG_LEVEL_INFO);
+            $this->logMessage("Authentication Failed !!!!!!!", NULL, 4);
 
             return "";
         }
@@ -2338,19 +2332,19 @@ class NCBANKUSSD extends DynamicMenuController {
         $responseData = $responseArray['results'][0]['responseExtraData'];
 
         if ($statusCode != $this->hubValidationSuccessCode) {
-            $this->logMessage("INVALID account !!!!!!!", NULL, DTBUGconfigs::LOG_LEVEL_INFO);
+            $this->logMessage("INVALID account !!!!!!!", NULL, 4);
 
             return "";
         }
 
         $responseDataArray = json_decode($responseData, true);
-        $this->logMessage("Response from validate KCCA: ", $responseDataArray, DTBUGconfigs::LOG_LEVEL_INFO);
+        $this->logMessage("Response from validate KCCA: ", $responseDataArray, 4);
 
         return $responseDataArray;
     }
 
     function validateNWSCCustomerAccount($accountNumber, $area) {
-        $this->logMessage("Validate NWSC meter number: " . $accountNumber, NULL, DTBUGconfigs::LOG_LEVEL_INFO);
+        $this->logMessage("Validate NWSC meter number: " . $accountNumber, NULL, 4);
 
         $credentials = array(
             "username" => $this->beepUsername,
@@ -2375,12 +2369,12 @@ class NCBANKUSSD extends DynamicMenuController {
             "payload" => json_encode($payload)
         );
 
-        $this->logMessage("payload to send to hub: ", $spayload, DTBUGconfigs::LOG_LEVEL_INFO);
+        $this->logMessage("payload to send to hub: ", $spayload, 4);
 
 
 //$response = post("http://127.0.0.1/BeepJsonAPI/index.php",json_encode($spayload));
         $response = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
-        $this->logMessage("Response from hub: ", $response, DTBUGconfigs::LOG_LEVEL_INFO);
+        $this->logMessage("Response from hub: ", $response, 4);
         $responseArray = json_decode($response, true);
 
 
@@ -2388,7 +2382,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $authStatusDesc = $responseArray['authStatus']['authStatusDescription'];
 
         if ($authStatusCode != $this->hubAuthSuccessCode) {
-            $this->logMessage("Authentication Failed !!!!!!!", NULL, DTBUGconfigs::LOG_LEVEL_INFO);
+            $this->logMessage("Authentication Failed !!!!!!!", NULL, 4);
 
             return "";
         }
@@ -2397,13 +2391,13 @@ class NCBANKUSSD extends DynamicMenuController {
         $responseData = $responseArray['results'][0]['responseExtraData'];
 
         if ($statusCode != $this->hubValidationSuccessCode) {
-            $this->logMessage("INVALID account !!!!!!!", NULL, DTBUGconfigs::LOG_LEVEL_INFO);
+            $this->logMessage("INVALID account !!!!!!!", NULL, 4);
 
             return "";
         }
 
         $responseDataArray = json_decode($responseData, true);
-        $this->logMessage("Response from validate NWSC: ", $responseDataArray, DTBUGconfigs::LOG_LEVEL_INFO);
+        $this->logMessage("Response from validate NWSC: ", $responseDataArray, 4);
 
         return $responseDataArray;
     }
