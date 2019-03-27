@@ -43,8 +43,6 @@ class NCBANKUSSD extends DynamicMenuController {
     private $hubValidationSuccessCode = "307";
     private $beepUsername = "nic_test_api_user";
     private $beepPassword = "nic_t3st_api_us3r";
-    
-    
     private $umemeServiceID = '28';
     private $umemeServiceCode = 'UMEME';
     private $nwscServiceID = '27';
@@ -54,8 +52,6 @@ class NCBANKUSSD extends DynamicMenuController {
     private $uraServiceID = '30';
     private $uraServiceCode = 'URA';
     private $nwscAreas = "Kampala,Jinja,Entebbe,Lugazi,Iganga,Kawuku,Kajjansi,Mukono,Others";
-    
-    
 
     function startPage() {
         $this->firstMenu();
@@ -2263,12 +2259,13 @@ class NCBANKUSSD extends DynamicMenuController {
 //$response = post("http://127.0.0.1/BeepJsonAPI/index.php",json_encode($spayload));
         $response = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
 
-        return $response;
 
-        /* $this->logMessage("Response from hub: ", $response, DTBUGconfigs::LOG_LEVEL_INFO);
-          $responseArray = json_decode($response, true);
+        $this->logMessage("Response from hub: ", $response, DTBUGconfigs::LOG_LEVEL_INFO);
+        $responseArray = json_decode($response, true);
+        
+        return $responseArray;
 
-
+        /*
           //todo: test me here ::
           $authStatusCode = $responseArray['authStatus']['authStatusCode'];
           $authStatusDesc = $responseArray['authStatus']['authStatusDescription'];
