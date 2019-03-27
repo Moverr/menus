@@ -2671,7 +2671,8 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
 
-        $this->displayText = "" . print_r($result, true);
+        $response = json_decode($result);
+        $this->displayText = "" . print_r($response, true);
         $this->sessionState = "END";
 
         /* $response = json_decode($result);
