@@ -2672,16 +2672,9 @@ class NCBANKUSSD extends DynamicMenuController {
         $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
 
         $response = json_decode($result);
-        $this->displayText = "" . print_r($response, true);
+        $this->logMessage("Bill Payment wallet Response:: ", $response, 4);
+        $this->displayText = $response->STAT_DESCRIPTION;
         $this->sessionState = "END";
-
-        /* $response = json_decode($result);
-          //                $this->displayText = "" . print_r($result, true);
-          $this->logMessage("Bill Payment wallet Response:: ", $response, 4);
-          $this->displayText = $response->DATA->MESSAGE;
-          $this->sessionState = "END";
-          $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-         */
     }
 
     /////End Of Pay Bill and Pay TVs/////////////////
