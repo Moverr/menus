@@ -2130,9 +2130,59 @@ class NCBANKUSSD extends DynamicMenuController {
 
             $accountDetails = $this->validateNWSCCustomerAccount($meterNumber, $selectedArea);
 
-            $this->displayText = "" . print_r($accountDetails, true);
-            $this->sessionState = "end";
 
+            if ($accountDetails == "" || $accountDetails == null) {
+                $this->displayText = "Invalid account Meter number. Please enter meter number again";
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processNwsc";
+                $this->previousPage = "enterMeterNumber";
+            } else {
+
+                $authStatusCode = $accountDetails['authStatus']['authStatusCode'];
+                $authStatusDesc = $accountDetails['authStatus']['authStatusDescription'];
+
+                $statusCode = $accountDetails['results'][0]['statusCode'];
+                $responseData = $accountDetails['results'][0]['responseExtraData'];
+
+                if ($authStatusCode != $this->hubAuthSuccessCode) {
+                    $this->logMessage("Authentication Failed !!!!!!!", NULL, 4);
+
+                    $this->displayText = "Account number has failed authentication ";
+                    $this->sessionState = "END";
+                } elseif ($statusCode != $this->hubValidationSuccessCode) {
+
+                    $this->logMessage("Invalid Account !!!!!!", NULL, 4);
+                    $this->displayText = "Invalid account ";
+                    $this->sessionState = "END";
+                } else {
+
+                    $accountDetails = json_decode($accountDetails['results'][0]['responseExtraData'], true);
+
+                    $customerName = $accountDetails['customerName'];
+                    $balance = $accountDetails['balance'];
+                    $customerType = $accountDetails['customerType'];
+
+                    $this->saveSessionVar("nwscCustomerName", $customerName);
+                    $this->saveSessionVar("nwscBalance", $balance);
+                    $this->saveSessionVar("nwscCustomerType", $customerType);
+                    $this->saveSessionVar("nwscMeterNumber", $meterNumber);
+
+                    if ($balance == 0 || $balance == null) {
+                        //$this->displayText = "Enter Amount to pay";
+                        $this->displayText = "Dear {$customerName}, Your balance is UGX " . number_format(0) . ". Enter Amount to pay";
+                    } else {
+                        $this->displayText = "Dear {$customerName}, Your balance is UGX " . number_format($balance) . ". Enter Amount to pay";
+                    }
+
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "processNwsc";
+                    $this->previousPage = "enterAmount";
+                }
+            }
+
+//            $this->displayText = "" . print_r($accountDetails, true);
+//            $this->sessionState = "end";
+//
 
             /*
               if ($accountDetails == "") {
@@ -2386,11 +2436,15 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $this->logMessage("payload to send to hub: ", $spayload, 4);
 
-
-//$response = post("http://127.0.0.1/BeepJsonAPI/index.php",json_encode($spayload));
         $response = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
 
-        return json_decode($response,true);
+        $this->logMessage("Response from hub: ", $response, 4);
+        $responseArray = json_decode($response, true);
+        $this->saveSessionVar("NWSCACCOUNT", $responseArray);
+
+        return $responseArray;
+
+
 
 
         /* $this->logMessage("Response from hub: ", $response, 4);
