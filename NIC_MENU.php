@@ -2390,7 +2390,7 @@ class NCBANKUSSD extends DynamicMenuController {
 //$response = post("http://127.0.0.1/BeepJsonAPI/index.php",json_encode($spayload));
         $response = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
 
-        return $response;
+        return json_decode($response,true);
 
 
         /* $this->logMessage("Response from hub: ", $response, 4);
