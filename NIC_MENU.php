@@ -2222,7 +2222,7 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->displayText = "Enter Payment Reference Number. PRN";
             $this->sessionState = "CONTINUE";
             $this->nextFunction = "processKCCA";
-            $this->previousPage = "enterMeterNumber";
+            $this->previousPage = "enterMeterNumber"; 
         } elseif ($this->previousPage == "enterMeterNumber") {
 
             if ($this->getSessionVar("KCCACustomerName") != null) { //we have already validated the account
