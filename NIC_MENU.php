@@ -245,8 +245,10 @@ class NCBANKUSSD extends DynamicMenuController {
                     break;
                 case '3':
                     $service = $this->getSessionVar('selectedService');
-                    $this->previousPage = "startPage";
-                    $this->processPayBill($input);
+                    $this->displayText = "Select Utility. \n1: UMEME \n2: NWSC \n3: Pay TV";
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "processPayBillMenu";
+                    $this->previousPage = "utilitySelected";
                     break;
 
                 case '4':
@@ -964,34 +966,27 @@ class NCBANKUSSD extends DynamicMenuController {
     }
 
     ////////////Process Pay Bill and Pay TVs
-    function processPayBill($input) {
+    function processPayBillMenu($input) {
 
-        if ($this->previousPage == "startPage") {
-            $this->displayText = "Select Utility. \n1: UMEME \n2: NWSC \n3: Pay TV";
-            $this->sessionState = "CONTINUE";
-            $this->nextFunction = "processPayBill";
-            $this->previousPage = "utilitySelected";
-        } else if ($this->previousPage == "utilitySelected") {
-            switch ($input) {
-                case 1:
-                    $this->processUmeme($input);
-                    break;
+        switch ($input) {
+            case 1:
+                $this->processUmeme($input);
+                break;
 
-                case 2:
-                    $this->processNwsc($input);
-                    break;
+            case 2:
+                $this->processNwsc($input);
+                break;
 
-                case 3:
-                    $this->processPayTV($input);
-                    break;
+            case 3:
+                $this->processPayTV($input);
+                break;
 
-                default:
-                    $this->displayText = "Select Utility. \n1: UMEME \n2: NWSC \n3: Pay TV";
-                    $this->sessionState = "CONTINUE";
-                    $this->nextFunction = "processPayBill";
-                    $this->previousPage = "utilitySelected";
-                    break;
-            }
+            default:
+                $this->displayText = "Select Utility. \n1: UMEME \n2: NWSC \n3: Pay TV";
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processPayBill";
+                $this->previousPage = "utilitySelected";
+                break;
         }
     }
 
