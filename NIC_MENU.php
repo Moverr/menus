@@ -976,7 +976,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->displayText = "Enter meter number";
                 $this->sessionState = "CONTINUE";
                 $this->nextFunction = "processUmeme";
-                $this->previousPage = "enterMeterNumber";
+                $this->previousPage = "processPayBillMenu";
                 break;
 
             case 2:
@@ -1871,71 +1871,42 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $clientAccounts = $this->getSessionVar('clientAccounts');
 
-        if ($this->previousPage == "utilitySelected") {
+        $meterNumber = $input;
+        $accountDetails = $this->validateUMEMECustomerAccount($meterNumber);
 
-            $this->displayText = "Enter meter number";
+        if ($accountDetails == "") {
+
+            $this->displayText = "Invalid account Meter number. Please enter meter number again";
             $this->sessionState = "CONTINUE";
             $this->nextFunction = "processUmeme";
             $this->previousPage = "enterMeterNumber";
-        } elseif ($this->previousPage == "enterMeterNumber") {
+        } else {
+            $customerName = $accountDetails['customerName'];
+            $balance = $accountDetails['balance'];
+            $customerType = $accountDetails['customerType'];
 
-            $meterNumber = $input;
-            $accountDetails = $this->validateUMEMECustomerAccount($meterNumber);
+            $this->saveSessionVar("umemeCustomerName", $customerName);
+            $this->saveSessionVar("umemeBalance", $balance);
+            $this->saveSessionVar("umemeCustomerType", $customerType);
+            $this->saveSessionVar("umemeMeterNumber", $meterNumber);
 
-            if ($accountDetails == "") {
-
-                $this->displayText = "Invalid account Meter number. Please enter meter number again";
-                $this->sessionState = "CONTINUE";
-                $this->nextFunction = "processUmeme";
-                $this->previousPage = "enterMeterNumber";
-            } else {
-
-                $customerName = $accountDetails['customerName'];
-                $balance = $accountDetails['balance'];
-                $customerType = $accountDetails['customerType'];
-
-                $this->saveSessionVar("umemeCustomerName", $customerName);
-                $this->saveSessionVar("umemeBalance", $balance);
-                $this->saveSessionVar("umemeCustomerType", $customerType);
-                $this->saveSessionVar("umemeMeterNumber", $meterNumber);
-
-                if ($customerType == "POSTPAID" && $balance != 0) {
+            if ($customerType == "POSTPAID" && $balance != 0) {
 //     $this->displayText = "Your balance is UGX " . $balance . ". Enter Amount to pay";
-                    $this->displayText = "Dear {$customerName}, your balance is " . number_format($balance) . ". Meter number {$meterNumber}.\n Enter amount to pay";
-                } else {
-// $this->displayText = "Enter Amount to pay";
-                    $this->displayText = "Dear {$customerName}, your balance is " . number_format($balance) . "  Meter number {$meterNumber}.\n Enter amount to pay";
-                }
-
-                $this->sessionState = "CONTINUE";
-                $this->nextFunction = "processUmeme";
-                $this->previousPage = "enterAmount";
-            }
-        } elseif ($this->previousPage == "enterAmount") {
-
-            if ($this->getSessionVar("umemeAmount") == null) {
-                $amount = (int) $input;
-                $this->saveSessionVar("umemeAmount", $amount);
-            }
-
-            $umemeBalance = $this->getSessionVar("umemeBalance") == NULL ? 0 : $this->getSessionVar("umemeBalance");
-            $this->logMessage("Comparing balance " . $umemeBalance . " and the entered amount " . $this->getSessionVar("umemeAmount"), NULL, DTBUGconfigs::LOG_LEVEL_INFO);
-            if (($this->getSessionVar("umemeCustomerType") == 'PREPAID') && $this->getSessionVar("umemeAmount") < ($umemeBalance + $this->umemeMinimum)) {
-                $this->saveSessionVar("umemeAmount", NULL);
-                $this->displayText = "Invalid amount\n Please enter an amount greater than your balance of " . round($umemeBalance);
-                $this->sessionState = "CONTINUE";
-                $this->nextFunction = "processUmeme";
-                $this->previousPage = "enterAmount";
+                $this->displayText = "Dear {$customerName}, your balance is " . number_format($balance) . ". Meter number {$meterNumber}.\n Enter amount to pay";
             } else {
-                $message = "You are paying " . $this->getSessionVar("umemeAmount");
-                $message .= ". Account name: " . $this->getSessionVar("umemeCustomerName") . ". ";
-                $message .= "Meter number " . $this->getSessionVar("umemeMeterNumber");
-                $message .= "\n1: Confirm \n2: Cancel";
-                $this->displayText = $message;
-                $this->sessionState = "CONTINUE";
-                $this->nextFunction = "processUmeme";
-                $this->previousPage = "confirmUmemePay";
+// $this->displayText = "Enter Amount to pay";
+                $this->displayText = "Dear {$customerName}, your balance is " . number_format($balance) . "  Meter number {$meterNumber}.\n Enter amount to pay";
             }
+
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processUmeme";
+            $this->previousPage = "enterAmount";
+        }
+
+
+
+        if ($this->previousPage == "enterAmount") {
+            
         } elseif ($this->previousPage == "confirmUmemePay") {
             switch ($input) {
                 case 1:
@@ -1976,6 +1947,42 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->previousPage = "enterAmount";
                     $this->processUmeme($input);
                     break;
+            }
+        }
+    }
+
+    function enterUmemeAmount($input) {
+
+        if ($input == null) {
+
+            $this->displayText = "Invalid  input , kindly enter amount to pay  ";
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "enterUmemeAmount";
+            $this->previousPage = "enterUmemeAmount";
+        } else {
+
+
+            $amount = (int) $input;
+            $this->saveSessionVar("umemeAmount", $amount);
+
+
+            $umemeBalance = $this->getSessionVar("umemeBalance") == NULL ? 0 : $this->getSessionVar("umemeBalance");
+            $this->logMessage("Comparing balance " . $umemeBalance . " and the entered amount " . $this->getSessionVar("umemeAmount"), NULL, DTBUGconfigs::LOG_LEVEL_INFO);
+            if (($this->getSessionVar("umemeCustomerType") == 'PREPAID') && $this->getSessionVar("umemeAmount") < ($umemeBalance + $this->umemeMinimum)) {
+                $this->saveSessionVar("umemeAmount", NULL);
+                $this->displayText = "Invalid amount\n Please enter an amount greater than your balance of " . round($umemeBalance);
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processUmeme";
+                $this->previousPage = "enterAmount";
+            } else {
+                $message = "You are paying " . $this->getSessionVar("umemeAmount");
+                $message .= ". Account name: " . $this->getSessionVar("umemeCustomerName") . ". ";
+                $message .= "Meter number " . $this->getSessionVar("umemeMeterNumber");
+                $message .= "\n1: Confirm \n2: Cancel";
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processUmeme";
+                $this->previousPage = "confirmUmemePay";
             }
         }
     }
