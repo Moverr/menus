@@ -973,7 +973,10 @@ class NCBANKUSSD extends DynamicMenuController {
         switch ($input) {
 
             case 1:
-                $this->processUmeme($input);
+                $this->displayText = "Enter meter number";
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processUmeme";
+                $this->previousPage = "enterMeterNumber";
                 break;
 
             case 2:
