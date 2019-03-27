@@ -1868,9 +1868,7 @@ class NCBANKUSSD extends DynamicMenuController {
     }
 
     function processUmeme($input) {
-
         $clientAccounts = $this->getSessionVar('clientAccounts');
-
         $meterNumber = $input;
         $accountDetails = $this->validateUMEMECustomerAccount($meterNumber);
 
@@ -1899,55 +1897,8 @@ class NCBANKUSSD extends DynamicMenuController {
             }
 
             $this->sessionState = "CONTINUE";
-            $this->nextFunction = "processUmeme";
-            $this->previousPage = "enterAmount";
-        }
-
-
-
-        if ($this->previousPage == "enterAmount") {
-            
-        } elseif ($this->previousPage == "confirmUmemePay") {
-            switch ($input) {
-                case 1:
-
-                    $this->saveSessionvar('serviceID', 'BILL_PAY');
-
-                    $this->saveSessionVar('amount', $this->getSessionVar("umemeAmount"));
-                    $this->saveSessionVar('nomination', 'no');
-                    $this->saveSessionVar('utilityBillAmount', $this->getSessionVar("umemeAmount"));
-                    $this->saveSessionVar('merchantCode', 'UMEME');
-                    $this->saveSessionVar('utilityBillAccountNo', $this->getSessionVar("umemeMeterNumber"));
-                    $this->saveSessionVar('flavour', 'open');
-                    $this->saveSessionVar('billEnrolment', "NO");
-                    $this->saveSessionVar('billEnrolmentNumber', 'NULL');
-
-                    $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
-                    $message = "Select Account: \n";
-                    if ($ACCOUNTS != null) {
-                        $message = "Choose Account \n";
-                        $count = 0;
-                        foreach ($ACCOUNTS as $account) {
-                            $count = $count + 1;
-                            $selectedAccount = $account;
-                            $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
-                        }
-                    }
-
-                    $this->displayText = "Select account:\n" . $message;
-                    $this->sessionState = "CONTINUE";
-                    $this->nextFunction = "finalizeProcessingPayBill";
-                    break;
-
-                case 2:
-                    $this->startPage();
-                    break;
-
-                default:
-                    $this->previousPage = "enterAmount";
-                    $this->processUmeme($input);
-                    break;
-            }
+            $this->nextFunction = "enterUmemeAmount";
+            $this->previousPage = "processUmeme";
         }
     }
 
@@ -1981,9 +1932,53 @@ class NCBANKUSSD extends DynamicMenuController {
                 $message .= "\n1: Confirm \n2: Cancel";
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
-                $this->nextFunction = "processUmeme";
-                $this->previousPage = "confirmUmemePay";
+                $this->nextFunction = "confirmUmemePay";
+                $this->previousPage = "enterUmemeAmount";
             }
+        }
+    }
+
+    function confirmUmemePay($input) {
+
+        switch ($input) {
+            case 1:
+
+                $this->saveSessionvar('serviceID', 'BILL_PAY');
+
+                $this->saveSessionVar('amount', $this->getSessionVar("umemeAmount"));
+                $this->saveSessionVar('nomination', 'no');
+                $this->saveSessionVar('utilityBillAmount', $this->getSessionVar("umemeAmount"));
+                $this->saveSessionVar('merchantCode', 'UMEME');
+                $this->saveSessionVar('utilityBillAccountNo', $this->getSessionVar("umemeMeterNumber"));
+                $this->saveSessionVar('flavour', 'open');
+                $this->saveSessionVar('billEnrolment', "NO");
+                $this->saveSessionVar('billEnrolmentNumber', 'NULL');
+
+                $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+                $message = "Select Account: \n";
+                if ($ACCOUNTS != null) {
+                    $message = "Choose Account \n";
+                    $count = 0;
+                    foreach ($ACCOUNTS as $account) {
+                        $count = $count + 1;
+                        $selectedAccount = $account;
+                        $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
+                    }
+                }
+
+                $this->displayText = "Select account:\n" . $message;
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "finalizeProcessingPayBill";
+                break;
+
+            case 2:
+                $this->startPage();
+                break;
+
+            default:
+                $this->previousPage = "enterAmount";
+                $this->processUmeme($input);
+                break;
         }
     }
 
