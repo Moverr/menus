@@ -1469,6 +1469,7 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->previousPage = "enterIUCNumber";
         } elseif ($this->previousPage == "enterIUCNumber") {
 
+            /*
             $this->saveSessionVar("multichoiceAccount", $input);
 
             $packageText = "Select package \n";
@@ -1479,6 +1480,8 @@ class NCBANKUSSD extends DynamicMenuController {
             }
 
             $this->displayText = $packageText;
+            */
+             $this->displayText  = "Validate : ".$input;
             $this->sessionState = "CONTINUE";
             $this->nextFunction = "processMultiChoiceTV";
             $this->previousPage = "selectPackage";
