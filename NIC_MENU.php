@@ -236,6 +236,7 @@ class NCBANKUSSD extends DynamicMenuController {
 # code...
                     $this->MerchantsMenu();
                     break;
+//                BALANCE ENQUIRY
                 case '2':
 # code...
                     $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
@@ -252,6 +253,7 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->nextFunction = "BalanceEnquiryMenu";
                     $this->previousPage = "startPage";
                     break;
+//                    BILL PAYMENTS
                 case '3':
                     $service = $this->getSessionVar('selectedService');
                     $message = "Select Utility. \n1: UMEME \n2: NWSC \n3: Pay TV";
@@ -995,8 +997,14 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->previousPage = "processPayBillMenu";
                 break;
 
+            //PAY TV MENU
             case 3:
-                $this->processPayTV($input);
+                $this->displayText = "Select TV Merchant. \n1: GoTV \n2: DSTV \n3: Startimes \n4: Azam"
+                        . "\n5: Zuku TV \n6: Kwese TV";
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processPayTV";
+                $this->previousPage = "processPayBillMenu";
+
                 break;
 
             case '0':
@@ -1020,52 +1028,53 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function processPayTV($input) {
 
-        if ($this->previousPage == "utilitySelected") {
-            $this->displayText = "Select TV Merchant. \n1: GoTV \n2: DSTV \n3: Startimes \n4: Azam"
-                    . "\n5: Zuku TV \n6: Kwese TV";
-            $this->sessionState = "CONTINUE";
-            $this->nextFunction = "processPayTV";
-            $this->previousPage = "payTVSelected";
-        } else if ($this->previousPage == "payTVSelected") {
-            switch ($input) {
-                case 1:
-                    $this->saveSessionVar("menuOptionSelected", DTBUGconfigs::GOTV_CODE);
-                    $this->processMultiChoiceTV($input);
-                    break;
+        switch ($input) {
+            case 1:
+                $this->saveSessionVar("CHECKBOOKNUMBER", $input);
 
-                case 2:
-                    $this->saveSessionVar("menuOptionSelected", DTBUGconfigs::DSTVUG_CODE);
-                    $this->processMultiChoiceTV($input);
-                    break;
+                $this->saveSessionVar("menuOptionSelected", DTBUGconfigs::GOTV_CODE);
+                $this->processMultiChoiceTV($input);
 
-                case 3:
-                    $this->saveSessionVar("menuOptionSelected", DTBUGconfigs::STARTIMES_CODE);
-                    $this->processStarTimes($input);
-                    break;
+                $this->displayText = "Enter Smart Card /IUC Number";
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processMultiChoiceTV";
+                $this->previousPage = "enterIUCNumber";
 
-                case 4:
-                    $this->saveSessionVar("menuOptionSelected", DTBUGconfigs::AZAM_CODE);
-                    $this->processAzamTV($input);
-                    break;
 
-                case 5:
-                    $this->saveSessionVar("menuOptionSelected", DTBUGconfigs::ZUKU_CODE);
-                    $this->processZukuTV($input);
-                    break;
+                break;
 
-                case 6:
-                    $this->saveSessionVar("menuOptionSelected", DTBUGconfigs::KWESE_CODE);
-                    $this->processKweseTV($input);
-                    break;
+            case 2:
+                $this->saveSessionVar("menuOptionSelected", DTBUGconfigs::DSTVUG_CODE);
+                $this->processMultiChoiceTV($input);
+                break;
 
-                default:
-                    $this->displayText = "Select TV Merchant. \n1: GoTV \n2: DSTV \n3: Startimes \n4: Azam"
-                            . "\n5: Zuku TV \n6: Kwese TV";
-                    $this->sessionState = "CONTINUE";
-                    $this->nextFunction = "processPayTV";
-                    $this->previousPage = "payTVSelected";
-                    break;
-            }
+            case 3:
+                $this->saveSessionVar("menuOptionSelected", DTBUGconfigs::STARTIMES_CODE);
+                $this->processStarTimes($input);
+                break;
+
+            case 4:
+                $this->saveSessionVar("menuOptionSelected", DTBUGconfigs::AZAM_CODE);
+                $this->processAzamTV($input);
+                break;
+
+            case 5:
+                $this->saveSessionVar("menuOptionSelected", DTBUGconfigs::ZUKU_CODE);
+                $this->processZukuTV($input);
+                break;
+
+            case 6:
+                $this->saveSessionVar("menuOptionSelected", DTBUGconfigs::KWESE_CODE);
+                $this->processKweseTV($input);
+                break;
+
+            default:
+                $this->displayText = "Select TV Merchant. \n1: GoTV \n2: DSTV \n3: Startimes \n4: Azam"
+                        . "\n5: Zuku TV \n6: Kwese TV";
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processPayTV";
+                $this->previousPage = "payTVSelected";
+                break;
         }
     }
 
@@ -2222,7 +2231,7 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->displayText = "Enter Payment Reference Number. PRN";
             $this->sessionState = "CONTINUE";
             $this->nextFunction = "processKCCA";
-            $this->previousPage = "enterMeterNumber"; 
+            $this->previousPage = "enterMeterNumber";
         } elseif ($this->previousPage == "enterMeterNumber") {
 
             if ($this->getSessionVar("KCCACustomerName") != null) { //we have already validated the account
@@ -2661,12 +2670,17 @@ class NCBANKUSSD extends DynamicMenuController {
         $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
 
         $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
-        $response = json_decode($result);
-//                $this->displayText = "" . print_r($result, true); 
-        $this->logMessage("Bill Payment wallet Response:: ", $response, 4);
-        $this->displayText = $response->DATA->MESSAGE;
+
+        $this->displayText = "" . print_r($result, true);
         $this->sessionState = "END";
-        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+
+        /* $response = json_decode($result);
+          //                $this->displayText = "" . print_r($result, true);
+          $this->logMessage("Bill Payment wallet Response:: ", $response, 4);
+          $this->displayText = $response->DATA->MESSAGE;
+          $this->sessionState = "END";
+          $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+         */
     }
 
     /////End Of Pay Bill and Pay TVs/////////////////
