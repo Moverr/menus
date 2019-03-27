@@ -2121,7 +2121,6 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->sessionState = "CONTINUE";
             $this->nextFunction = "processNwsc";
             $this->previousPage = "selectAreaNWSC";
-            
         } else {
             #valid index has been selected
             $selectedIndex = $input - 1;
@@ -2131,31 +2130,36 @@ class NCBANKUSSD extends DynamicMenuController {
 
             $accountDetails = $this->validateNWSCCustomerAccount($meterNumber, $selectedArea);
 
-            if ($accountDetails == "") {
+            $this->displayText = "" . print_r($accountDetails, true);
+            $this->sessionState = "end";
 
-                $this->displayText = "Invalid account Meter number. Please enter meter number again";
-                $this->sessionState = "CONTINUE";
-                $this->nextFunction = "processNwsc";
-                $this->previousPage = "enterMeterNumber";
-            } else {
 
-                $customerName = $accountDetails['customerName'];
-                $balance = $accountDetails['balance'];
-                $customerType = $accountDetails['customerType'];
+            /*
+              if ($accountDetails == "") {
 
-                $this->saveSessionVar("nwscCustomerName", $customerName);
+              $this->displayText = "Invalid account Meter number. Please enter meter number again";
+              $this->sessionState = "CONTINUE";
+              $this->nextFunction = "processNwsc";
+              $this->previousPage = "selectAreaNWSC";
+              } else {
 
-                if ($balance == 0) {
-                    //$this->displayText = "Enter Amount to pay";
-                    $this->displayText = "Dear {$customerName}, Your balance is UGX " . number_format($balance) . ". Enter Amount to pay";
-                } else {
-                    $this->displayText = "Dear {$customerName}, Your balance is UGX " . number_format($balance) . ". Enter Amount to pay";
-                }
+              $customerName = $accountDetails['customerName'];
+              $balance = $accountDetails['balance'];
+              $customerType = $accountDetails['customerType'];
 
-                $this->sessionState = "CONTINUE";
-                $this->nextFunction = "processNwsc";
-                $this->previousPage = "enterAmount";
-            }
+              $this->saveSessionVar("nwscCustomerName", $customerName);
+
+              if ($balance == 0) {
+              //$this->displayText = "Enter Amount to pay";
+              $this->displayText = "Dear {$customerName}, Your balance is UGX " . number_format($balance) . ". Enter Amount to pay";
+              } else {
+              $this->displayText = "Dear {$customerName}, Your balance is UGX " . number_format($balance) . ". Enter Amount to pay";
+              }
+
+              $this->sessionState = "CONTINUE";
+              $this->nextFunction = "processNwsc";
+              $this->previousPage = "enterAmount";
+              } */
         }
     }
 
@@ -2385,32 +2389,36 @@ class NCBANKUSSD extends DynamicMenuController {
 
 //$response = post("http://127.0.0.1/BeepJsonAPI/index.php",json_encode($spayload));
         $response = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
-        $this->logMessage("Response from hub: ", $response, 4);
-        $responseArray = json_decode($response, true);
+
+        return $response;
 
 
-        $authStatusCode = $responseArray['authStatus']['authStatusCode'];
-        $authStatusDesc = $responseArray['authStatus']['authStatusDescription'];
+        /* $this->logMessage("Response from hub: ", $response, 4);
+          $responseArray = json_decode($response, true);
 
-        if ($authStatusCode != $this->hubAuthSuccessCode) {
-            $this->logMessage("Authentication Failed !!!!!!!", NULL, 4);
 
-            return "";
-        }
+          $authStatusCode = $responseArray['authStatus']['authStatusCode'];
+          $authStatusDesc = $responseArray['authStatus']['authStatusDescription'];
 
-        $statusCode = $responseArray['results'][0]['statusCode'];
-        $responseData = $responseArray['results'][0]['responseExtraData'];
+          if ($authStatusCode != $this->hubAuthSuccessCode) {
+          $this->logMessage("Authentication Failed !!!!!!!", NULL, 4);
 
-        if ($statusCode != $this->hubValidationSuccessCode) {
-            $this->logMessage("INVALID account !!!!!!!", NULL, 4);
+          return "";
+          }
 
-            return "";
-        }
+          $statusCode = $responseArray['results'][0]['statusCode'];
+          $responseData = $responseArray['results'][0]['responseExtraData'];
 
-        $responseDataArray = json_decode($responseData, true);
-        $this->logMessage("Response from validate NWSC: ", $responseDataArray, 4);
+          if ($statusCode != $this->hubValidationSuccessCode) {
+          $this->logMessage("INVALID account !!!!!!!", NULL, 4);
 
-        return $responseDataArray;
+          return "";
+          }
+
+          $responseDataArray = json_decode($responseData, true);
+          $this->logMessage("Response from validate NWSC: ", $responseDataArray, 4);
+
+          return $responseDataArray; */
     }
 
     /* ================== end bill processing ========== */
