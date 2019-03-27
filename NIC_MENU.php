@@ -2033,55 +2033,12 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $this->displayText = $text;
         $this->sessionState = "CONTINUE";
-        $this->nextFunction = "processNwsc";
-        $this->previousPage = "selectArea";
+        $this->nextFunction = "selectAreaNWSC";
+        $this->previousPage = "processNwsc";
 
 
-        /* elseif ($this->previousPage == "selectArea") {
 
-          $areasArray = explode(",", $this->nwscAreas);
-          $input = (int) $input;
-
-          #check for array index out of bounds
-          if ($input > sizeof($areasArray) || $input < 1) {
-          #prompt user to enter select area again
-          $this->previousPage = "enterMeterNumber";
-          $this->processNwsc($this->getSessionVar("nwscMeterNumber"));
-          } else {
-          #valid index has been selected
-          $selectedIndex = $input - 1;
-          $selectedArea = trim($areasArray[$selectedIndex]);
-          $this->saveSessionVar("selectedArea", $selectedArea);
-          $meterNumber = $this->getSessionVar("nwscMeterNumber");
-
-          $accountDetails = $this->validateNWSCCustomerAccount($meterNumber, $selectedArea);
-
-          if ($accountDetails == "") {
-
-          $this->displayText = "Invalid account Meter number. Please enter meter number again";
-          $this->sessionState = "CONTINUE";
-          $this->nextFunction = "processNwsc";
-          $this->previousPage = "enterMeterNumber";
-          } else {
-
-          $customerName = $accountDetails['customerName'];
-          $balance = $accountDetails['balance'];
-          $customerType = $accountDetails['customerType'];
-
-          $this->saveSessionVar("nwscCustomerName", $customerName);
-
-          if ($balance == 0) {
-          //$this->displayText = "Enter Amount to pay";
-          $this->displayText = "Dear {$customerName}, Your balance is UGX " . number_format($balance) . ". Enter Amount to pay";
-          } else {
-          $this->displayText = "Dear {$customerName}, Your balance is UGX " . number_format($balance) . ". Enter Amount to pay";
-          }
-
-          $this->sessionState = "CONTINUE";
-          $this->nextFunction = "processNwsc";
-          $this->previousPage = "enterAmount";
-          }
-          }
+        /*
           } elseif ($this->previousPage == "enterAmount") {
 
           if ($this->getSessionVar("nwscAmount") == null) {
@@ -2141,6 +2098,65 @@ class NCBANKUSSD extends DynamicMenuController {
           break;
           }
           } */
+    }
+
+    function selectAreaNWSC($input) {
+
+
+        $areasArray = explode(",", $this->nwscAreas);
+        $input = (int) $input;
+
+        #check for array index out of bounds
+        if ($input > sizeof($areasArray) || $input < 1) {
+
+
+            $text = "Invalid Input \nSelect area \n";
+            $areasArray = explode(",", $this->nwscAreas);
+
+            for ($i = 0; $i < sizeof($areasArray); $i++) {
+                $text .= $i + 1 . ". " . $areasArray[$i] . "\n";
+            }
+
+            $this->displayText = $text;
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processNwsc";
+            $this->previousPage = "selectAreaNWSC";
+            
+        } else {
+            #valid index has been selected
+            $selectedIndex = $input - 1;
+            $selectedArea = trim($areasArray[$selectedIndex]);
+            $this->saveSessionVar("selectedArea", $selectedArea);
+            $meterNumber = $this->getSessionVar("nwscMeterNumber");
+
+            $accountDetails = $this->validateNWSCCustomerAccount($meterNumber, $selectedArea);
+
+            if ($accountDetails == "") {
+
+                $this->displayText = "Invalid account Meter number. Please enter meter number again";
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processNwsc";
+                $this->previousPage = "enterMeterNumber";
+            } else {
+
+                $customerName = $accountDetails['customerName'];
+                $balance = $accountDetails['balance'];
+                $customerType = $accountDetails['customerType'];
+
+                $this->saveSessionVar("nwscCustomerName", $customerName);
+
+                if ($balance == 0) {
+                    //$this->displayText = "Enter Amount to pay";
+                    $this->displayText = "Dear {$customerName}, Your balance is UGX " . number_format($balance) . ". Enter Amount to pay";
+                } else {
+                    $this->displayText = "Dear {$customerName}, Your balance is UGX " . number_format($balance) . ". Enter Amount to pay";
+                }
+
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processNwsc";
+                $this->previousPage = "enterAmount";
+            }
+        }
     }
 
     function processKCCA($input) {
