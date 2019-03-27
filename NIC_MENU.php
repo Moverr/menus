@@ -989,7 +989,10 @@ class NCBANKUSSD extends DynamicMenuController {
                 break;
 
             case 2:
-                $this->processNwsc($input);
+                $this->displayText = "Enter meter number";
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processNwsc";
+                $this->previousPage = "processPayBillMenu";
                 break;
 
             case 3:
@@ -1009,8 +1012,8 @@ class NCBANKUSSD extends DynamicMenuController {
             default:
                 $this->displayText = "Select Utility. \n1: UMEME \n2: NWSC \n3: Pay TV";
                 $this->sessionState = "CONTINUE";
-                $this->nextFunction = "processPayBill";
-                $this->previousPage = "utilitySelected";
+                $this->nextFunction = "processPayBillMenu";
+                $this->previousPage = "processPayBillMenu";
                 break;
         }
     }
@@ -1912,7 +1915,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->sessionState = "END";
             } else {
                 $accountDetails = json_decode($accountDetails['results'][0]['responseExtraData'], true);
-                
+
                 $customerName = $accountDetails['customerName'];
                 $balance = $accountDetails['balance'];
                 $customerType = $accountDetails['customerType'];
