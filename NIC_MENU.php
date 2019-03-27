@@ -245,7 +245,9 @@ class NCBANKUSSD extends DynamicMenuController {
                     break;
                 case '3':
                     $service = $this->getSessionVar('selectedService');
-                    $this->displayText = "Select Utility. \n1: UMEME \n2: NWSC \n3: Pay TV";
+                    $message = "Select Utility. \n1: UMEME \n2: NWSC \n3: Pay TV";
+                    $message .= "\n\n0. Home \n" . "00. Back";
+                    $this->displayText = $message;
                     $this->sessionState = "CONTINUE";
                     $this->nextFunction = "processPayBillMenu";
                     $this->previousPage = "utilitySelected";
@@ -969,6 +971,7 @@ class NCBANKUSSD extends DynamicMenuController {
     function processPayBillMenu($input) {
 
         switch ($input) {
+
             case 1:
                 $this->processUmeme($input);
                 break;
@@ -979,6 +982,16 @@ class NCBANKUSSD extends DynamicMenuController {
 
             case 3:
                 $this->processPayTV($input);
+                break;
+
+            case '0':
+                $this->firstMenu();
+                break;
+            case '00':
+                $this->firstMenu();
+                break;
+            case '000':
+                $this->firstMenu();
                 break;
 
             default:
