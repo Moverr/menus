@@ -1508,6 +1508,9 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->processMultiChoiceTV($this->getSessionVar("multichoiceAccount"));
             } else {
 #valid index has been selected
+                
+                $this->displayText = "Reached";
+                /*
                 $selectedIndex = $input - 1;
                 $selectedPackage = trim($this->getPackageName($gotvPackage[$selectedIndex]));
                 $selectedPackagePrice = trim($this->getPackagePrice($gotvPackage[$selectedIndex]));
@@ -1528,7 +1531,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
                 $this->sessionState = "CONTINUE";
                 $this->nextFunction = "processMultiChoiceTV";
-                $this->previousPage = "enterAmount";
+                $this->previousPage = "enterAmount"; */
             }
         } elseif ($this->previousPage == "enterAmount") {
 
