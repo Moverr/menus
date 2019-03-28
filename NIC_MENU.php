@@ -1469,6 +1469,7 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->previousPage = "enterIUCNumber";
         } elseif ($this->previousPage == "enterIUCNumber") {
 
+            $accountNumber = $input;
             /*
               $this->saveSessionVar("multichoiceAccount", $input);
 
@@ -2563,7 +2564,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $packet = array(
             'serviceID' => $serviceID,
             'serviceCode' => $serviceCode,
-            'accountNumber' => 1234,
+            'accountNumber' => $accountNumber,
             'requestExtraData' => $extraData,
             'extraData' => $extraData,
         );
