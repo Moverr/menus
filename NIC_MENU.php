@@ -1470,29 +1470,32 @@ class NCBANKUSSD extends DynamicMenuController {
         } elseif ($this->previousPage == "enterIUCNumber") {
 
             $accountNumber = $input;
-            /*
-              $this->saveSessionVar("multichoiceAccount", $input);
 
-              $packageText = "Select package \n";
-              $gotvPackage = explode(",", $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_PACKAGES : DTBUGconfigs::DSTV_PACKAGES);
-
-              for ($i = 0; $i < sizeof($gotvPackage); $i++) {
-              $packageText .= $i + 1 . ". " . $this->getPackageName($gotvPackage[$i]) . " - " . $this->getPackagePrice($gotvPackage[$i]) . "\n";
-              }
-
-              $this->displayText = $packageText;
-             */
             $serviceID = $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_SERVICE_ID : DTBUGconfigs::DSTV_SERVICE_ID;
             $serviceCode = $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_SERVICE_CODE : DTBUGconfigs::DSTV_SERVICE_CODE;
 
             $accountDetails = $this->validatePayTVAccount($selectedMenuService, $serviceID, $serviceCode, $accountNumber);
 
+            if ($accountDetails == null) {
+                $this->displayText = "Invalid Account , \n Enter correct GOTV Account : " . print_r($accountDetails, true);
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processMultiChoiceTV";
+                $this->previousPage = "payTVSelected";
+            } else {
 
+                $this->saveSessionVar("multichoiceAccount", $input);
+                $packageText = "Select package \n";
+                $gotvPackage = explode(",", $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_PACKAGES : DTBUGconfigs::DSTV_PACKAGES);
 
-            $this->displayText = "Validate : " . print_r($accountDetails, true);
-            $this->sessionState = "CONTINUE";
-            $this->nextFunction = "processMultiChoiceTV";
-            $this->previousPage = "selectPackage";
+                for ($i = 0; $i < sizeof($gotvPackage); $i++) {
+                    $packageText .= $i + 1 . ". " . $this->getPackageName($gotvPackage[$i]) . " - " . $this->getPackagePrice($gotvPackage[$i]) . "\n";
+                }
+
+                $this->displayText = $packageText;
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processMultiChoiceTV";
+                $this->previousPage = "selectPackage";
+            }
         } elseif ($this->previousPage == "selectPackage") {
 
             $gotvPackage = explode(",", $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_PACKAGES : DTBUGconfigs::DSTV_PACKAGES);
