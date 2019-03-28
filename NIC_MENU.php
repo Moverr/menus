@@ -411,6 +411,8 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->FundsTransferMenu($input);
         } else {
 
+            //get transfrer from account
+
             $this->saveSessionVar("TRANSFERFROMACCOUNT", $input);
 
             switch ($input) {
@@ -425,7 +427,100 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->firstMenu();
                     break;
                 default:
-                    $message = "1)International Funds Transfer ";
+
+                    $selectedAccount = null;
+                    foreach ($ACCOUNTS as $account) {
+                        if ($account['ID'] == $input) {
+                            $selectedAccount = $account;
+                            break;
+                        }
+                    }
+                    if ($selectedAccount == null) {
+                        
+                    } else {
+
+                        $message = "Enter Transfer to Account ";
+
+                        $message .= "\n\n0. Home \n" . "00. Back";
+                        $this->displayText = $message;
+                        $this->sessionState = "CONTINUE";
+                        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                        $this->nextFunction = "GetTransferToAccount";
+                        $this->previousPage = "GetTransferFromAccount";
+                    }
+
+                    break;
+            }
+        }
+    }
+
+    function GetTransferToAccount($input) {
+        if ($input == null || $input = "") {
+            $message = "Invalid Input \n1)International Funds Transfer ";
+
+            $message .= "\n\n0. Home \n" . "00. Back";
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+            $this->nextFunction = "FundsTransferMenu";
+            $this->previousPage = "startPage";
+        } else {
+
+            $this->saveSessionVar("TRANSFERTOACCOUNT", $input);
+
+            switch ($input) {
+
+                case '0':
+                    $this->firstMenu();
+                    break;
+                case '00':
+                    $this->firstMenu();
+                    break;
+                case '000':
+                    $this->firstMenu();
+                    break;
+                default:
+                    $message = "Enter Amount ";
+
+                    $message .= "\n\n0. Home \n" . "00. Back";
+                    $this->displayText = $message;
+                    $this->sessionState = "CONTINUE";
+                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                    $this->nextFunction = "GetTransferAmount";
+                    $this->previousPage = "GetTransferToAccount";
+
+                    break;
+            }
+        }
+    }
+
+    function GetTransferAmount($input) {
+        if ($input == null || $input = "") {
+            $message = "Invalid Input \nEnter Transfer to Account ";
+
+            $message .= "\n\n0. Home \n" . "00. Back";
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+            $this->nextFunction = "GetTransferToAccount";
+            $this->previousPage = "GetTransferAmount";
+        } else {
+
+            $this->saveSessionVar("TRANSFERTOACCOUNT", $input);
+
+            switch ($input) {
+
+                case '0':
+                    $this->firstMenu();
+                    break;
+                case '00':
+                    $this->firstMenu();
+                    break;
+                case '000':
+                    $this->firstMenu();
+                    break;
+                default:
+                    $message = "Enter Amount ";
 
                     $message .= "\n\n0. Home \n" . "00. Back";
                     $this->displayText = $message;
