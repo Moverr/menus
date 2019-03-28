@@ -1518,25 +1518,17 @@ class NCBANKUSSD extends DynamicMenuController {
                 $serviceID = $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_SERVICE_ID : DTBUGconfigs::DSTV_SERVICE_ID;
                 $serviceCode = $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_SERVICE_CODE : DTBUGconfigs::DSTV_SERVICE_CODE;
 
-                $accountDetails = $this->validatePayTVAccount($selectedMenuService, $serviceID, $serviceCode, $accountNumber);
+                $accountDetails = $this->getSessionVar('PAYTVACCOUNT'); 
 
-                if ($accountDetails == "") {
+                $customerName = $accountDetails['customerName'];
 
-                    $this->displayText = "Invalid account UIC Number. Please enter it again";
-                    $this->sessionState = "CONTINUE";
-                    $this->nextFunction = "processMultiChoiceTV";
-                    $this->previousPage = "enterIUCNumber";
-                } else {
-                    $customerName = $accountDetails['customerName'];
+                $this->saveSessionVar("MCCustomerName", $customerName);
 
-                    $this->saveSessionVar("MCCustomerName", $customerName);
+                $this->displayText = "Name: {$customerName}, Smart Card No: " . $accountNumber . " Package selected: " . $selectedPackage . " Amount: " . number_format($selectedPackagePrice) . ". Enter Amount to pay";
 
-                    $this->displayText = "Name: {$customerName}, Smart Card No: " . $accountNumber . " Package selected: " . $selectedPackage . " Amount: " . number_format($selectedPackagePrice) . ". Enter Amount to pay";
-
-                    $this->sessionState = "CONTINUE";
-                    $this->nextFunction = "processMultiChoiceTV";
-                    $this->previousPage = "enterAmount";
-                }
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processMultiChoiceTV";
+                $this->previousPage = "enterAmount";
             }
         } elseif ($this->previousPage == "enterAmount") {
 
