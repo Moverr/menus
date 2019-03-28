@@ -1058,10 +1058,13 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
                 break;
-
+//PROCESS STAR TIMES
             case 3:
-                $this->saveSessionVar("menuOptionSelected", DTBUGconfigs::STARTIMES_CODE);
-                $this->processStarTimes($input);
+                $this->saveSessionVar("menuOptionSelected", DTBUGconfigs::DSTV_SERVICE_CODE);
+                $this->displayText = "Enter Smart Card /IUC Number";
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processSTARTIMESTV";
+                $this->previousPage = "enterIUCNumber";
                 break;
 
             case 4:
@@ -1089,6 +1092,148 @@ class NCBANKUSSD extends DynamicMenuController {
         }
     }
 
+        //Going to use this function for both gotv and dstv
+    function processSTARTIMESTV($input) {
+
+        $clientAccounts = $this->getSessionVar('clientAccounts');
+
+        $selectedMenuService = $this->getSessionVar("menuOptionSelected");
+
+        if ($this->previousPage == "payTVSelected") {
+            $this->displayText = "Enter Smart Card /IUC Number";
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processDSTV";
+            $this->previousPage = "enterIUCNumber";
+        } elseif ($this->previousPage == "enterIUCNumber") {
+
+            $accountNumber = $input;
+
+            $serviceID = $selectedMenuService == DTBUGconfigs::STARTIMES_SERVICE_ID ? DTBUGconfigs::STARTIMES_SERVICE_ID : DTBUGconfigs::STARTIMES_SERVICE_ID;
+            $serviceCode = $selectedMenuService == DTBUGconfigs::STARTIMES_SERVICE_CODE ? DTBUGconfigs::STARTIMES_SERVICE_CODE : DTBUGconfigs::STARTIMES_SERVICE_CODE;
+
+            $accountDetails = $this->validatePayTVAccount($selectedMenuService, $serviceID, $serviceCode, $accountNumber);
+
+            if ($accountDetails == null) {
+                $this->displayText = "Invalid Account , \n Enter correct STARTIMES Account : ";
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processSTARTIMESTV";
+                $this->previousPage = "enterIUCNumber";
+            } else {
+
+                $this->saveSessionVar("multichoiceAccount", $input);
+                $packageText = "Select package \n";
+                $gotvPackage = explode(",", $selectedMenuService == DTBUGconfigs::STARTIMES_SERVICE_CODE ? DTBUGconfigs::STARTIMES_PACKAGES : DTBUGconfigs::STARTIMES_PACKAGES);
+
+                for ($i = 0; $i < sizeof($gotvPackage); $i++) {
+                    $packageText .= $i + 1 . ". " . $this->getPackageName($gotvPackage[$i]) . " - " . $this->getPackagePrice($gotvPackage[$i]) . "\n";
+                }
+
+                $this->displayText = $packageText;
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processSTARTIMESTV";
+                $this->previousPage = "selectPackage";
+            }
+        } elseif ($this->previousPage == "selectPackage") {
+
+            $gotvPackage = explode(",", $selectedMenuService == DTBUGconfigs::STARTIMES_SERVICE_CODE ? DTBUGconfigs::STARTIMES_PACKAGES : DTBUGconfigs::STARTIMES_PACKAGES);
+            $input = (int) $input;
+
+#check for array index out of bounds
+            if ($input > sizeof($gotvPackage) || $input < 1) {
+#prompt user to enter select package again
+                $this->previousPage = "enterIUCNumber";
+                $this->processMultiChoiceTV($this->getSessionVar("multichoiceAccount"));
+            } else {
+#valid index has been selected
+                $selectedIndex = $input - 1;
+//                $selectedPackage = trim($this->getPackageName($gotvPackage[$selectedIndex]));
+                $selectedPackagePrice = trim($this->getPackagePrice($gotvPackage[$selectedIndex]));
+                $this->saveSessionVar("selectedPackage", $selectedPackage);
+                $this->saveSessionVar("selectedPackagePrice", $selectedPackagePrice);
+                $accountNumber = $this->getSessionVar("multichoiceAccount");
+
+                $serviceID = $selectedMenuService == DTBUGconfigs::STARTIMES_SERVICE_CODE ? DTBUGconfigs::STARTIMES_SERVICE_ID : DTBUGconfigs::STARTIMES_SERVICE_ID;
+                $serviceCode = $selectedMenuService == DTBUGconfigs::STARTIMES_SERVICE_CODE ? DTBUGconfigs::STARTIMES_SERVICE_CODE : DTBUGconfigs::STARTIMES_SERVICE_CODE;
+
+                $accountDetails = $this->getSessionVar('PAYTVACCOUNT');
+
+
+
+                $customerName = $accountDetails->CustomerName;
+                $selectedPackage = $accountDetails->PaymentItem;
+
+                $this->saveSessionVar("MCCustomerName", $customerName);
+
+                $this->displayText = "Name: {$customerName}, Smart Card No: " . $accountNumber . " Package selected: " . $selectedPackage . ". Enter Amount to pay";
+
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processSTARTIMESTV";
+                $this->previousPage = "enterAmount";
+            }
+        } elseif ($this->previousPage == "enterAmount") {
+
+            if ($this->getSessionVar("MCAmount") == null) {
+                $amount = (int) $input;
+                $this->saveSessionVar("MCAmount", $amount);
+            }
+
+            $message = "You are paying " . $selectedMenuService . " UGX. " . $this->getSessionVar("MCAmount");
+            $message .= ". Account name: " . $this->getSessionVar("MCCustomerName") . ". ";
+            $message .= "UIC Number " . $this->getSessionVar("multichoiceAccount");
+            $message .= "\n1: Confirm \n2: Cancel";
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processSTARTIMESTV";
+            $this->previousPage = "confirmGoTVPayment";
+        } elseif ($this->previousPage == "confirmGoTVPayment") {
+            switch ($input) {
+                case 1:
+
+                    $walletMerchantCode = $selectedMenuService == DTBUGconfigs::DSTV_SERVICE_CODE ? DTBUGconfigs::DSTV_WALLET_MERCHANT_CODE : DTBUGconfigs::DSTV_WALLET_MERCHANT_CODE;
+
+                    $this->saveSessionvar('serviceID', 'BILL_PAY');
+
+                    $this->saveSessionVar('amount', $this->getSessionVar("MCAmount"));
+                    $this->saveSessionVar('nomination', 'no');
+                    $this->saveSessionVar('utilityBillAmount', $this->getSessionVar("MCAmount"));
+                    $this->saveSessionVar('merchantCode', $walletMerchantCode);
+                    $this->saveSessionVar('utilityBillAccountNo', $this->getSessionVar("multichoiceAccount"));
+                    $this->saveSessionVar('flavour', 'open');
+                    $this->saveSessionVar('billEnrolment', "NO");
+                    $this->saveSessionVar('billEnrolmentNumber', 'NULL');
+                    $this->saveSessionVar('package', $this->getSessionVar("selectedPackage"));
+
+                    $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+                    $message = "Select Account: \n";
+                    if ($ACCOUNTS != null) {
+                        $message = "Choose Account \n";
+                        $count = 0;
+                        foreach ($ACCOUNTS as $account) {
+                            $count = $count + 1;
+                            $selectedAccount = $account;
+                            $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
+                        }
+                    }
+
+                    $this->displayText = "Select account:\n" . $message;
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "finalizeProcessingPayBill";
+
+                    break;
+
+                case 2:
+                    $this->startPage();
+                    break;
+
+                default:
+                    $this->previousPage = "enterAmount";
+                    $this->processMultiChoiceTV($input);
+                    break;
+            }
+        }
+    }
+
+    
     //Going to use this function for both gotv and dstv
     function processDSTV($input) {
 
