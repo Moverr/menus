@@ -1508,33 +1508,31 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->processMultiChoiceTV($this->getSessionVar("multichoiceAccount"));
             } else {
 #valid index has been selected
-                /* $selectedIndex = $input - 1;
-                  $selectedPackage = trim($this->getPackageName($gotvPackage[$selectedIndex]));
-                  $selectedPackagePrice = trim($this->getPackagePrice($gotvPackage[$selectedIndex]));
-                  $this->saveSessionVar("selectedPackage", $selectedPackage);
-                  $this->saveSessionVar("selectedPackagePrice", $selectedPackagePrice);
-                  $accountNumber = $this->getSessionVar("multichoiceAccount");
+                $selectedIndex = $input - 1;
+//                $selectedPackage = trim($this->getPackageName($gotvPackage[$selectedIndex]));
+                $selectedPackagePrice = trim($this->getPackagePrice($gotvPackage[$selectedIndex]));
+                $this->saveSessionVar("selectedPackage", $selectedPackage);
+                $this->saveSessionVar("selectedPackagePrice", $selectedPackagePrice);
+                $accountNumber = $this->getSessionVar("multichoiceAccount");
 
-                  $serviceID = $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_SERVICE_ID : DTBUGconfigs::DSTV_SERVICE_ID;
-                  $serviceCode = $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_SERVICE_CODE : DTBUGconfigs::DSTV_SERVICE_CODE;
+                $serviceID = $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_SERVICE_ID : DTBUGconfigs::DSTV_SERVICE_ID;
+                $serviceCode = $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_SERVICE_CODE : DTBUGconfigs::DSTV_SERVICE_CODE;
 
-                  $accountDetails = $this->getSessionVar('PAYTVACCOUNT');
-
-                  //                        $this->validatePayTVAccount($selectedMenuService, $serviceID, $serviceCode, $accountNumber);
-
-                  $customerName = $accountDetails['customerName'];
-
-                  $this->saveSessionVar("MCCustomerName", $customerName);
-
-                  $this->displayText = "Name: {$customerName}, Smart Card No: " . $accountNumber . " Package selected: " . $selectedPackage . " Amount: " . number_format($selectedPackagePrice) . ". Enter Amount to pay";
-
-                  $this->sessionState = "CONTINUE";
-                  $this->nextFunction = "processMultiChoiceTV";
-                  $this->previousPage = "enterAmount";   
-                 * 
-                 */
                 $accountDetails = $this->getSessionVar('PAYTVACCOUNT');
-                $this->displayText = print_r($accountDetails, true);
+
+                //                        $this->validatePayTVAccount($selectedMenuService, $serviceID, $serviceCode, $accountNumber);
+
+
+                $customerName = $accountDetails->CustomerName;
+                $selectedPackage = $accountDetails->PaymentItem;
+
+                $this->saveSessionVar("MCCustomerName", $customerName);
+
+                $this->displayText = "Name: {$customerName}, Smart Card No: " . $accountNumber . " Package selected: " . $selectedPackage .  ". Enter Amount to pay";
+
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processMultiChoiceTV";
+                $this->previousPage = "enterAmount";
             }
         } elseif ($this->previousPage == "enterAmount") {
 
