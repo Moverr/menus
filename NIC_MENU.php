@@ -2563,7 +2563,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $packet = array(
             'serviceID' => $serviceID,
             'serviceCode' => $serviceCode,
-            'accountNumber' => $accountNumber,
+            'accountNumber' => 1234,
             'requestExtraData' => $extraData,
             'extraData' => $extraData,
         );
