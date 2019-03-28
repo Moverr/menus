@@ -1130,7 +1130,7 @@ class NCBANKUSSD extends DynamicMenuController {
             $accountDetails = $this->validatePayTVAccount($selectedMenuService, $serviceID, $serviceCode, $accountNumber);
 
             if ($accountDetails == null) {
-                $this->displayText = "Invalid Account , \n Enter correct STARTIMES Account : ";
+                $this->displayText = "Invalid Account , \n Enter correct KWESE Account : ";
                 $this->sessionState = "CONTINUE";
                 $this->nextFunction = "processKweseTV";
                 $this->previousPage = "enterIUCNumber";
@@ -1271,7 +1271,7 @@ class NCBANKUSSD extends DynamicMenuController {
             $accountDetails = $this->validatePayTVAccount($selectedMenuService, $serviceID, $serviceCode, $accountNumber);
 
             if ($accountDetails == null) {
-                $this->displayText = "Invalid Account , \n Enter correct STARTIMES Account : ";
+                $this->displayText = "Invalid Account , \n Enter correct ZUKU Account : ";
                 $this->sessionState = "CONTINUE";
                 $this->nextFunction = "processZukuTV";
                 $this->previousPage = "enterIUCNumber";
@@ -1412,7 +1412,7 @@ class NCBANKUSSD extends DynamicMenuController {
             $accountDetails = $this->validatePayTVAccount($selectedMenuService, $serviceID, $serviceCode, $accountNumber);
 
             if ($accountDetails == null) {
-                $this->displayText = "Invalid Account , \n Enter correct STARTIMES Account : ";
+                $this->displayText = "Invalid Account , \n Enter correct AZAM Account : ";
                 $this->sessionState = "CONTINUE";
                 $this->nextFunction = "processAzamTV";
                 $this->previousPage = "enterIUCNumber";
