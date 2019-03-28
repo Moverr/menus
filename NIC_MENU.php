@@ -2590,7 +2590,7 @@ class NCBANKUSSD extends DynamicMenuController {
 //        $responseDataArray = json_decode($responseData, true);
 ////
 
-        return $responseArray['results'][0];
+        return $responseArray;
     }
 
     function postValidationRequestToHUB($url, $fields) {
