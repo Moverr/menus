@@ -1480,7 +1480,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->displayText = "Invalid Account , \n Enter correct GOTV Account : " . print_r($accountDetails, true);
                 $this->sessionState = "CONTINUE";
                 $this->nextFunction = "processMultiChoiceTV";
-                $this->previousPage = "payTVSelected";
+                $this->previousPage = "enterIUCNumber";
             } else {
 
                 $this->saveSessionVar("multichoiceAccount", $input);
