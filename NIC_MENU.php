@@ -1456,6 +1456,46 @@ class NCBANKUSSD extends DynamicMenuController {
     }
     
     
+    
+    function validatePayTvAccount($accountNumber) {
+
+        $this->logMessage("Validate Umeme meter number: " . $accountNumber, NULL, 4);
+
+        $credentials = array(
+            "username" => $this->beepUsername,
+            "password" => $this->beepPassword
+        );
+
+        $packet = array(
+            'serviceID' => 417,
+            'serviceCode' => "PayTV",
+            'accountNumber' => $accountNumber,
+            'requestExtraData' => ''
+        );
+
+        $data[] = $packet;
+        $payload = array(
+            "credentials" => $credentials,
+            "packet" => $data
+        );
+
+        $spayload = array(
+            "function" => $this->hubValidationFunction,
+            "payload" => json_encode($payload)
+        );
+
+        $this->logMessage("payload to send to hub: ", $spayload, 4);
+
+//$response = post("http://127.0.0.1/BeepJsonAPI/index.php",json_encode($spayload));
+        $response = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
+
+//        $this->logMessage("Response from hub: ", $response, 4);
+        $responseArray = json_decode($response, true);
+//        $this->saveSessionVar("UMEMEACCOUNT", $responseArray);
+
+        return $responseArray;
+    }
+    
 
     //Going to use this function for both gotv and dstv
     function processMultiChoiceTV($input) {
