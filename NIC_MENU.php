@@ -1530,7 +1530,8 @@ class NCBANKUSSD extends DynamicMenuController {
 
                   $this->sessionState = "CONTINUE";
                   $this->nextFunction = "processMultiChoiceTV";
-                  $this->previousPage = "enterAmount";
+                  $this->previousPage = "enterAmount";   
+                 * 
                  */
                 $accountDetails = $this->getSessionVar('PAYTVACCOUNT');
                 $this->displayText = print_r($accountDetails, true);
