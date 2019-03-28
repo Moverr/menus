@@ -1110,8 +1110,13 @@ class NCBANKUSSD extends DynamicMenuController {
 
             $accountDetails = $this->validatePayTVAccount($selectedMenuService, $serviceID, $serviceCode, $accountNumber);
 
+             $this->displayText =  print_r($accountDetails, true);
+                $this->sessionState = "END";
+            
+                
+            /*
             if ($accountDetails == null) {
-                $this->displayText = "Invalid Account , \n Enter correct DSTV  Account : " . print_r($accountDetails, true);
+                $this->displayText = "Invalid Account , \n Enter correct DSTV  Account : " ;
                 $this->sessionState = "CONTINUE";
                 $this->nextFunction = "processDSTV";
                 $this->previousPage = "enterIUCNumber";
@@ -1130,6 +1135,8 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->nextFunction = "processDSTV";
                 $this->previousPage = "selectPackage";
             }
+            
+            */
         } elseif ($this->previousPage == "selectPackage") {
 
             $gotvPackage = explode(",", $selectedMenuService == DTBUGconfigs::DSTV_SERVICE_CODE ? DTBUGconfigs::DSTV_PACKAGES : DTBUGconfigs::DSTV_PACKAGES);
@@ -2736,6 +2743,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $responseArray = json_decode($response, true);
 
+        /*
         if ($responseArray['results'][0]['statusCode'] != 307) {
             return null;
         }
@@ -2743,8 +2751,8 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
         $this->saveSessionVar("PAYTVACCOUNT", $body);
-
-        return $body;
+*/
+        return $responseArray;
     }
 
     function postValidationRequestToHUB($url, $fields) {
