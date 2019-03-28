@@ -266,7 +266,16 @@ class NCBANKUSSD extends DynamicMenuController {
 
                 case '4':
 # code...
-                    $this->FundsTransferMenu();
+//FUNDS TRANSFER
+                    $message = "1)International Funds Transfer ";
+
+                    $message .= "\n\n0. Home \n" . "00. Back";
+                    $this->displayText = $message;
+                    $this->sessionState = "CONTINUE";
+                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                    $this->nextFunction = "FundsTransferMenu";
+                    $this->previousPage = "startPage";
+
                     break;
                 case '5':
 # code...
@@ -347,6 +356,76 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->serviceDescription = "MTN Mula";
             $this->nextFunction = "validateMobileNumber";
             $this->previousPage = "validateMobileNumber";
+        }
+    }
+
+    function FundsTransferMenu($input) {
+
+        $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+        switch ($input) {
+            case '1':
+                $selectedAccount = null;
+                foreach ($ACCOUNTS as $account) {
+                    if ($account['ID'] == $input) {
+                        $selectedAccount = $account;
+                        break;
+                    }
+                }
+                if ($selectedAccount == null) {
+
+                    $message = "Invalid Input \n\nChoose Account\n";
+                    $index = 0;
+                    foreach ($ACCOUNTS as $account) {
+                        $index = $index + 1;
+                        $message .= $index . ") " . $account['ACCOUNTNUMBER'] . "\n";
+                    }
+                    $message .= "\n\n0. Home \n" . "00. Back";
+                    $this->displayText = $message;
+                    $this->sessionState = "CONTINUE";
+                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                    $this->nextFunction = "BalanceEnquiryMenu";
+                    $this->previousPage = "BalanceEnquiryMenu";
+                } else {
+                    $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
+//                  $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
+                    $requestPayload = array(
+                        "serviceID" => 10,
+                        "flavour" => 'self',
+                        "pin" => $this->encryptPin($PINRECORD['RAWPIN'], 1),
+                        //$this->encryptPin($PINRECORD['RAWPIN'],$this->IMCREQUESTID), //$this->encryptPin($PINRECORD['RAWPIN'],1)
+                        "accountAlias" => $selectedAccount['ACCOUNTNAME'],
+                        "accountID" => $selectedAccount['ACCOUNTCBSID'],
+                    );
+                    $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
+
+                    $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
+                    $response = json_decode($result);
+//                $this->displayText = "" . print_r($result, true); 
+                    $this->logMessage("Balance Enquiry Response:: ", $response, 4);
+                    $this->displayText = "" . ($response->DATA->MESSAGE);
+                    $this->sessionState = "END";
+                }
+
+                break;
+            case '0':
+                $this->firstMenu();
+                break;
+            case '00':
+                $this->firstMenu();
+                break;
+            case '000':
+                $this->firstMenu();
+                break;
+            default:
+                $message = "1)International Funds Transfer ";
+                $message .= "\n\n0. Home \n" . "00. Back";
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                $this->nextFunction = "FundsTransferMenu";
+                $this->previousPage = "FundsTransferMenu";
+
+                break;
         }
     }
 
@@ -528,10 +607,6 @@ class NCBANKUSSD extends DynamicMenuController {
     }
 
     function BillPaymentsMenu() {
-        $this->serviceNotAvailable();
-    }
-
-    function FundsTransferMenu() {
         $this->serviceNotAvailable();
     }
 
