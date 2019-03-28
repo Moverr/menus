@@ -1111,7 +1111,7 @@ class NCBANKUSSD extends DynamicMenuController {
             $accountDetails = $this->validatePayTVAccount($selectedMenuService, $serviceID, $serviceCode, $accountNumber);
 
             if ($accountDetails == null) {
-                $this->displayText = "Invalid Account , \n Enter correct GOTV Account : " . print_r($accountDetails, true);
+                $this->displayText = "Invalid Account , \n Enter correct DSTV  Account : " . print_r($accountDetails, true);
                 $this->sessionState = "CONTINUE";
                 $this->nextFunction = "processDSTV";
                 $this->previousPage = "enterIUCNumber";
