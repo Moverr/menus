@@ -1488,6 +1488,7 @@ class NCBANKUSSD extends DynamicMenuController {
             $accountDetails = $this->validatePayTVAccount($selectedMenuService, $serviceID, $serviceCode, $accountNumber);
 
 
+
             $this->displayText = "Validate : " . print_r($accountDetails, true);
             $this->sessionState = "CONTINUE";
             $this->nextFunction = "processMultiChoiceTV";
@@ -2585,15 +2586,13 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $responseArray = json_decode($response, true);
 
-//        $responseData = $responseArray['results'][0]['responseExtraData'];
-////
-//        $responseDataArray = json_decode($responseData, true);
-////
-        
-        if($responseArray['results'][0]['statusCode'] != 307){
+        if ($responseArray['results'][0]['statusCode'] != 307) {
             return null;
         }
         $body = json_decode($responseArray['results'][0]['responseExtraData']);
+
+
+        $this->saveSessionVar("PAYTVACCOUNT", $body);
 
         return $body;
     }
