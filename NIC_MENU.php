@@ -1454,48 +1454,6 @@ class NCBANKUSSD extends DynamicMenuController {
             }
         }
     }
-    
-    
-    
-    function validatePayTvAccount($accountNumber) {
-
-        $this->logMessage("Validate Umeme meter number: " . $accountNumber, NULL, 4);
-
-        $credentials = array(
-            "username" => $this->beepUsername,
-            "password" => $this->beepPassword
-        );
-
-        $packet = array(
-            'serviceID' => 417,
-            'serviceCode' => "PayTV",
-            'accountNumber' => $accountNumber,
-            'requestExtraData' => ''
-        );
-
-        $data[] = $packet;
-        $payload = array(
-            "credentials" => $credentials,
-            "packet" => $data
-        );
-
-        $spayload = array(
-            "function" => $this->hubValidationFunction,
-            "payload" => json_encode($payload)
-        );
-
-        $this->logMessage("payload to send to hub: ", $spayload, 4);
-
-//$response = post("http://127.0.0.1/BeepJsonAPI/index.php",json_encode($spayload));
-        $response = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
-
-//        $this->logMessage("Response from hub: ", $response, 4);
-        $responseArray = json_decode($response, true);
-//        $this->saveSessionVar("UMEMEACCOUNT", $responseArray);
-
-        return $responseArray;
-    }
-    
 
     //Going to use this function for both gotv and dstv
     function processMultiChoiceTV($input) {
@@ -1512,19 +1470,25 @@ class NCBANKUSSD extends DynamicMenuController {
         } elseif ($this->previousPage == "enterIUCNumber") {
 
             /*
-            $this->saveSessionVar("multichoiceAccount", $input);
+              $this->saveSessionVar("multichoiceAccount", $input);
 
-            $packageText = "Select package \n";
-            $gotvPackage = explode(",", $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_PACKAGES : DTBUGconfigs::DSTV_PACKAGES);
+              $packageText = "Select package \n";
+              $gotvPackage = explode(",", $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_PACKAGES : DTBUGconfigs::DSTV_PACKAGES);
 
-            for ($i = 0; $i < sizeof($gotvPackage); $i++) {
-                $packageText .= $i + 1 . ". " . $this->getPackageName($gotvPackage[$i]) . " - " . $this->getPackagePrice($gotvPackage[$i]) . "\n";
-            }
+              for ($i = 0; $i < sizeof($gotvPackage); $i++) {
+              $packageText .= $i + 1 . ". " . $this->getPackageName($gotvPackage[$i]) . " - " . $this->getPackagePrice($gotvPackage[$i]) . "\n";
+              }
 
-            $this->displayText = $packageText;
-            */
-             $this->displayText  = "Validate : ".$input;
-            $this->sessionState = "CONTINUE";  
+              $this->displayText = $packageText;
+             */
+            $serviceID = $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_SERVICE_ID : DTBUGconfigs::DSTV_SERVICE_ID;
+            $serviceCode = $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_SERVICE_CODE : DTBUGconfigs::DSTV_SERVICE_CODE;
+
+            $accountDetails = $this->validatePayTVAccount($selectedMenuService, $serviceID, $serviceCode, $accountNumber);
+
+
+            $this->displayText = "Validate : " . print_r($accountDetails, true);
+            $this->sessionState = "CONTINUE";
             $this->nextFunction = "processMultiChoiceTV";
             $this->previousPage = "selectPackage";
         } elseif ($this->previousPage == "selectPackage") {
