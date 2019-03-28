@@ -1520,7 +1520,6 @@ class NCBANKUSSD extends DynamicMenuController {
 
                 $accountDetails = $this->getSessionVar('PAYTVACCOUNT');
 
-                //                        $this->validatePayTVAccount($selectedMenuService, $serviceID, $serviceCode, $accountNumber);
 
 
                 $customerName = $accountDetails->CustomerName;
@@ -1528,7 +1527,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
                 $this->saveSessionVar("MCCustomerName", $customerName);
 
-                $this->displayText = "Name: {$customerName}, Smart Card No: " . $accountNumber . " Package selected: " . $selectedPackage .  ". Enter Amount to pay";
+                $this->displayText = "Name: {$customerName}, Smart Card No: " . $accountNumber . " Package selected: " . $selectedPackage . ". Enter Amount to pay";
 
                 $this->sessionState = "CONTINUE";
                 $this->nextFunction = "processMultiChoiceTV";
