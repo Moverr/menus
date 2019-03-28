@@ -2589,8 +2589,13 @@ class NCBANKUSSD extends DynamicMenuController {
 ////
 //        $responseDataArray = json_decode($responseData, true);
 ////
+        
+        if($responseArray['results'][0]['statusCode'] != 307){
+            return null;
+        }
+        $body = json_decode($responseArray['results'][0]['responseExtraData']);
 
-        return $responseArray;
+        return $body;
     }
 
     function postValidationRequestToHUB($url, $fields) {
