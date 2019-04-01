@@ -464,7 +464,6 @@ class NCBANKUSSD extends DynamicMenuController {
 
                         $this->saveSessionVar("TRANSFERFROMACCOUNT", $selectedAccount['ACCOUNTNUMBER']);
 
-
                         $message = "Enter Transfer to Account ";
 
                         $message .= "\n\n0. Home \n" . "00. Back";
@@ -492,7 +491,6 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->previousPage = "startPage";
         } else {
 
-            $this->saveSessionVar("TRANSFERTOACCOUNT", $input);
 
             switch ($input) {
 
@@ -506,8 +504,8 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->firstMenu();
                     break;
                 default:
+                    $this->saveSessionVar("TRANSFERTOACCOUNT", $input);
                     $message = "Enter Amount ";
-
                     $message .= "\n\n0. Home \n" . "00. Back";
                     $this->displayText = $message;
                     $this->sessionState = "CONTINUE";
@@ -521,14 +519,13 @@ class NCBANKUSSD extends DynamicMenuController {
     }
 
     function GetTransferAmount($input) {
-        if ($input == null || $input = "") {
-            $message = "Invalid Input \nEnter Transfer to Account ";
-
+        if ($input == null || !is_numeric($input)) {
+            $message = "Invalid Input \nEnter Amount ";
             $message .= "\n\n0. Home \n" . "00. Back";
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-            $this->nextFunction = "GetTransferToAccount";
+            $this->nextFunction = "GetTransferAmount";
             $this->previousPage = "GetTransferAmount";
         } else {
 
@@ -546,14 +543,13 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->firstMenu();
                     break;
                 default:
-                    $message = "Enter Amount ";
+                    $message = "Ready TO Go  ";
 
                     $message .= "\n\n0. Home \n" . "00. Back";
                     $this->displayText = $message;
-                    $this->sessionState = "CONTINUE";
+                    $this->sessionState = "END";
                     $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-                    $this->nextFunction = "FundsTransferMenu";
-                    $this->previousPage = "FundsTransferMenu";
+
 
                     break;
             }
