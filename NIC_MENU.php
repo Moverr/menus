@@ -815,43 +815,44 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function BankToMobileMenu($input) {
 
-        switch ($input) {
-            case '1':
-
-                $message = "Enter Mobile Number";
-
-                $message .= "\n\n0. Home \n" . "00. Back";
-                $this->displayText = $message;
-                $this->sessionState = "CONTINUE";
-                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-                $this->nextFunction = "AccountToWithdrawFromToMobile";
-                $this->previousPage = "startPage";
+        $merchantcode = null;
+        if ($input . "" == "1") {
+            $merchantcode = "MTNMON";
+        } else if ($input . "" == "1") {
+            $merchantcode = "AIRTEL";
+        } else {
+            $merchantcode = NULL;
+        }
 
 
-                break;
+        if ($merchantcode == null) {
 
-            case '2':
-                break;
+            $message = "Invalid selction \n Send to \n"
+                    . "1) MTN Funds Transfer\n"
+                    . "2) Airtel Money \n ";
 
+            $message .= "\n\n0. Home \n" . "00. Back";
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+            $this->nextFunction = "BankToMobileMenu";
+            $this->previousPage = "startPage";
+        } else {
 
-            case '0':
-                $this->firstMenu();
-                break;
-            case '00':
-                $this->firstMenu();
-                break;
-            case '000':
-                $this->firstMenu();
-                break;
+            $message = "Enter Mobile Number";
 
-
-
-            default:
-                break;
+            $message .= "\n\n0. Home \n" . "00. Back";
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+            $this->nextFunction = "AccountToWithdrawFromToMobile";
+            $this->previousPage = "startPage";
         }
     }
 
     function MSSIDNTOTRANSFERTOMONEY($input) {
+
+        $this->saveSessionVar("MOBILENUMBERB2C", $input);
 
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
         $message = "Select Account \n";
@@ -869,13 +870,11 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->sessionState = "CONTINUE";
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
         $this->nextFunction = "AccountToWithdrawFromToMobileSelected";
-        $this->previousPage = "AccountToWithdrawFromToMobile";
+        $this->previousPage = "MSSIDNTOTRANSFERTOMONEY";
     }
 
     function AccountToWithdrawFromToMobile($input) {
 
-
-        $this->saveSessionVar("MOBILENUMBERB2C", $input);
 
 
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
@@ -974,7 +973,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $response = json_decode($result);
         $this->logMessage(" Internal Funds Transfer ", $response, 4);
 
-            
+
 
         $this->displayText = $response->DATA->MESSAGE;
         $this->sessionState = "END";
