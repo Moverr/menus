@@ -306,13 +306,13 @@ class NCBANKUSSD extends DynamicMenuController {
                 case '2':
 # code...
                     $message = "\n1).Balance Enquiry "
-                            . "\2).Mini statement \n" . "\n3).Change PIN";
+                            . "\n2).Mini statement \n" . "\n3).Change PIN";
 
                     $this->displayText = $message;
                     $this->sessionState = "CONTINUE";
                     $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-                    $this->nextFunction = "menuSwitcher";
-                    $this->previousPage = "startPage";
+                    $this->nextFunction = "MyAccountMenu";
+                    $this->previousPage = "menuSwitcher";
 
 
                     break;
