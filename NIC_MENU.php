@@ -605,14 +605,13 @@ class NCBANKUSSD extends DynamicMenuController {
                     $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
 
                     $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
-                    $response = json_decode($result);
-
+//                    $response = json_decode($result);
 //                $this->displayText = "" . print_r($result, true); 
-                    $this->logMessage("Validate Customer PIN Response:: ", $response, 4);
+//                    $this->logMessage("Validate Customer PIN Response:: ", $response, 4);
 
-                    $message = "" . print_r($response);
+                    $message = "RESPONSE : " . print_r($result);
 
-                    $message .= "\n\n0. Home \n" . "00. Back";
+//                    $message .= "\n\n0. Home \n" . "00. Back";
                     $this->displayText = $message;
                     $this->sessionState = "END";
                     $this->serviceDescription = $this->SERVICE_DESCRIPTION;
