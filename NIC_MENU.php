@@ -818,7 +818,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $merchantcode = null;
         if ($input . "" == "1") {
             $merchantcode = "MTNMON";
-        } else if ($input . "" == "1") {
+        } else if ($input . "" == "2") {
             $merchantcode = "AIRTEL";
         } else {
             $merchantcode = NULL;
@@ -839,8 +839,8 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->previousPage = "startPage";
         } else {
 
+            $this->saveSessionVar("MERCHANTCODE", $merchantcode);
             $message = "Enter Mobile Number";
-
             $message .= "\n\n0. Home \n" . "00. Back";
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
