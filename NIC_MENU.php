@@ -286,7 +286,7 @@ class NCBANKUSSD extends DynamicMenuController {
             default:
 
                 $message = "\n1. Balance Enquiry "
-                        . "\2. Mini statement \n" . "\n3. Cheque Requests \n" . "\n9. Change PIN";
+                        . "\2. Mini statement \n" . "\n3. Cheque Requests" . "\n9. Change PIN";
 
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
