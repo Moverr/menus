@@ -588,9 +588,8 @@ class NCBANKUSSD extends DynamicMenuController {
                     $TRANSFERFROMACCOUNT = $this->getSessionVar('TRANSFERFROMACCOUNT');
                     $TRANSFERTOACCOUNT = $this->getSessionVar('TRANSFERTOACCOUNT');
                     $TRANSFERTOACCOUNTNAMES = $this->getSessionVar('TRANSFERTOACCOUNTNAMES');
-
-
                     $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
+
                     $requestPayload = array(
                         "serviceID" => 13,
                         "flavour" => 'open',
@@ -610,9 +609,8 @@ class NCBANKUSSD extends DynamicMenuController {
 
 //                $this->displayText = "" . print_r($result, true); 
                     $this->logMessage("Validate Customer PIN Response:: ", $response, 4);
-                    $this->displayText = "" . ($response->DATA->MESSAGE);
-                    $this->sessionState = "END";
 
+                    $message = "" . print_r($response);
 
                     $message .= "\n\n0. Home \n" . "00. Back";
                     $this->displayText = $message;
