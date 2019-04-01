@@ -971,10 +971,9 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
         $response = json_decode($result);
-        $this->logMessage(" Internal Funds Transfer ", $response, 4);
-
-        $message = print_r($response,true);
-
+        $this->logMessage(" Internal Funds Transfer ", $response, 4); 
+        
+        $message = $response->DATA != null ? $response->DATA->MESSAGE : $response->STAT_DESCRIPTION;
 
         $this->displayText = $message;
 //                $response->DATA->MESSAGE;
