@@ -900,7 +900,6 @@ class NCBANKUSSD extends DynamicMenuController {
     function AccountToWithdrawFromToMobileSelected($input) {
 
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
-        $message = "Enter  Amount \n";
 
         $selectedAccount = null;
         foreach ($ACCOUNTS as $account) {
@@ -930,20 +929,56 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->previousPage = "AccountToWithdrawFromToMobileSelected";
         } else {
 
-            $this->saveSessionVar("selectedSourceAccount", $selectedAccount);
+
+            $message = "Enter  Amount \n";
+
+            $this->saveSessionVar("ACCOUNTB2C", $selectedAccount);
 
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-            $this->nextFunction = "finalizeTransaction";
+            $this->nextFunction = "finalizeTransactionB2C";
             $this->previousPage = "AccountToWithdrawFromToMobile";
         }
     }
 
-    function finalizeTransaction($input) {
+    function finalizeTransactionB2C($input) {
+        $this->saveSessionVar("AMOUNTB2C", $input);
 
-        $this->displayText = "We end here";
+
+        $ACCOUNTB2C = $this->getSessionVar('ACCOUNTB2C'); 
+        $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
+
+        $MOBILENUMBERB2C = $this->getSessionVar('MOBILENUMBERB2C');
+
+
+        $requestPayload = array(
+            "serviceID" => 'BILL_PAY',
+            "flavour" => 'open',
+            "pin" => $this->encryptPin($PINRECORD['RAWPIN'], 1),
+            "MSISDN" => $this->_msisdn,
+            "accountAlias" => $ACCOUNTB2C['ACCOUNTNAME'],
+            "accountID" => $ACCOUNTB2C['ACCOUNTCBSID'],
+            "amount" => $input,
+            "columnA" => $MOBILENUMBERB2C,
+            "merchantCode" => "MTNMON",
+            "CBSID" => 1,
+            "enrollmentAlias" => $MOBILENUMBERB2C,
+            "enroll" => "NO",
+            "columnD" => $MOBILENUMBERB2C
+            
+        );
+        $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
+
+        $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
+        $response = json_decode($result);
+        $this->logMessage(" Internal Funds Transfer ", $response, 4);
+
+//        $message = $response->STAT_DESCRIPTION;
+
+        $this->displayText = print_r($response, true);
         $this->sessionState = "END";
+        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
     }
 
     function BankToMobileAmountToTransferMenu($input) {
