@@ -406,8 +406,10 @@ class NCBANKUSSD extends DynamicMenuController {
     }
 
     function GetTransferFromAccount($input) {
+        $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+
+
         if ($input == null || $input = "") {
-            $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
 
             $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
             $message = "\nTransfer from  Account\n";
