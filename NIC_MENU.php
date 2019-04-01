@@ -267,7 +267,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 case '4':
 # code...
 //FUNDS TRANSFER
-                    $message = "1)International Funds Transfer ";
+                    $message = "1)Internal Funds Transfer ";
 
                     $message .= "\n\n0. Home \n" . "00. Back";
                     $this->displayText = $message;
