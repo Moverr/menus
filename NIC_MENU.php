@@ -174,7 +174,7 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->nextFunction = "validatePinMenu";
             $this->previousPage = "startPage";
         } else if ($response['STATUSCODE'] == 1) {
-            $message = "Hello " . $this->getSessionVar('customerNames') . ",\n1. Merchants \n" . "2. Balance Enquiry \n" .
+            $message = "Hello " . $this->getSessionVar('customerNames') . ",\n1. Merchants \n" . "2.My Account \n" .
                     "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" .
                     "\n7. Mini statement \n" . "\n8. Cheque Requests \n" . "\n9. Change PIN";
             $this->displayText = $message;
@@ -228,6 +228,72 @@ class NCBANKUSSD extends DynamicMenuController {
         return $responseData;
     }
 
+    function MyAccountMenu($inptu) {
+
+        switch ('' . $input) {
+//            BALANCE ENQUIRY
+            case '1':
+                $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+                $message = "\n\nChoose Account\n";
+                $index = 0;
+                foreach ($ACCOUNTS as $account) {
+                    $index = $index + 1;
+                    $message .= $index . ") " . $account['ACCOUNTNUMBER'] . "\n";
+                }
+                $message .= "\n\n0. Home \n" . "00. Back";
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                $this->nextFunction = "BalanceEnquiryMenu";
+                $this->previousPage = "startPage";
+                break;
+//                MINI STATEMENT
+            case '2':
+                $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+                $message = "Choose Account ";
+                $count = 0;
+                foreach ($ACCOUNTS as $account) {
+                    $count = $count + 1;
+                    $message .= "\n" . $count . ")" . $account['ACCOUNTNUMBER'];
+                }
+                $message .= "\n\n0. Home \n" . "00. Back";
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                $this->nextFunction = "MiniStatementMenu";
+                $this->previousPage = "startPage";
+                break;
+//CHANGE PIN
+            case '3':
+# code...
+                $message = "Please enter you new \n mobile banking pin";
+
+                $message .= "\n\n0. Home \n" . "00. Back";
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                $this->nextFunction = "MyAccountMenu";
+
+
+                break;
+
+//DEFAULT MENU 
+            default:
+
+                $message = "\n1. Balance Enquiry "
+                        . "\2. Mini statement \n" . "\n3. Cheque Requests \n" . "\n9. Change PIN";
+
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                $this->nextFunction = "menuSwitcher";
+                $this->previousPage = "startPage";
+
+
+                break;
+        }
+    }
+
     function menuSwitcher($input) {
 
         if (is_numeric($input)) {
@@ -239,19 +305,16 @@ class NCBANKUSSD extends DynamicMenuController {
 //                BALANCE ENQUIRY
                 case '2':
 # code...
-                    $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
-                    $message = "\n\nChoose Account\n";
-                    $index = 0;
-                    foreach ($ACCOUNTS as $account) {
-                        $index = $index + 1;
-                        $message .= $index . ") " . $account['ACCOUNTNUMBER'] . "\n";
-                    }
-                    $message .= "\n\n0. Home \n" . "00. Back";
+                    $message = "\n1. Balance Enquiry "
+                            . "\2. Mini statement \n" . "\n3. Cheque Requests \n" . "\n9. Change PIN";
+
                     $this->displayText = $message;
                     $this->sessionState = "CONTINUE";
                     $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-                    $this->nextFunction = "BalanceEnquiryMenu";
+                    $this->nextFunction = "menuSwitcher";
                     $this->previousPage = "startPage";
+
+
                     break;
 //                    BILL PAYMENTS
                 case '3':
@@ -971,8 +1034,8 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
         $response = json_decode($result);
-        $this->logMessage(" Internal Funds Transfer ", $response, 4); 
-        
+        $this->logMessage(" Internal Funds Transfer ", $response, 4);
+
         $message = $response->DATA != null ? $response->DATA->MESSAGE : $response->STAT_DESCRIPTION;
 
         $this->displayText = $message;
