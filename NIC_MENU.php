@@ -468,8 +468,8 @@ class NCBANKUSSD extends DynamicMenuController {
     }
 
     function GetTransferToAccount($input) {
-        if ($input == null || $input = "") {
-            $message = "Invalid Input \n1)International Funds Transfer ";
+        if ($input == null  ) {
+            $message = "Invalid Input \n1)Internal Funds Transfer ";
 
             $message .= "\n\n0. Home \n" . "00. Back";
             $this->displayText = $message;
