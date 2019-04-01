@@ -609,7 +609,7 @@ class NCBANKUSSD extends DynamicMenuController {
 //                $this->displayText = "" . print_r($result, true); 
 //                    $this->logMessage("Validate Customer PIN Response:: ", $response, 4);
 
-                    $message = "RESPONSE : " . print_r($response,true);
+                    $message = "RESPONSE : " . print_r($response->STAT_DESCRIPTION,true);
 
 //                    $message .= "\n\n0. Home \n" . "00. Back";
                     $this->displayText = $message;
