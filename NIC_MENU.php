@@ -409,10 +409,9 @@ class NCBANKUSSD extends DynamicMenuController {
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
 
 
-        if ($input == null || $input = "") {
+        if ($input == null) {
 
-            $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
-            $message = "\nTransfer from  Account\n";
+            $message = "Invalid Input \nTransfer from  Account\n";
             $index = 0;
             foreach ($ACCOUNTS as $account) {
                 $index = $index + 1;
@@ -424,10 +423,8 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->sessionState = "CONTINUE";
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
             $this->nextFunction = "GetTransferFromAccount";
-            $this->previousPage = "FundsTransferMenu";
+            $this->previousPage = "GetTransferFromAccount";
         } else {
-
-            //get transfrer from account
 
             $this->saveSessionVar("TRANSFERFROMACCOUNT", $input);
 
