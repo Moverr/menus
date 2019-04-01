@@ -277,8 +277,20 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->previousPage = "startPage";
 
                     break;
+                //BANK TO MOBILE
                 case '5':
 # code...
+                    $message = "Send to \n"
+                            . "1) MTN Funds Transfer\n"
+                            . "2) Airtel Money \n ";
+
+                    $message .= "\n\n0. Home \n" . "00. Back";
+                    $this->displayText = $message;
+                    $this->sessionState = "CONTINUE";
+                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                    $this->nextFunction = "FundsTransferMenu";
+                    $this->previousPage = "startPage";
+
                     $this->BankToMobileMenu();
                     break;
                 case '6':
