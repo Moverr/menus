@@ -946,10 +946,11 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->saveSessionVar("AMOUNTB2C", $input);
 
 
-        $ACCOUNTB2C = $this->getSessionVar('ACCOUNTB2C'); 
+        $ACCOUNTB2C = $this->getSessionVar('ACCOUNTB2C');
         $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
 
         $MOBILENUMBERB2C = $this->getSessionVar('MOBILENUMBERB2C');
+        $MERCHANTCODE = $this->getSessionVar('MERCHANTCODE');
 
 
         $requestPayload = array(
@@ -961,12 +962,11 @@ class NCBANKUSSD extends DynamicMenuController {
             "accountID" => $ACCOUNTB2C['ACCOUNTCBSID'],
             "amount" => $input,
             "columnA" => $MOBILENUMBERB2C,
-            "merchantCode" => "MTNMON",
+            "merchantCode" => $MERCHANTCODE,
             "CBSID" => 1,
             "enrollmentAlias" => $MOBILENUMBERB2C,
             "enroll" => "NO",
             "columnD" => $MOBILENUMBERB2C
-            
         );
         $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
 
@@ -974,9 +974,9 @@ class NCBANKUSSD extends DynamicMenuController {
         $response = json_decode($result);
         $this->logMessage(" Internal Funds Transfer ", $response, 4);
 
-//        $message = $response->DATA;
+            
 
-        $this->displayText = print_r($response->DATA->MESSAGE, true);
+        $this->displayText = $response->DATA->MESSAGE;
         $this->sessionState = "END";
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
     }
