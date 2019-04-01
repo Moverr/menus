@@ -392,7 +392,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->firstMenu();
                 break;
             default:
-                $message = "1)International Funds Transfer ";
+                $message = "1)Internal Funds Transfer ";
 
                 $message .= "\n\n0. Home \n" . "00. Back";
                 $this->displayText = $message;
@@ -407,8 +407,22 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function GetTransferFromAccount($input) {
         if ($input == null || $input = "") {
-            $input = '1';
-            $this->FundsTransferMenu($input);
+            $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+
+            $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+            $message = "\nTransfer from  Account\n";
+            $index = 0;
+            foreach ($ACCOUNTS as $account) {
+                $index = $index + 1;
+                $message .= $index . ") " . $account['ACCOUNTNUMBER'] . "\n";
+            }
+            $message .= "\n\n0. Home \n" . "00. Back";
+
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+            $this->nextFunction = "GetTransferFromAccount";
+            $this->previousPage = "FundsTransferMenu";
         } else {
 
             //get transfrer from account
