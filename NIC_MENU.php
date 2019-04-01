@@ -842,6 +842,29 @@ class NCBANKUSSD extends DynamicMenuController {
         }
     }
 
+    function MSSIDNTOTRANSFERTOMONEY($input) {
+
+        $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+        $message = "Select Account \n";
+        if ($ACCOUNTS != null) {
+            $message = "Choose Account \n";
+            $count = 0;
+            foreach ($ACCOUNTS as $account) {
+                $count = $count + 1;
+                $selectedAccount = $account;
+                $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
+            }
+        }
+
+        $this->displayText = $message;
+        $this->sessionState = "CONTINUE";
+        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+        $this->nextFunction = "AccountToWithdrawFromToMobileSelected";
+        $this->previousPage = "AccountToWithdrawFromToMobile";
+        
+    }
+    
+    
     function AccountToWithdrawFromToMobile($input) {
 
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
@@ -861,7 +884,9 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
         $this->nextFunction = "AccountToWithdrawFromToMobileSelected";
         $this->previousPage = "AccountToWithdrawFromToMobile";
+        
     }
+    
 
     function AccountToWithdrawFromToMobileSelected($input) {
 
