@@ -175,8 +175,7 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->previousPage = "startPage";
         } else if ($response['STATUSCODE'] == 1) {
             $message = "Hello " . $this->getSessionVar('customerNames') . ",\n1. Merchants \n" . "2. My Account \n" .
-                    "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" .
-                    "\n7. Mini statement \n" . "\n8. Cheque Requests \n" . "\n9. Change PIN";
+                    "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "\n7. Cheque Requests \n";
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -367,22 +366,22 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->nextFunction = "AirtimePurchaseMenu";
                     $this->previousPage = "startPage";
                     break;
+//                case '7':
+//                    $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+//                    $message = "Choose Account ";
+//                    $count = 0;
+//                    foreach ($ACCOUNTS as $account) {
+//                        $count = $count + 1;
+//                        $message .= "\n" . $count . ")" . $account['ACCOUNTNUMBER'];
+//                    }
+//                    $message .= "\n\n0. Home \n" . "00. Back";
+//                    $this->displayText = $message;
+//                    $this->sessionState = "CONTINUE";
+//                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+//                    $this->nextFunction = "MiniStatementMenu";
+//                    $this->previousPage = "startPage";
+//                    break;
                 case '7':
-                    $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
-                    $message = "Choose Account ";
-                    $count = 0;
-                    foreach ($ACCOUNTS as $account) {
-                        $count = $count + 1;
-                        $message .= "\n" . $count . ")" . $account['ACCOUNTNUMBER'];
-                    }
-                    $message .= "\n\n0. Home \n" . "00. Back";
-                    $this->displayText = $message;
-                    $this->sessionState = "CONTINUE";
-                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-                    $this->nextFunction = "MiniStatementMenu";
-                    $this->previousPage = "startPage";
-                    break;
-                case '8':
 # code...
                     $message = "Account Request"
                             . "\n1) Cheque Book Request"
