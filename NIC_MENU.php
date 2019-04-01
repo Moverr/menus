@@ -131,9 +131,11 @@ class NCBANKUSSD extends DynamicMenuController {
             $authenticatedPIN = $this->getSessionVar('AUTHENTICATEDPIN');
             if ($authenticatedPIN != null) {
                 if ($authenticatedPIN['STATUSCODE'] == 1) {
-                    $message = "Hello " . ($clientProfiledata['customerNames']) . "\n1. Merchants \n" . "2. Balance Enquiry \n" .
-                            "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" .
-                            "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN";
+                    $message  =  $this->getDefaultMenu();
+                            
+//                            "Hello " . ($clientProfiledata['customerNames']) . "\n1. Merchants \n" . "2. Balance Enquiry \n" .
+//                            "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" .
+//                            "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN";
 
                     $this->displayText = $message;
                     $this->sessionState = "CONTINUE";
@@ -161,6 +163,11 @@ class NCBANKUSSD extends DynamicMenuController {
         }
     }
 
+    function getDefaultMenu(){
+           $message = "Hello " . $this->getSessionVar('customerNames') . ",\n1. Merchants \n" . "2. My Account \n" .
+                    "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase" . "\n7. Cheque Requests \n";
+           return $message;
+    }
     // VALIDATE PIN MENU
     function validatePinMenu($input) {
         $clientProfile = $this->getSessionVar('CLIENTPROFILE');
@@ -174,8 +181,7 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->nextFunction = "validatePinMenu";
             $this->previousPage = "startPage";
         } else if ($response['STATUSCODE'] == 1) {
-            $message = "Hello " . $this->getSessionVar('customerNames') . ",\n1. Merchants \n" . "2. My Account \n" .
-                    "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" . "\n7. Cheque Requests \n";
+            $message =  $this->getDefaultMenu();
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
