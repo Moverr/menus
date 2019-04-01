@@ -973,9 +973,11 @@ class NCBANKUSSD extends DynamicMenuController {
         $response = json_decode($result);
         $this->logMessage(" Internal Funds Transfer ", $response, 4);
 
+        $message = print_r($response,true);
 
 
-        $this->displayText = $response->DATA->MESSAGE;
+        $this->displayText = $message;
+//                $response->DATA->MESSAGE;
         $this->sessionState = "END";
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
     }
