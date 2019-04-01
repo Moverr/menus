@@ -228,7 +228,7 @@ class NCBANKUSSD extends DynamicMenuController {
         return $responseData;
     }
 
-    function MyAccountMenu($inptu) {
+    function MyAccountMenu($input) {
 
         switch ('' . $input) {
 //            BALANCE ENQUIRY
@@ -305,8 +305,8 @@ class NCBANKUSSD extends DynamicMenuController {
 //                BALANCE ENQUIRY
                 case '2':
 # code...
-                    $message = "\n1. Balance Enquiry "
-                            . "\2. Mini statement \n" . "\n3. Cheque Requests \n" . "\n9. Change PIN";
+                    $message = "\n1).Balance Enquiry "
+                            . "\2).Mini statement \n" . "\n3).Change PIN";
 
                     $this->displayText = $message;
                     $this->sessionState = "CONTINUE";
