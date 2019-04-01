@@ -505,6 +505,47 @@ class NCBANKUSSD extends DynamicMenuController {
                     break;
                 default:
                     $this->saveSessionVar("TRANSFERTOACCOUNT", $input);
+
+                    $message = "Enter  account names ";
+                    $message .= "\n\n0. Home \n" . "00. Back";
+                    $this->displayText = $message;
+                    $this->sessionState = "CONTINUE";
+                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                    $this->nextFunction = "GetTransferToAccountName";
+                    $this->previousPage = "GetTransferToAccount";
+
+                    break;
+            }
+        }
+    }
+
+    function GetTransferToAccountName($input) {
+        if ($input == null) {
+            $message = "Invalid Input \n1)Internal Funds Transfer ";
+
+            $message .= "\n\n0. Home \n" . "00. Back";
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+            $this->nextFunction = "FundsTransferMenu";
+            $this->previousPage = "startPage";
+        } else {
+
+
+            switch ($input) {
+
+                case '0':
+                    $this->firstMenu();
+                    break;
+                case '00':
+                    $this->firstMenu();
+                    break;
+                case '000':
+                    $this->firstMenu();
+                    break;
+                default:
+                    $this->saveSessionVar("TRANSFERTOACCOUNTNAMES", $input);
+
                     $message = "Enter Amount ";
                     $message .= "\n\n0. Home \n" . "00. Back";
                     $this->displayText = $message;
@@ -529,7 +570,7 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->previousPage = "GetTransferAmount";
         } else {
 
-            $this->saveSessionVar("TRANSFERTOACCOUNT", $input);
+
 
             switch ($input) {
 
@@ -543,7 +584,35 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->firstMenu();
                     break;
                 default:
-                    $message = "Ready TO Go  ";
+
+                    $TRANSFERFROMACCOUNT = $this->getSessionVar('TRANSFERFROMACCOUNT');
+                    $TRANSFERTOACCOUNT = $this->getSessionVar('TRANSFERTOACCOUNT');
+                    $TRANSFERTOACCOUNTNAMES = $this->getSessionVar('TRANSFERTOACCOUNTNAMES');
+
+
+                    $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
+                    $requestPayload = array(
+                        "serviceID" => 13,
+                        "flavour" => 'open',
+                        "pin" => $this->encryptPin($PINRECORD['RAWPIN'], 1),
+                        "MSISDN" => $this->_msisdn,
+                        "accountAlias" => $TRANSFERFROMACCOUNT['ACCOUNTNAME'],
+                        "accountID" => $TRANSFERFROMACCOUNT['ACCOUNTCBSID'],
+                        "amount" => $input,
+                        "columnA" => $TRANSFERTOACCOUNT,
+                        "columnD" => $TRANSFERTOACCOUNTNAMES,
+                        "columnE" => "Money Transfer through mobile banking ussd channel",
+                    );
+                    $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
+
+                    $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
+                    $response = json_decode($result);
+
+//                $this->displayText = "" . print_r($result, true); 
+                    $this->logMessage("Validate Customer PIN Response:: ", $response, 4);
+                    $this->displayText = "" . ($response->DATA->MESSAGE);
+                    $this->sessionState = "END";
+
 
                     $message .= "\n\n0. Home \n" . "00. Back";
                     $this->displayText = $message;
