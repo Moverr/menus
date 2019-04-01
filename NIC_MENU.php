@@ -976,7 +976,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
 //        $message = $response->DATA;
 
-        $this->displayText = print_r($response->DATA, true);
+        $this->displayText = print_r($response->DATA->MESSAGE, true);
         $this->sessionState = "END";
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
     }
