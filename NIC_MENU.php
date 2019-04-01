@@ -288,10 +288,10 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->displayText = $message;
                     $this->sessionState = "CONTINUE";
                     $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-                    $this->nextFunction = "FundsTransferMenu";
+                    $this->nextFunction = "BankToMobileMenu";
                     $this->previousPage = "startPage";
 
-                    $this->BankToMobileMenu();
+
                     break;
                 case '6':
                     $message = " Top Up"
@@ -813,8 +813,84 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->serviceNotAvailable();
     }
 
-    function BankToMobileMenu() {
+    function BankToMobileMenu($input) {
+
+        switch ($input) {
+
+            case '1':
+                $this->AccountToWithdrawFromToMobile($input);
+                break;
+
+            case '2':
+                break;
+
+
+            case '0':
+                $this->firstMenu();
+                break;
+            case '00':
+                $this->firstMenu();
+                break;
+            case '000':
+                $this->firstMenu();
+                break;
+
+
+
+            default:
+                break;
+        }
         $this->serviceNotAvailable();
+    }
+
+    function AccountToWithdrawFromToMobile($input) {
+
+        $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+        $message = "Select Account \n";
+        if ($ACCOUNTS != null) {
+            $message = "Choose Account \n";
+            $count = 0;
+            foreach ($ACCOUNTS as $account) {
+                $count = $count + 1;
+                $selectedAccount = $account;
+                $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
+            }
+        }
+        $this->displayText = $message;
+        $this->sessionState = "CONTINUE";
+        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+        $this->nextFunction = "BankToMobileAmountToTransferMenu";
+        $this->previousPage = "AccountToWithdrawFromToMobile";
+    }
+
+    function BankToMobileAmountToTransferMenu($input) {
+
+        if (!is_numeric($input)) {
+            $message = "Invalid Input \n Enter Amount";
+            $message .= "\n\n0. Home \n" . "00. Back";
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+            $this->nextFunction = "BankToMobileAmountToTransferMenu";
+            $this->previousPage = "BankToMobileAmountToTransferMenu";
+        } else {
+
+            switch ($input) {
+                case '0':
+                    $this->firstMenu();
+                    break;
+                case '00':
+                    $this->firstMenu();
+                    break;
+                case '000':
+                    $this->firstMenu();
+                    break;
+                default:
+
+
+                    break;
+            }
+        }
     }
 
     //: MENU ITEM 6 AIRTIME PURCHASE
@@ -827,17 +903,17 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
             $this->nextFunction = "TopUpAmountMenu";
             $this->previousPage = "TopUpAmountMenu";
+        } else {
+            $this->saveSessionVar("AirtimeRecipient", $input);
+            $message = "Enter Top Up Amount";
+            $message .= "\n0. Home \n" . "00. Back";
+
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+            $this->nextFunction = "AirtimeMerchantChooseAccount";
+            $this->previousPage = "AirtimePurchaseMenu";
         }
-
-        $this->saveSessionVar("AirtimeRecipient", $input);
-        $message = "Enter Top Up Amount";
-        $message .= "\n0. Home \n" . "00. Back";
-
-        $this->displayText = $message;
-        $this->sessionState = "CONTINUE";
-        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-        $this->nextFunction = "AirtimeMerchantChooseAccount";
-        $this->previousPage = "AirtimePurchaseMenu";
     }
 
     function finishBuyingAirtime($input) {
