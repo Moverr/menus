@@ -856,11 +856,39 @@ class NCBANKUSSD extends DynamicMenuController {
                 $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
             }
         }
+
         $this->displayText = $message;
         $this->sessionState = "CONTINUE";
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-        $this->nextFunction = "BankToMobileAmountToTransferMenu";
+        $this->nextFunction = "AccountToWithdrawFromToMobileSelected";
         $this->previousPage = "AccountToWithdrawFromToMobile";
+    }
+
+    function AccountToWithdrawFromToMobileSelected($input) {
+
+        $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+        $message = "Enter  Account \n";
+
+        $selectedAccount = null;
+        foreach ($ACCOUNTS as $account) {
+            if ($account['ID'] == $input) {
+                $selectedAccount = $account;
+                break;
+            }
+        }
+
+        if ($selectedAccount == null) {
+            
+        } else {
+
+            $this->saveSessionVar("selectedSourceAccount", $selectedAccount);
+
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+            $this->nextFunction = "BankToMobileAmountToTransferMenu";
+            $this->previousPage = "AccountToWithdrawFromToMobile";
+        }
     }
 
     function BankToMobileAmountToTransferMenu($input) {
