@@ -407,8 +407,6 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function GetTransferFromAccount($input) {
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
-
-
         if ($input == null) {
 
             $message = "Invalid Input \nTransfer from  Account\n";
@@ -426,7 +424,6 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->previousPage = "GetTransferFromAccount";
         } else {
 
-            $this->saveSessionVar("TRANSFERFROMACCOUNT", $input);
 
             switch ($input) {
 
@@ -449,8 +446,24 @@ class NCBANKUSSD extends DynamicMenuController {
                         }
                     }
                     if ($selectedAccount == null) {
-                        
+
+                        $message = "Invalid Input \nTransfer from  Account\n";
+                        $index = 0;
+                        foreach ($ACCOUNTS as $account) {
+                            $index = $index + 1;
+                            $message .= $index . ") " . $account['ACCOUNTNUMBER'] . "\n";
+                        }
+                        $message .= "\n\n0. Home \n" . "00. Back";
+
+                        $this->displayText = $message;
+                        $this->sessionState = "CONTINUE";
+                        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                        $this->nextFunction = "GetTransferFromAccount";
+                        $this->previousPage = "GetTransferFromAccount";
                     } else {
+
+                        $this->saveSessionVar("TRANSFERFROMACCOUNT", $selectedAccount['ACCOUNTNUMBER']);
+
 
                         $message = "Enter Transfer to Account ";
 
@@ -468,7 +481,7 @@ class NCBANKUSSD extends DynamicMenuController {
     }
 
     function GetTransferToAccount($input) {
-        if ($input == null  ) {
+        if ($input == null) {
             $message = "Invalid Input \n1)Internal Funds Transfer ";
 
             $message .= "\n\n0. Home \n" . "00. Back";
