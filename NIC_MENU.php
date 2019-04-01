@@ -818,7 +818,16 @@ class NCBANKUSSD extends DynamicMenuController {
         switch ($input) {
             case '1':
 
-                $this->AccountToWithdrawFromToMobile($input);
+                $message = "Enter Mobile Number";
+
+                $message .= "\n\n0. Home \n" . "00. Back";
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                $this->nextFunction = "AccountToWithdrawFromToMobile";
+                $this->previousPage = "startPage";
+
+
                 break;
 
             case '2':
@@ -861,11 +870,13 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
         $this->nextFunction = "AccountToWithdrawFromToMobileSelected";
         $this->previousPage = "AccountToWithdrawFromToMobile";
-        
     }
-    
-    
+
     function AccountToWithdrawFromToMobile($input) {
+
+
+        $this->saveSessionVar("MOBILENUMBERB2C", $input);
+
 
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
         $message = "Select Account \n";
@@ -884,9 +895,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
         $this->nextFunction = "AccountToWithdrawFromToMobileSelected";
         $this->previousPage = "AccountToWithdrawFromToMobile";
-        
     }
-    
 
     function AccountToWithdrawFromToMobileSelected($input) {
 
