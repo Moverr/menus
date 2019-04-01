@@ -900,7 +900,7 @@ class NCBANKUSSD extends DynamicMenuController {
     function AccountToWithdrawFromToMobileSelected($input) {
 
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
-        $message = "Enter  Account \n";
+        $message = "Enter  Amount \n";
 
         $selectedAccount = null;
         foreach ($ACCOUNTS as $account) {
@@ -935,9 +935,15 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-            $this->nextFunction = "BankToMobileAmountToTransferMenu";
+            $this->nextFunction = "finalizeTransaction";
             $this->previousPage = "AccountToWithdrawFromToMobile";
         }
+    }
+
+    function finalizeTransaction($input) {
+
+        $this->displayText = "We end here";
+        $this->sessionState = "END";
     }
 
     function BankToMobileAmountToTransferMenu($input) {
