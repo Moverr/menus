@@ -944,7 +944,7 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-            $this->nextFunction = "AccountToWithdrawFromToMobile";
+            $this->nextFunction = "MSSIDNTOTRANSFERTOMONEY";
             $this->previousPage = "startPage";
         }
     }
@@ -952,6 +952,10 @@ class NCBANKUSSD extends DynamicMenuController {
     function MSSIDNTOTRANSFERTOMONEY($input) {
 
         $this->saveSessionVar("MOBILENUMBERB2C", $input);
+
+        $MERCHANTCODE = $this->getSessionVar("MERCHANTCODE");
+        
+            
 
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
         $message = "Select Account \n";
