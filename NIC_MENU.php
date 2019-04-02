@@ -131,8 +131,8 @@ class NCBANKUSSD extends DynamicMenuController {
             $authenticatedPIN = $this->getSessionVar('AUTHENTICATEDPIN');
             if ($authenticatedPIN != null) {
                 if ($authenticatedPIN['STATUSCODE'] == 1) {
-                    $message  =  $this->getDefaultMenu();
-                            
+                    $message = $this->getDefaultMenu();
+
 //                            "Hello " . ($clientProfiledata['customerNames']) . "\n1. Merchants \n" . "2. Balance Enquiry \n" .
 //                            "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" .
 //                            "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN";
@@ -163,11 +163,12 @@ class NCBANKUSSD extends DynamicMenuController {
         }
     }
 
-    function getDefaultMenu(){
-           $message = "Hello " . $this->getSessionVar('customerNames') . ",\n1. Merchants \n" . "2. My Account \n" .
-                    "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase" . "\n7. Cheque Requests \n";
-           return $message;
+    function getDefaultMenu() {
+        $message = "Hello " . $this->getSessionVar('customerNames') . ",\n1. Merchants \n" . "2. My Account \n" .
+                "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase" . "\n7. Cheque Requests \n";
+        return $message;
     }
+
     // VALIDATE PIN MENU
     function validatePinMenu($input) {
         $clientProfile = $this->getSessionVar('CLIENTPROFILE');
@@ -181,7 +182,7 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->nextFunction = "validatePinMenu";
             $this->previousPage = "startPage";
         } else if ($response['STATUSCODE'] == 1) {
-            $message =  $this->getDefaultMenu();
+            $message = $this->getDefaultMenu();
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -245,7 +246,7 @@ class NCBANKUSSD extends DynamicMenuController {
                     $index = $index + 1;
                     $message .= $index . ") " . $account['ACCOUNTNUMBER'] . "\n";
                 }
-                $message .= "\n\n0. Home \n" . "00. Back";
+                $message .= "\n\n0. Home \n" . "00. Exit";
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
                 $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -261,7 +262,7 @@ class NCBANKUSSD extends DynamicMenuController {
                     $count = $count + 1;
                     $message .= "\n" . $count . ")" . $account['ACCOUNTNUMBER'];
                 }
-                $message .= "\n\n0. Home \n" . "00. Back";
+                $message .= "\n\n0. Home \n" . "00. Exit";
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
                 $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -273,7 +274,7 @@ class NCBANKUSSD extends DynamicMenuController {
 # code...
                 $message = "Please enter you new \n mobile banking pin";
 
-                $message .= "\n\n0. Home \n" . "00. Back";
+                $message .= "\n\n0. Home \n" . "00. Exit";
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
                 $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -325,7 +326,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 case '3':
                     $service = $this->getSessionVar('selectedService');
                     $message = "Select Utility. \n1: UMEME \n2: NWSC \n3: Pay TV";
-                    $message .= "\n\n0. Home \n" . "00. Back";
+                    $message .= "\n\n0. Home \n" . "00. Exit";
                     $this->displayText = $message;
                     $this->sessionState = "CONTINUE";
                     $this->nextFunction = "processPayBillMenu";
@@ -337,7 +338,7 @@ class NCBANKUSSD extends DynamicMenuController {
 //FUNDS TRANSFER
                     $message = "1)Internal Funds Transfer ";
 
-                    $message .= "\n\n0. Home \n" . "00. Back";
+                    $message .= "\n\n0. Home \n" . "00. Exit";
                     $this->displayText = $message;
                     $this->sessionState = "CONTINUE";
                     $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -352,7 +353,7 @@ class NCBANKUSSD extends DynamicMenuController {
                             . "1) MTN Funds Transfer\n"
                             . "2) Airtel Money \n ";
 
-                    $message .= "\n\n0. Home \n" . "00. Back";
+                    $message .= "\n\n0. Home \n" . "00. Exit";
                     $this->displayText = $message;
                     $this->sessionState = "CONTINUE";
                     $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -365,7 +366,7 @@ class NCBANKUSSD extends DynamicMenuController {
                     $message = " Top Up"
                             . "\n1) Own Phone"
                             . "\n2) Other Phone";
-                    $message .= "\n\n0. Home \n" . "00. Back";
+                    $message .= "\n\n0. Home \n" . "00. Exit";
                     $this->displayText = $message;
                     $this->sessionState = "CONTINUE";
                     $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -380,7 +381,7 @@ class NCBANKUSSD extends DynamicMenuController {
 //                        $count = $count + 1;
 //                        $message .= "\n" . $count . ")" . $account['ACCOUNTNUMBER'];
 //                    }
-//                    $message .= "\n\n0. Home \n" . "00. Back";
+//                    $message .= "\n\n0. Home \n" . "00. Exit";
 //                    $this->displayText = $message;
 //                    $this->sessionState = "CONTINUE";
 //                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -392,7 +393,7 @@ class NCBANKUSSD extends DynamicMenuController {
                     $message = "Account Request"
                             . "\n1) Cheque Book Request"
                             . "\n2) Stop Cheque ";
-                    $message .= "\n\n0. Home \n" . "00. Back";
+                    $message .= "\n\n0. Home \n" . "00. Exit";
                     $this->displayText = $message;
                     $this->sessionState = "CONTINUE";
                     $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -403,7 +404,7 @@ class NCBANKUSSD extends DynamicMenuController {
 # code...
                     $message = "Please enter you new \n mobile banking pin";
 
-                    $message .= "\n\n0. Home \n" . "00. Back";
+                    $message .= "\n\n0. Home \n" . "00. Exit";
                     $this->displayText = $message;
                     $this->sessionState = "CONTINUE";
                     $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -414,12 +415,13 @@ class NCBANKUSSD extends DynamicMenuController {
                     break;
                 case '0':
 # code...
+                    $this->firstMenu();
                     break;
                 case '00':
-# code...
-                    break;
                 case '000':
 # code...
+                    $this->displayText = "Thank you for supporting NC Bank ";
+                    $this->sessionState = "END";
                     break;
                 default:
 # code...
@@ -451,7 +453,7 @@ class NCBANKUSSD extends DynamicMenuController {
                     $index = $index + 1;
                     $message .= $index . ") " . $account['ACCOUNTNUMBER'] . "\n";
                 }
-                $message .= "\n\n0. Home \n" . "00. Back";
+                $message .= "\n\n0. Home \n" . "00. Exit";
 
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
@@ -466,15 +468,17 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->firstMenu();
                 break;
             case '00':
-                $this->firstMenu();
+                $this->displayText = "Thank you for supporting NC Bank ";
+                $this->sessionState = "END";
                 break;
             case '000':
-                $this->firstMenu();
+                $this->displayText = "Thank you for supporting NC Bank ";
+                $this->sessionState = "END";
                 break;
             default:
                 $message = "1)Internal Funds Transfer ";
 
-                $message .= "\n\n0. Home \n" . "00. Back";
+                $message .= "\n\n0. Home \n" . "00. Exit";
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
                 $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -495,7 +499,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $index = $index + 1;
                 $message .= $index . ") " . $account['ACCOUNTNUMBER'] . "\n";
             }
-            $message .= "\n\n0. Home \n" . "00. Back";
+            $message .= "\n\n0. Home \n" . "00. Exit";
 
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
@@ -511,10 +515,12 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->firstMenu();
                     break;
                 case '00':
-                    $this->firstMenu();
+                    $this->displayText = "Thank you for supporting NC Bank ";
+                    $this->sessionState = "END";
                     break;
                 case '000':
-                    $this->firstMenu();
+                    $this->displayText = "Thank you for supporting NC Bank ";
+                    $this->sessionState = "END";
                     break;
                 default:
 
@@ -533,7 +539,7 @@ class NCBANKUSSD extends DynamicMenuController {
                             $index = $index + 1;
                             $message .= $index . ") " . $account['ACCOUNTNUMBER'] . "\n";
                         }
-                        $message .= "\n\n0. Home \n" . "00. Back";
+                        $message .= "\n\n0. Home \n" . "00. Exit";
 
                         $this->displayText = $message;
                         $this->sessionState = "CONTINUE";
@@ -546,7 +552,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
                         $message = "Enter Transfer to Account ";
 
-                        $message .= "\n\n0. Home \n" . "00. Back";
+                        $message .= "\n\n0. Home \n" . "00. Exit";
                         $this->displayText = $message;
                         $this->sessionState = "CONTINUE";
                         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -563,7 +569,7 @@ class NCBANKUSSD extends DynamicMenuController {
         if ($input == null) {
             $message = "Invalid Input \n1)Internal Funds Transfer ";
 
-            $message .= "\n\n0. Home \n" . "00. Back";
+            $message .= "\n\n0. Home \n" . "00. Exit";
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -578,16 +584,18 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->firstMenu();
                     break;
                 case '00':
-                    $this->firstMenu();
+                    $this->displayText = "Thank you for supporting NC Bank ";
+                    $this->sessionState = "END";
                     break;
                 case '000':
-                    $this->firstMenu();
+                    $this->displayText = "Thank you for supporting NC Bank ";
+                    $this->sessionState = "END";
                     break;
                 default:
                     $this->saveSessionVar("TRANSFERTOACCOUNT", $input);
 
                     $message = "Enter  account names ";
-                    $message .= "\n\n0. Home \n" . "00. Back";
+                    $message .= "\n\n0. Home \n" . "00. Exit";
                     $this->displayText = $message;
                     $this->sessionState = "CONTINUE";
                     $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -603,7 +611,7 @@ class NCBANKUSSD extends DynamicMenuController {
         if ($input == null) {
             $message = "Invalid Input \n1)Internal Funds Transfer ";
 
-            $message .= "\n\n0. Home \n" . "00. Back";
+            $message .= "\n\n0. Home \n" . "00. Exit";
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -618,16 +626,18 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->firstMenu();
                     break;
                 case '00':
-                    $this->firstMenu();
+                    $this->displayText = "Thank you for supporting NC Bank ";
+                    $this->sessionState = "END";
                     break;
                 case '000':
-                    $this->firstMenu();
+                    $this->displayText = "Thank you for supporting NC Bank ";
+                    $this->sessionState = "END";
                     break;
                 default:
                     $this->saveSessionVar("TRANSFERTOACCOUNTNAMES", $input);
 
                     $message = "Enter Amount ";
-                    $message .= "\n\n0. Home \n" . "00. Back";
+                    $message .= "\n\n0. Home \n" . "00. Exit";
                     $this->displayText = $message;
                     $this->sessionState = "CONTINUE";
                     $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -642,7 +652,7 @@ class NCBANKUSSD extends DynamicMenuController {
     function GetTransferAmount($input) {
         if ($input == null || !is_numeric($input)) {
             $message = "Invalid Input \nEnter Amount ";
-            $message .= "\n\n0. Home \n" . "00. Back";
+            $message .= "\n\n0. Home \n" . "00. Exit";
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -658,10 +668,12 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->firstMenu();
                     break;
                 case '00':
-                    $this->firstMenu();
+                     $this->displayText = "Thank you for supporting NC Bank ";
+                $this->sessionState = "END";
                     break;
                 case '000':
-                    $this->firstMenu();
+                     $this->displayText = "Thank you for supporting NC Bank ";
+                $this->sessionState = "END";
                     break;
                 default:
 
@@ -705,7 +717,7 @@ class NCBANKUSSD extends DynamicMenuController {
         if ($input == null || !is_numeric($input)) {
             $message = "Please enter your current mobile banking pin ";
 
-            $message .= "\n\n0. Home \n" . "00. Back";
+            $message .= "\n\n0. Home \n" . "00. Exit";
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -717,7 +729,7 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->saveSessionVar("NEWPIN", $input);
 
             $message = "Please re-enter you new mobile banking pin";
-            $message .= "\n\n0. Home \n" . "00. Back";
+            $message .= "\n\n0. Home \n" . "00. Exit";
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -750,7 +762,7 @@ class NCBANKUSSD extends DynamicMenuController {
         } else {
 
             $message = "Your new Pins don't match \n Please Re-enter New Pin";
-            $message .= "\n\n0. Home \n" . "00. Back";
+            $message .= "\n\n0. Home \n" . "00. Exit";
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -790,12 +802,12 @@ class NCBANKUSSD extends DynamicMenuController {
     }
 
     function ServiceNotAvailable() {
-        $message = "Service not available \n\n" . "0. Home \n" . "00. Back ";
+        $message = "Service coming soon \n\n" . "0. Home \n" . "00. Exit ";
         $this->displayText = $message;
         $this->sessionState = "CONTINUE";
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
         $this->nextFunction = "menuSwitcher";
-        $this->previousPage = "startPage";
+        $this->previousPage = "ServiceNotAvailable";
     }
 
     function MerchantsMenu() {
@@ -826,10 +838,12 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->firstMenu();
                 break;
             case '00':
-                $this->firstMenu();
+                $this->displayText = "Thank you for supporting NC Bank ";
+                $this->sessionState = "END";
                 break;
             case '000':
-                $this->firstMenu();
+                $this->displayText = "Thank you for supporting NC Bank ";
+                $this->sessionState = "END";
                 break;
             default:
                 $selectedAccount = null;
@@ -847,7 +861,7 @@ class NCBANKUSSD extends DynamicMenuController {
                         $index = $index + 1;
                         $message .= $index . ") " . $account['ACCOUNTNUMBER'] . "\n";
                     }
-                    $message .= "\n\n0. Home \n" . "00. Back";
+                    $message .= "\n\n0. Home \n" . "00. Exit";
                     $this->displayText = $message;
                     $this->sessionState = "CONTINUE";
                     $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -899,7 +913,7 @@ class NCBANKUSSD extends DynamicMenuController {
                     . "1) MTN Funds Transfer\n"
                     . "2) Airtel Money \n ";
 
-            $message .= "\n\n0. Home \n" . "00. Back";
+            $message .= "\n\n0. Home \n" . "00. Exit";
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -909,7 +923,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
             $this->saveSessionVar("MERCHANTCODE", $merchantcode);
             $message = "Enter Mobile Number";
-            $message .= "\n\n0. Home \n" . "00. Back";
+            $message .= "\n\n0. Home \n" . "00. Exit";
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -1053,7 +1067,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
         if (!is_numeric($input)) {
             $message = "Invalid Input \n Enter Amount";
-            $message .= "\n\n0. Home \n" . "00. Back";
+            $message .= "\n\n0. Home \n" . "00. Exit";
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -1066,10 +1080,12 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->firstMenu();
                     break;
                 case '00':
-                    $this->firstMenu();
+                     $this->displayText = "Thank you for supporting NC Bank ";
+                $this->sessionState = "END";
                     break;
                 case '000':
-                    $this->firstMenu();
+                    $this->displayText = "Thank you for supporting NC Bank ";
+                $this->sessionState = "END";
                     break;
                 default:
 
@@ -1083,7 +1099,7 @@ class NCBANKUSSD extends DynamicMenuController {
     function TopUpAmountMenu($input) {
         if (!is_numeric($input)) {
             $message = "Invalid Number Entered. Please enter number again";
-            $message .= "\n\n0. Home \n" . "00. Back";
+            $message .= "\n\n0. Home \n" . "00. Exit";
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -1092,7 +1108,7 @@ class NCBANKUSSD extends DynamicMenuController {
         } else {
             $this->saveSessionVar("AirtimeRecipient", $input);
             $message = "Enter Top Up Amount";
-            $message .= "\n0. Home \n" . "00. Back";
+            $message .= "\n0. Home \n" . "00. Exit";
 
             $this->displayText = $message;
             $this->sessionState = "CONTINUE";
@@ -1171,7 +1187,7 @@ class NCBANKUSSD extends DynamicMenuController {
         switch ($input) {
             case '1':
                 $message = "Enter Top Up Amount";
-                $message .= "\n0. Home \n" . "00. Back";
+                $message .= "\n0. Home \n" . "00. Exit";
 
                 $this->saveSessionVar("AirtimeRecipient", $this->_msisdn);
                 //get the network id
@@ -1186,7 +1202,7 @@ class NCBANKUSSD extends DynamicMenuController {
             case '2':
 //                $this->TopUpAmountMenu($input);
                 $message = "Enter Other number to send Airtime";
-                $message .= "\n0. Home \n" . "00. Back \n";
+                $message .= "\n0. Home \n" . "00. Exit \n";
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
                 $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -1197,16 +1213,18 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->firstMenu();
                 break;
             case '00':
-                $this->firstMenu();
+                 $this->displayText = "Thank you for supporting NC Bank ";
+                $this->sessionState = "END";
                 break;
             case '000':
-                $this->firstMenu();
+                 $this->displayText = "Thank you for supporting NC Bank ";
+                $this->sessionState = "END";
                 break;
             default:
                 $message = "Invalid Selection\n Top Up"
                         . "\n.1 Own Phone"
                         . "\n.2 Other Phone";
-                $message .= "\n\n0. Home \n" . "00. Back";
+                $message .= "\n\n0. Home \n" . "00. Exit";
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
                 $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -1224,10 +1242,13 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->firstMenu();
                 break;
             case '00':
-                $this->firstMenu();
+                $this->displayText = "Thank you for supporting NC Bank ";
+                $this->sessionState = "END";
+                
                 break;
             case '000':
-                $this->firstMenu();
+                 $this->displayText = "Thank you for supporting NC Bank ";
+                $this->sessionState = "END";
                 break;
             default:
                 $selectedAccount = null;
@@ -1245,7 +1266,7 @@ class NCBANKUSSD extends DynamicMenuController {
                         $index = $index + 1;
                         $message .= $index . ") " . $account['ACCOUNTNUMBER'] . "\n";
                     }
-                    $message .= "\n\n0. Home \n" . "00. Back";
+                    $message .= "\n\n0. Home \n" . "00. Exit";
                     $this->displayText = $message;
                     $this->sessionState = "CONTINUE";
                     $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -1308,7 +1329,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $message = "Account Request"
                         . "\n1) Cheque Book Request"
                         . "\n2) Stop Cheque ";
-                $message .= "\n\n0. Home \n" . "00. Back";
+                $message .= "\n\n0. Home \n" . "00. Exit";
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
                 $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -1327,10 +1348,12 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->firstMenu();
                 break;
             case '00':
-                $this->firstMenu();
+                 $this->displayText = "Thank you for supporting NC Bank ";
+                $this->sessionState = "END";
                 break;
             case '000':
-                $this->firstMenu();
+                 $this->displayText = "Thank you for supporting NC Bank ";
+                $this->sessionState = "END";
                 break;
             default:
 
@@ -1442,10 +1465,12 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->firstMenu();
                 break;
             case '00':
-                $this->firstMenu();
+                 $this->displayText = "Thank you for supporting NC Bank ";
+                $this->sessionState = "END";
                 break;
             case '000':
-                $this->firstMenu();
+                 $this->displayText = "Thank you for supporting NC Bank ";
+                $this->sessionState = "END";
                 break;
             default:
                 //todo: checkbook number
@@ -1506,7 +1531,7 @@ class NCBANKUSSD extends DynamicMenuController {
     }
 
     function PromptPin() {
-        $message .= "Enter Pin to confirm \n0. Home \n" . "00. Back ";
+        $message .= "Enter Pin to confirm \n0. Home \n" . "00. Exit ";
         $this->displayText = $message;
         $this->sessionState = "CONTINUE";
         $this->serviceDescription = $this->SERVICE_DESCRIPTION;
@@ -1551,10 +1576,12 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->firstMenu();
                 break;
             case '00':
-                $this->firstMenu();
+                 $this->displayText = "Thank you for supporting NC Bank ";
+                $this->sessionState = "END";
                 break;
             case '000':
-                $this->firstMenu();
+                 $this->displayText = "Thank you for supporting NC Bank ";
+                $this->sessionState = "END";
                 break;
 
             default:
