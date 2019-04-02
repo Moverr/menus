@@ -834,9 +834,6 @@ class NCBANKUSSD extends DynamicMenuController {
     function BalanceEnquiryMenu($input) {
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
         switch ($input) {
-            case '0':
-                $this->firstMenu();
-                break;
             case '00':
                 $this->displayText = "Thank you for supporting NC Bank ";
                 $this->sessionState = "END";
@@ -845,6 +842,11 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->displayText = "Thank you for supporting NC Bank ";
                 $this->sessionState = "END";
                 break;
+
+            case '0':
+                $this->firstMenu();
+                break;
+
             default:
                 $selectedAccount = null;
                 foreach ($ACCOUNTS as $account) {
