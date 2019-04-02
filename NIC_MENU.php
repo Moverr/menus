@@ -283,11 +283,22 @@ class NCBANKUSSD extends DynamicMenuController {
 
                 break;
 
+            case '00':# code...
+                $this->displayText = "Thank you for supporting NC Bank ";
+                $this->sessionState = "END";
+                break;
+
+            case '0':# code...
+                $this->firstMenu();
+                break;
+
+
+
 //DEFAULT MENU 
             default:
 
                 $message = "\n1).Balance Enquiry "
-                        . "\n2).Mini statement \n" . "\n3).Change PIN";
+                        . "\n2).Mini statement " . "\n3).Change PIN";
 
 
                 $this->displayText = $message;
