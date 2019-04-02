@@ -286,8 +286,9 @@ class NCBANKUSSD extends DynamicMenuController {
 //DEFAULT MENU 
             default:
 
-                $message = "\n1. Balance Enquiry "
-                        . "\2. Mini statement \n" . "\n3. Cheque Requests" . "\n9. Change PIN";
+                $message = "\n1).Balance Enquiry "
+                        . "\n2).Mini statement \n" . "\n3).Change PIN";
+
 
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
@@ -312,7 +313,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 case '2':
 # code...
                     $message = "\n1).Balance Enquiry "
-                            . "\n2).Mini statement \n" . "\n3).Change PIN";
+                            . "\n2).Mini statement " . "\n3).Change PIN";
 
                     $this->displayText = $message;
                     $this->sessionState = "CONTINUE";
@@ -417,11 +418,11 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->displayText = "Thank you for supporting NC Bank ";
                     $this->sessionState = "END";
                     break;
-                
+
                 case '0':# code...
                     $this->firstMenu();
                     break;
-                
+
                 default:
 # code...
                     $this->displayText = "Invalid input. Please enter a menu number ";
