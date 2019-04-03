@@ -559,7 +559,7 @@ class NCBANKUSSD extends DynamicMenuController {
                         $this->previousPage = "GetTransferFromAccount";
                     } else {
 
-                        $this->saveSessionVar("TRANSFERFROMACCOUNT", $selectedAccount['ACCOUNTNUMBER']);
+                        $this->saveSessionVar("TRANSFERFROMACCOUNT", $selectedAccount);
 
                         $message = "Enter Transfer to Account ";
 
