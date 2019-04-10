@@ -8,7 +8,7 @@
  */
 error_reporting(0);
 include 'DynamicMenuController.php';
-include './DTBUGconfigs.php';
+include './NCCONFIG.php';
 
 class NCBANKUSSD extends DynamicMenuController {
 

@@ -12,7 +12,7 @@
  *
  * @author polly
  */
-class NCCONFIG {
+class DTBUGconfigs {
 
 //    const PIN_SERVICE_ID = 206;
     const PIN_SERVICE_ID = 6;
