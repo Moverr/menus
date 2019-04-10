@@ -7,8 +7,7 @@
  *
  */
 error_reporting(0);
-include 'DynamicMenuController.php';
-include './NCCONFIG.php';
+include 'DynamicMenuController.php'; 
 
 class NCBANKUSSD extends DynamicMenuController {
 
@@ -52,6 +51,74 @@ class NCBANKUSSD extends DynamicMenuController {
     private $uraServiceID = '30';
     private $uraServiceCode = 'URA';
     private $nwscAreas = "Kampala,Jinja,Entebbe,Lugazi,Iganga,Kawuku,Kajjansi,Mukono,Others";
+
+
+
+
+//    private $ PIN_SERVICE_ID = 206;
+    private $PIN_SERVICE_ID = 6;
+    private $QUESTIONNUMBER = 3;
+    private $DEFAULT_PIN = '1234';
+    private $ACCOUNT_DETAIL_VAL_SERVICE_ID = 58;
+    private $LOG_SUCCESS_CODE = "369";
+    //Define the log levels
+    private $LOG_LEVEL_INFO = 4;
+    private $LOG_LEVEL_ERROR = 1;
+    private $PIN_EXPIRE_TIME = 86400;
+    private $BANK_SIGNATURE = "DTB Uganda";
+    private $PANAMA_REQ_PARAM_NUM = "4";
+    private $HUB_CLIENT_ID = 186;
+    private $UG_CODE = 256;
+    //PIN STATUSES
+    private $ONE_TIME_PIN_STATUS = 2;
+    private $ONE_TIME_PIN_EXPIRED = 6;
+    private $LOCKED_ACTIVE_PIN = 3;
+    private $LOCKED_ONETIME_PIN = 4;
+
+    //PayTV configs
+    private $DEFAULT_PACKAGE_NAME = " ";
+    private $GOTV_PACKAGES = "GOtv Lite=9500, Mobile Bouquet=11250, Lite Quarterly=22000, GOtv Plus=26000, Max Bouquet=49000, Lite 12mths=60000";
+    private $DSTV_PACKAGES = "Access=33000, Family=60000, French11=66375, Asia=128000, Compact=115000, Compact Plus=180000, Premium=280000";
+    private $AZAM_PACKAGES = "Azam 1wk Pure=3500, Azam 2wks Pure=6500, Azam Pure=10000, Azam Plus=25000, Azam Play=37000";
+    private $STARTIMES_PACKAGES = "Basic=18000, Classic=33000, Unique=60000";
+    private $ZUKU_PACKAGES = "Smart=10500, Classic=23500, Premium=33500";
+    private $KWESE_PACKAGES = "3 days=17000, 7 days=32000, 30 days=106000";
+
+    private $DSTV_SERVICE_ID = 33;
+    private $DSTV_SERVICE_CODE = "DSTVUG";
+    private $DSTVUG_CODE = "DSTV";
+    private $DSTV_WALLET_MERCHANT_CODE = "DSTV_UGANDA";
+
+    private $STARTIMES_SERVICE_ID = 1298;
+    private $STARTIMES_SERVICE_CODE = "STARTIMESUG";
+    private $STARTIMES_CODE = "STARTIMES";
+    private $STARTIMES_WALLET_MERCHANT_CODE = "STARTIMESUG";
+
+    private $ZUKU_SERVICE_ID = 35;
+    private $ZUKU_SERVICE_CODE = "ZUKUUG";
+    private $ZUKU_CODE = "ZUKU";
+    private $ZUKU_WALLET_MERCHANT_CODE = "ZUKUTV";
+
+
+    private $GOTV_SERVICE_ID = 34;
+    private $GOTV_SERVICE_CODE = "GOTV";
+    private $GOTV_CODE = "GOTV";
+    private $GOTV_WALLET_MERCHANT_CODE = "GotvUG";
+
+    private $AZAM_SERVICE_ID = 790;
+    private $AZAM_SERVICE_CODE = "AZAMTV";
+    private $AZAM_CODE = "AZAMTV";
+    private $AZAM_WALLET_MERCHANT_CODE = "AZAMTV";
+
+    private $KWESE_SERVICE_ID = 834;
+    private $KWESE_SERVICE_CODE = "KWESETV";
+    private $KWESE_CODE = "KWESE";
+    private $KWESE_WALLET_MERCHANT_CODE = "KWESEUG";
+
+    private $BILLPAY_SERVICE = "BILL_PAY";
+ 
+    private $MAX_NARRATION_LENGTH = 50;
+
 
     function startPage() {
         $this->firstMenu();
@@ -1621,7 +1688,7 @@ class NCBANKUSSD extends DynamicMenuController {
             case 1:
 //                $this->saveSessionVar("CHECKBOOKNUMBER", $input);
 
-                $this->saveSessionVar("menuOptionSelected", DTBUGconfigs::GOTV_CODE);
+                $this->saveSessionVar("menuOptionSelected", $this->GOTV_CODE);
 //                $this->processMultiChoiceTV($input);
 
                 $this->displayText = "Enter Smart Card /IUC Number";
@@ -1636,7 +1703,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
 //                processDSTV
 
-                $this->saveSessionVar("menuOptionSelected", DTBUGconfigs::DSTV_SERVICE_CODE);
+                $this->saveSessionVar("menuOptionSelected", $this->DSTV_SERVICE_CODE);
 //                $this->processMultiChoiceTV($input);
 
                 $this->displayText = "Enter Smart Card /IUC Number";
@@ -1648,7 +1715,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 break;
 //PROCESS STAR TIMES
             case 3:
-                $this->saveSessionVar("menuOptionSelected", DTBUGconfigs::DSTV_SERVICE_CODE);
+                $this->saveSessionVar("menuOptionSelected", $this->DSTV_SERVICE_CODE);
                 $this->displayText = "Enter Smart Card /IUC Number";
                 $this->sessionState = "CONTINUE";
                 $this->nextFunction = "processSTARTIMESTV";
@@ -1658,7 +1725,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
             //PROCESS AZAM TV
             case 4:
-                $this->saveSessionVar("menuOptionSelected", DTBUGconfigs::DSTV_SERVICE_CODE);
+                $this->saveSessionVar("menuOptionSelected", $this->DSTV_SERVICE_CODE);
                 $this->displayText = "Enter Smart Card /IUC Number";
                 $this->sessionState = "CONTINUE";
                 $this->nextFunction = "processAzamTV";
@@ -1667,7 +1734,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 break;
             //PROCESS ZUKU TV
             case 5:
-                $this->saveSessionVar("menuOptionSelected", DTBUGconfigs::DSTV_SERVICE_CODE);
+                $this->saveSessionVar("menuOptionSelected", $this->DSTV_SERVICE_CODE);
                 $this->displayText = "Enter Smart Card /IUC Number";
                 $this->sessionState = "CONTINUE";
                 $this->nextFunction = "processZukuTV";
@@ -1678,7 +1745,7 @@ class NCBANKUSSD extends DynamicMenuController {
 // PROCESS KWESE
             case 6:
 
-                $this->saveSessionVar("menuOptionSelected", DTBUGconfigs::DSTV_SERVICE_CODE);
+                $this->saveSessionVar("menuOptionSelected", $this->DSTV_SERVICE_CODE);
                 $this->displayText = "Enter Smart Card /IUC Number";
                 $this->sessionState = "CONTINUE";
                 $this->nextFunction = "processKweseTV";
@@ -1712,8 +1779,8 @@ class NCBANKUSSD extends DynamicMenuController {
 
             $accountNumber = $input;
 
-            $serviceID = $selectedMenuService == DTBUGconfigs::KWESE_SERVICE_ID ? DTBUGconfigs::KWESE_SERVICE_ID : DTBUGconfigs::KWESE_SERVICE_ID;
-            $serviceCode = $selectedMenuService == DTBUGconfigs::KWESE_SERVICE_CODE ? DTBUGconfigs::KWESE_SERVICE_CODE : DTBUGconfigs::KWESE_SERVICE_CODE;
+            $serviceID = $selectedMenuService == $this->KWESE_SERVICE_ID ? $this->KWESE_SERVICE_ID : $this->KWESE_SERVICE_ID;
+            $serviceCode = $selectedMenuService == $this->KWESE_SERVICE_CODE ? $this->KWESE_SERVICE_CODE : $this->KWESE_SERVICE_CODE;
 
             $accountDetails = $this->validatePayTVAccount($selectedMenuService, $serviceID, $serviceCode, $accountNumber);
 
@@ -1726,7 +1793,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
                 $this->saveSessionVar("multichoiceAccount", $input);
                 $packageText = "Select package \n";
-                $gotvPackage = explode(",", $selectedMenuService == DTBUGconfigs::KWESE_SERVICE_CODE ? DTBUGconfigs::KWESE_PACKAGES : DTBUGconfigs::KWESE_PACKAGES);
+                $gotvPackage = explode(",", $selectedMenuService == $this->KWESE_SERVICE_CODE ? $this->KWESE_PACKAGES : $this->KWESE_PACKAGES);
 
                 for ($i = 0; $i < sizeof($gotvPackage); $i++) {
                     $packageText .= $i + 1 . ". " . $this->getPackageName($gotvPackage[$i]) . " - " . $this->getPackagePrice($gotvPackage[$i]) . "\n";
@@ -1739,7 +1806,7 @@ class NCBANKUSSD extends DynamicMenuController {
             }
         } elseif ($this->previousPage == "selectPackage") {
 
-            $gotvPackage = explode(",", $selectedMenuService == DTBUGconfigs::KWESE_SERVICE_CODE ? DTBUGconfigs::KWESE_PACKAGES : DTBUGconfigs::KWESE_PACKAGES);
+            $gotvPackage = explode(",", $selectedMenuService == $this->KWESE_SERVICE_CODE ? $this->KWESE_PACKAGES : $this->KWESE_PACKAGES);
             $input = (int) $input;
 
 #check for array index out of bounds
@@ -1756,8 +1823,8 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->saveSessionVar("selectedPackagePrice", $selectedPackagePrice);
                 $accountNumber = $this->getSessionVar("multichoiceAccount");
 
-                $serviceID = $selectedMenuService == DTBUGconfigs::KWESE_SERVICE_CODE ? DTBUGconfigs::KWESE_SERVICE_ID : DTBUGconfigs::KWESE_SERVICE_ID;
-                $serviceCode = $selectedMenuService == DTBUGconfigs::KWESE_SERVICE_CODE ? DTBUGconfigs::KWESE_SERVICE_CODE : DTBUGconfigs::KWESE_SERVICE_CODE;
+                $serviceID = $selectedMenuService == $this->KWESE_SERVICE_CODE ? $this->KWESE_SERVICE_ID : $this->KWESE_SERVICE_ID;
+                $serviceCode = $selectedMenuService == $this->KWESE_SERVICE_CODE ? $this->KWESE_SERVICE_CODE : $this->KWESE_SERVICE_CODE;
 
                 $accountDetails = $this->getSessionVar('PAYTVACCOUNT');
 
@@ -1793,7 +1860,7 @@ class NCBANKUSSD extends DynamicMenuController {
             switch ($input) {
                 case 1:
 
-                    $walletMerchantCode = $selectedMenuService == DTBUGconfigs::KWESE_SERVICE_CODE ? DTBUGconfigs::KWESE_SERVICE_CODE : DTBUGconfigs::KWESE_SERVICE_CODE;
+                    $walletMerchantCode = $selectedMenuService == $this->KWESE_SERVICE_CODE ? $this->KWESE_SERVICE_CODE : $this->KWESE_SERVICE_CODE;
 
                     $this->saveSessionvar('serviceID', 'BILL_PAY');
 
@@ -1853,8 +1920,8 @@ class NCBANKUSSD extends DynamicMenuController {
 
             $accountNumber = $input;
 
-            $serviceID = $selectedMenuService == DTBUGconfigs::ZUKU_SERVICE_ID ? DTBUGconfigs::ZUKU_SERVICE_ID : DTBUGconfigs::ZUKU_SERVICE_ID;
-            $serviceCode = $selectedMenuService == DTBUGconfigs::ZUKU_SERVICE_CODE ? DTBUGconfigs::ZUKU_SERVICE_CODE : DTBUGconfigs::ZUKU_SERVICE_CODE;
+            $serviceID = $selectedMenuService == $this->ZUKU_SERVICE_ID ? $this->ZUKU_SERVICE_ID : $this->ZUKU_SERVICE_ID;
+            $serviceCode = $selectedMenuService == $this->ZUKU_SERVICE_CODE ? $this->ZUKU_SERVICE_CODE : $this->ZUKU_SERVICE_CODE;
 
             $accountDetails = $this->validatePayTVAccount($selectedMenuService, $serviceID, $serviceCode, $accountNumber);
 
@@ -1867,7 +1934,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
                 $this->saveSessionVar("multichoiceAccount", $input);
                 $packageText = "Select package \n";
-                $gotvPackage = explode(",", $selectedMenuService == DTBUGconfigs::ZUKU_SERVICE_CODE ? DTBUGconfigs::ZUKU_PACKAGES : DTBUGconfigs::ZUKU_PACKAGES);
+                $gotvPackage = explode(",", $selectedMenuService == $this->ZUKU_SERVICE_CODE ? $this->ZUKU_PACKAGES : $this->ZUKU_PACKAGES);
 
                 for ($i = 0; $i < sizeof($gotvPackage); $i++) {
                     $packageText .= $i + 1 . ". " . $this->getPackageName($gotvPackage[$i]) . " - " . $this->getPackagePrice($gotvPackage[$i]) . "\n";
@@ -1880,7 +1947,7 @@ class NCBANKUSSD extends DynamicMenuController {
             }
         } elseif ($this->previousPage == "selectPackage") {
 
-            $gotvPackage = explode(",", $selectedMenuService == DTBUGconfigs::ZUKU_SERVICE_CODE ? DTBUGconfigs::ZUKU_PACKAGES : DTBUGconfigs::ZUKU_PACKAGES);
+            $gotvPackage = explode(",", $selectedMenuService == $this->ZUKU_SERVICE_CODE ? $this->ZUKU_PACKAGES : $this->ZUKU_PACKAGES);
             $input = (int) $input;
 
 #check for array index out of bounds
@@ -1897,8 +1964,8 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->saveSessionVar("selectedPackagePrice", $selectedPackagePrice);
                 $accountNumber = $this->getSessionVar("multichoiceAccount");
 
-                $serviceID = $selectedMenuService == DTBUGconfigs::ZUKU_SERVICE_CODE ? DTBUGconfigs::ZUKU_SERVICE_ID : DTBUGconfigs::ZUKU_SERVICE_ID;
-                $serviceCode = $selectedMenuService == DTBUGconfigs::ZUKU_SERVICE_CODE ? DTBUGconfigs::ZUKU_SERVICE_CODE : DTBUGconfigs::ZUKU_SERVICE_CODE;
+                $serviceID = $selectedMenuService == $this->ZUKU_SERVICE_CODE ? $this->ZUKU_SERVICE_ID : $this->ZUKU_SERVICE_ID;
+                $serviceCode = $selectedMenuService == $this->ZUKU_SERVICE_CODE ? $this->ZUKU_SERVICE_CODE : $this->ZUKU_SERVICE_CODE;
 
                 $accountDetails = $this->getSessionVar('PAYTVACCOUNT');
 
@@ -1934,7 +2001,7 @@ class NCBANKUSSD extends DynamicMenuController {
             switch ($input) {
                 case 1:
 
-                    $walletMerchantCode = $selectedMenuService == DTBUGconfigs::ZUKU_SERVICE_CODE ? DTBUGconfigs::ZUKU_WALLET_MERCHANT_CODE : DTBUGconfigs::ZUKU_WALLET_MERCHANT_CODE;
+                    $walletMerchantCode = $selectedMenuService == $this->ZUKU_SERVICE_CODE ? $this->ZUKU_WALLET_MERCHANT_CODE : $this->ZUKU_WALLET_MERCHANT_CODE;
 
                     $this->saveSessionvar('serviceID', 'BILL_PAY');
 
@@ -1994,8 +2061,8 @@ class NCBANKUSSD extends DynamicMenuController {
 
             $accountNumber = $input;
 
-            $serviceID = $selectedMenuService == DTBUGconfigs::AZAM_SERVICE_ID ? DTBUGconfigs::AZAM_SERVICE_ID : DTBUGconfigs::AZAM_SERVICE_ID;
-            $serviceCode = $selectedMenuService == DTBUGconfigs::AZAM_SERVICE_CODE ? DTBUGconfigs::AZAM_SERVICE_CODE : DTBUGconfigs::AZAM_SERVICE_CODE;
+            $serviceID = $selectedMenuService == $this->AZAM_SERVICE_ID ? $this->AZAM_SERVICE_ID : $this->AZAM_SERVICE_ID;
+            $serviceCode = $selectedMenuService == $this->AZAM_SERVICE_CODE ? $this->AZAM_SERVICE_CODE : $this->AZAM_SERVICE_CODE;
 
             $accountDetails = $this->validatePayTVAccount($selectedMenuService, $serviceID, $serviceCode, $accountNumber);
 
@@ -2008,7 +2075,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
                 $this->saveSessionVar("multichoiceAccount", $input);
                 $packageText = "Select package \n";
-                $gotvPackage = explode(",", $selectedMenuService == DTBUGconfigs::AZAM_SERVICE_CODE ? DTBUGconfigs::AZAM_PACKAGES : DTBUGconfigs::AZAM_PACKAGES);
+                $gotvPackage = explode(",", $selectedMenuService == $this->AZAM_SERVICE_CODE ? $this->AZAM_PACKAGES : $this->AZAM_PACKAGES);
 
                 for ($i = 0; $i < sizeof($gotvPackage); $i++) {
                     $packageText .= $i + 1 . ". " . $this->getPackageName($gotvPackage[$i]) . " - " . $this->getPackagePrice($gotvPackage[$i]) . "\n";
@@ -2021,7 +2088,7 @@ class NCBANKUSSD extends DynamicMenuController {
             }
         } elseif ($this->previousPage == "selectPackage") {
 
-            $gotvPackage = explode(",", $selectedMenuService == DTBUGconfigs::AZAM_SERVICE_CODE ? DTBUGconfigs::AZAM_PACKAGES : DTBUGconfigs::AZAM_PACKAGES);
+            $gotvPackage = explode(",", $selectedMenuService == $this->AZAM_SERVICE_CODE ? $this->AZAM_PACKAGES : $this->AZAM_PACKAGES);
             $input = (int) $input;
 
 #check for array index out of bounds
@@ -2038,8 +2105,8 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->saveSessionVar("selectedPackagePrice", $selectedPackagePrice);
                 $accountNumber = $this->getSessionVar("multichoiceAccount");
 
-                $serviceID = $selectedMenuService == DTBUGconfigs::AZAM_SERVICE_CODE ? DTBUGconfigs::AZAM_SERVICE_ID : DTBUGconfigs::AZAM_SERVICE_ID;
-                $serviceCode = $selectedMenuService == DTBUGconfigs::AZAM_SERVICE_CODE ? DTBUGconfigs::AZAM_SERVICE_CODE : DTBUGconfigs::AZAM_SERVICE_CODE;
+                $serviceID = $selectedMenuService == $this->AZAM_SERVICE_CODE ? $this->AZAM_SERVICE_ID : $this->AZAM_SERVICE_ID;
+                $serviceCode = $selectedMenuService == $this->AZAM_SERVICE_CODE ? $this->AZAM_SERVICE_CODE : $this->AZAM_SERVICE_CODE;
 
                 $accountDetails = $this->getSessionVar('PAYTVACCOUNT');
 
@@ -2075,7 +2142,7 @@ class NCBANKUSSD extends DynamicMenuController {
             switch ($input) {
                 case 1:
 
-                    $walletMerchantCode = $selectedMenuService == DTBUGconfigs::AZAM_SERVICE_CODE ? DTBUGconfigs::AZAM_WALLET_MERCHANT_CODE : DTBUGconfigs::AZAM_WALLET_MERCHANT_CODE;
+                    $walletMerchantCode = $selectedMenuService == $this->AZAM_SERVICE_CODE ? $this->AZAM_WALLET_MERCHANT_CODE : $this->AZAM_WALLET_MERCHANT_CODE;
 
                     $this->saveSessionvar('serviceID', 'BILL_PAY');
 
@@ -2135,8 +2202,8 @@ class NCBANKUSSD extends DynamicMenuController {
 
             $accountNumber = $input;
 
-            $serviceID = $selectedMenuService == DTBUGconfigs::STARTIMES_SERVICE_ID ? DTBUGconfigs::STARTIMES_SERVICE_ID : DTBUGconfigs::STARTIMES_SERVICE_ID;
-            $serviceCode = $selectedMenuService == DTBUGconfigs::STARTIMES_SERVICE_CODE ? DTBUGconfigs::STARTIMES_SERVICE_CODE : DTBUGconfigs::STARTIMES_SERVICE_CODE;
+            $serviceID = $selectedMenuService == $this->STARTIMES_SERVICE_ID ? $this->STARTIMES_SERVICE_ID : $this->STARTIMES_SERVICE_ID;
+            $serviceCode = $selectedMenuService == $this->STARTIMES_SERVICE_CODE ? $this->STARTIMES_SERVICE_CODE : $this->STARTIMES_SERVICE_CODE;
 
             $accountDetails = $this->validatePayTVAccount($selectedMenuService, $serviceID, $serviceCode, $accountNumber);
 
@@ -2149,7 +2216,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
                 $this->saveSessionVar("multichoiceAccount", $input);
                 $packageText = "Select package \n";
-                $gotvPackage = explode(",", $selectedMenuService == DTBUGconfigs::STARTIMES_SERVICE_CODE ? DTBUGconfigs::STARTIMES_PACKAGES : DTBUGconfigs::STARTIMES_PACKAGES);
+                $gotvPackage = explode(",", $selectedMenuService == $this->STARTIMES_SERVICE_CODE ? $this->STARTIMES_PACKAGES : $this->STARTIMES_PACKAGES);
 
                 for ($i = 0; $i < sizeof($gotvPackage); $i++) {
                     $packageText .= $i + 1 . ". " . $this->getPackageName($gotvPackage[$i]) . " - " . $this->getPackagePrice($gotvPackage[$i]) . "\n";
@@ -2162,7 +2229,7 @@ class NCBANKUSSD extends DynamicMenuController {
             }
         } elseif ($this->previousPage == "selectPackage") {
 
-            $gotvPackage = explode(",", $selectedMenuService == DTBUGconfigs::STARTIMES_SERVICE_CODE ? DTBUGconfigs::STARTIMES_PACKAGES : DTBUGconfigs::STARTIMES_PACKAGES);
+            $gotvPackage = explode(",", $selectedMenuService == $this->STARTIMES_SERVICE_CODE ? $this->STARTIMES_PACKAGES : $this->STARTIMES_PACKAGES);
             $input = (int) $input;
 
 #check for array index out of bounds
@@ -2179,8 +2246,8 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->saveSessionVar("selectedPackagePrice", $selectedPackagePrice);
                 $accountNumber = $this->getSessionVar("multichoiceAccount");
 
-                $serviceID = $selectedMenuService == DTBUGconfigs::STARTIMES_SERVICE_CODE ? DTBUGconfigs::STARTIMES_SERVICE_ID : DTBUGconfigs::STARTIMES_SERVICE_ID;
-                $serviceCode = $selectedMenuService == DTBUGconfigs::STARTIMES_SERVICE_CODE ? DTBUGconfigs::STARTIMES_SERVICE_CODE : DTBUGconfigs::STARTIMES_SERVICE_CODE;
+                $serviceID = $selectedMenuService == $this->STARTIMES_SERVICE_CODE ? $this->STARTIMES_SERVICE_ID : $this->STARTIMES_SERVICE_ID;
+                $serviceCode = $selectedMenuService == $this->STARTIMES_SERVICE_CODE ? $this->STARTIMES_SERVICE_CODE : $this->STARTIMES_SERVICE_CODE;
 
                 $accountDetails = $this->getSessionVar('PAYTVACCOUNT');
 
@@ -2216,7 +2283,7 @@ class NCBANKUSSD extends DynamicMenuController {
             switch ($input) {
                 case 1:
 
-                    $walletMerchantCode = $selectedMenuService == DTBUGconfigs::DSTV_SERVICE_CODE ? DTBUGconfigs::DSTV_WALLET_MERCHANT_CODE : DTBUGconfigs::DSTV_WALLET_MERCHANT_CODE;
+                    $walletMerchantCode = $selectedMenuService == $this->DSTV_SERVICE_CODE ? $this->DSTV_WALLET_MERCHANT_CODE : $this->DSTV_WALLET_MERCHANT_CODE;
 
                     $this->saveSessionvar('serviceID', 'BILL_PAY');
 
@@ -2276,8 +2343,8 @@ class NCBANKUSSD extends DynamicMenuController {
 
             $accountNumber = $input;
 
-            $serviceID = $selectedMenuService == DTBUGconfigs::DSTV_SERVICE_CODE ? DTBUGconfigs::DSTV_SERVICE_ID : DTBUGconfigs::DSTV_SERVICE_ID;
-            $serviceCode = $selectedMenuService == DTBUGconfigs::DSTV_SERVICE_CODE ? DTBUGconfigs::DSTV_SERVICE_CODE : DTBUGconfigs::DSTV_SERVICE_CODE;
+            $serviceID = $selectedMenuService == $this->DSTV_SERVICE_CODE ? $this->DSTV_SERVICE_ID : $this->DSTV_SERVICE_ID;
+            $serviceCode = $selectedMenuService == $this->DSTV_SERVICE_CODE ? $this->DSTV_SERVICE_CODE : $this->DSTV_SERVICE_CODE;
 
             $accountDetails = $this->validatePayTVAccount($selectedMenuService, $serviceID, $serviceCode, $accountNumber);
 
@@ -2290,7 +2357,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
                 $this->saveSessionVar("multichoiceAccount", $input);
                 $packageText = "Select package \n";
-                $gotvPackage = explode(",", $selectedMenuService == DTBUGconfigs::DSTV_SERVICE_CODE ? DTBUGconfigs::GOTV_PACKAGES : DTBUGconfigs::DSTV_PACKAGES);
+                $gotvPackage = explode(",", $selectedMenuService == $this->DSTV_SERVICE_CODE ? $this->GOTV_PACKAGES : $this->DSTV_PACKAGES);
 
                 for ($i = 0; $i < sizeof($gotvPackage); $i++) {
                     $packageText .= $i + 1 . ". " . $this->getPackageName($gotvPackage[$i]) . " - " . $this->getPackagePrice($gotvPackage[$i]) . "\n";
@@ -2303,7 +2370,7 @@ class NCBANKUSSD extends DynamicMenuController {
             }
         } elseif ($this->previousPage == "selectPackage") {
 
-            $gotvPackage = explode(",", $selectedMenuService == DTBUGconfigs::DSTV_SERVICE_CODE ? DTBUGconfigs::DSTV_PACKAGES : DTBUGconfigs::DSTV_PACKAGES);
+            $gotvPackage = explode(",", $selectedMenuService == $this->DSTV_SERVICE_CODE ? $this->DSTV_PACKAGES : $this->DSTV_PACKAGES);
             $input = (int) $input;
 
 #check for array index out of bounds
@@ -2320,8 +2387,8 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->saveSessionVar("selectedPackagePrice", $selectedPackagePrice);
                 $accountNumber = $this->getSessionVar("multichoiceAccount");
 
-                $serviceID = $selectedMenuService == DTBUGconfigs::DSTV_SERVICE_CODE ? DTBUGconfigs::DSTV_SERVICE_ID : DTBUGconfigs::DSTV_SERVICE_ID;
-                $serviceCode = $selectedMenuService == DTBUGconfigs::DSTV_SERVICE_CODE ? DTBUGconfigs::DSTV_SERVICE_CODE : DTBUGconfigs::DSTV_SERVICE_CODE;
+                $serviceID = $selectedMenuService == $this->DSTV_SERVICE_CODE ? $this->DSTV_SERVICE_ID : $this->DSTV_SERVICE_ID;
+                $serviceCode = $selectedMenuService == $this->DSTV_SERVICE_CODE ? $this->DSTV_SERVICE_CODE : $this->DSTV_SERVICE_CODE;
 
                 $accountDetails = $this->getSessionVar('PAYTVACCOUNT');
 
@@ -2357,7 +2424,7 @@ class NCBANKUSSD extends DynamicMenuController {
             switch ($input) {
                 case 1:
 
-                    $walletMerchantCode = $selectedMenuService == DTBUGconfigs::DSTV_SERVICE_CODE ? DTBUGconfigs::DSTV_WALLET_MERCHANT_CODE : DTBUGconfigs::DSTV_WALLET_MERCHANT_CODE;
+                    $walletMerchantCode = $selectedMenuService == $this->DSTV_SERVICE_CODE ? $this->DSTV_WALLET_MERCHANT_CODE : $this->DSTV_WALLET_MERCHANT_CODE;
 
                     $this->saveSessionvar('serviceID', 'BILL_PAY');
 
@@ -2417,8 +2484,8 @@ class NCBANKUSSD extends DynamicMenuController {
 
             $accountNumber = $input;
 
-            $serviceID = $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_SERVICE_ID : DTBUGconfigs::DSTV_SERVICE_ID;
-            $serviceCode = $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_SERVICE_CODE : DTBUGconfigs::DSTV_SERVICE_CODE;
+            $serviceID = $selectedMenuService == $this->GOTV_CODE ? $this->GOTV_SERVICE_ID : $this->DSTV_SERVICE_ID;
+            $serviceCode = $selectedMenuService == $this->GOTV_CODE ? $this->GOTV_SERVICE_CODE : $this->DSTV_SERVICE_CODE;
 
             $accountDetails = $this->validatePayTVAccount($selectedMenuService, $serviceID, $serviceCode, $accountNumber);
 
@@ -2431,7 +2498,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
                 $this->saveSessionVar("multichoiceAccount", $input);
                 $packageText = "Select package \n";
-                $gotvPackage = explode(",", $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_PACKAGES : DTBUGconfigs::DSTV_PACKAGES);
+                $gotvPackage = explode(",", $selectedMenuService == $this->GOTV_CODE ? $this->GOTV_PACKAGES : $this->DSTV_PACKAGES);
 
                 for ($i = 0; $i < sizeof($gotvPackage); $i++) {
                     $packageText .= $i + 1 . ". " . $this->getPackageName($gotvPackage[$i]) . " - " . $this->getPackagePrice($gotvPackage[$i]) . "\n";
@@ -2444,7 +2511,7 @@ class NCBANKUSSD extends DynamicMenuController {
             }
         } elseif ($this->previousPage == "selectPackage") {
 
-            $gotvPackage = explode(",", $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_PACKAGES : DTBUGconfigs::DSTV_PACKAGES);
+            $gotvPackage = explode(",", $selectedMenuService == $this->GOTV_CODE ? $this->GOTV_PACKAGES : $this->DSTV_PACKAGES);
             $input = (int) $input;
 
 #check for array index out of bounds
@@ -2461,8 +2528,8 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->saveSessionVar("selectedPackagePrice", $selectedPackagePrice);
                 $accountNumber = $this->getSessionVar("multichoiceAccount");
 
-                $serviceID = $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_SERVICE_ID : DTBUGconfigs::DSTV_SERVICE_ID;
-                $serviceCode = $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_SERVICE_CODE : DTBUGconfigs::DSTV_SERVICE_CODE;
+                $serviceID = $selectedMenuService == $this->GOTV_CODE ? $this->GOTV_SERVICE_ID : $this->DSTV_SERVICE_ID;
+                $serviceCode = $selectedMenuService == $this->GOTV_CODE ? $this->GOTV_SERVICE_CODE : $this->DSTV_SERVICE_CODE;
 
                 $accountDetails = $this->getSessionVar('PAYTVACCOUNT');
 
@@ -2498,7 +2565,7 @@ class NCBANKUSSD extends DynamicMenuController {
             switch ($input) {
                 case 1:
 
-                    $walletMerchantCode = $selectedMenuService == DTBUGconfigs::GOTV_CODE ? DTBUGconfigs::GOTV_WALLET_MERCHANT_CODE : DTBUGconfigs::DSTV_WALLET_MERCHANT_CODE;
+                    $walletMerchantCode = $selectedMenuService == $this->GOTV_CODE ? $this->GOTV_WALLET_MERCHANT_CODE : $this->DSTV_WALLET_MERCHANT_CODE;
 
                     $this->saveSessionvar('serviceID', 'BILL_PAY');
 
@@ -2543,7 +2610,7 @@ class NCBANKUSSD extends DynamicMenuController {
     }
 
     function getPackageName($fullPackageCombined) {
-        $packageName = DTBUGconfigs::DEFAULT_PACKAGE_NAME;
+        $packageName = $this->DEFAULT_PACKAGE_NAME;
         $array = explode("=", $fullPackageCombined);
         if (isset($array[1])) {
             $packageName = $array[0];
@@ -3461,7 +3528,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 break;
 
             default :
-                $this->displayText = "Thank you for banking with" . DTBUGconfigs::BANK_SIGNATURE;
+                $this->displayText = "Thank you for banking with" . $this->BANK_SIGNATURE;
                 $this->sessionState = "END";
                 break;
         }
@@ -3997,7 +4064,7 @@ class NCBANKUSSD extends DynamicMenuController {
         return $providers[$networkID];
     }
 
-    function logMessage($message, $result = null, $logLevel = DTBUGconfigs::LOG_LEVEL_INFO) {
+    function logMessage($message, $result = null, $logLevel = $this->LOG_LEVEL_INFO) {
         if ($result != null) {
             CoreUtils::flog4php($logLevel, $this->_msisdn, array("MESSAGE" => $message . print_r($result, true)), __FILE__, __FUNCTION__, __LINE__, "ussdinfo", USSD_LOG_PROPERTIES);
         } else {
