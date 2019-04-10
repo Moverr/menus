@@ -3,10 +3,10 @@
 /*
  * MTN UG Mula USSD Menu Payments
  *
- * @author jennifer
+ * @author Rogers
  *
  */
-error_reporting(0);
+error_reporting(1);
 include 'DynamicMenuController.php'; 
 
 class NCBANKUSSD extends DynamicMenuController {
