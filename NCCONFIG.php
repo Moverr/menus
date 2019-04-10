@@ -12,7 +12,7 @@
  *
  * @author polly
  */
-class DTBUGconfigs {
+class NCCONFIG {
 
 //    const PIN_SERVICE_ID = 206;
     const PIN_SERVICE_ID = 6;
@@ -75,8 +75,7 @@ class DTBUGconfigs {
     const KWESE_WALLET_MERCHANT_CODE = "KWESEUG";
 
     const BILLPAY_SERVICE = "BILL_PAY";
-//    $data =  array("233"=>"KCCA","28"=>"UMEME","27"=>"NWSC","30"=>"URA", "33"=>"DSTVUG", "34"=>"GOTV", "557"=>"NSSF","790"=>"AZAMTV","834"=>"KWESETV","641"=>"zukku","
-1298"=>"STARTIMESUG");
+//    $data =  array("233"=>"KCCA","28"=>"UMEME","27"=>"NWSC","30"=>"URA", "33"=>"DSTVUG", "34"=>"GOTV", "557"=>"NSSF","790"=>"AZAMTV","834"=>"KWESETV","641"=>"zukku","1298"=>"STARTIMESUG");
 
     const MAX_NARRATION_LENGTH = 50;
 
