@@ -455,17 +455,16 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
                 break;
+                 case '00':
+                $this->displayText = "Thank you for supporting NC Bank ";
+                $this->sessionState = "END";
+                break;
+            
             case '0':
                 $this->firstMenu();
                 break;
-            case '00':
-                $this->displayText = "Thank you for supporting NC Bank ";
-                $this->sessionState = "END";
-                break;
-            case '000':
-                $this->displayText = "Thank you for supporting NC Bank ";
-                $this->sessionState = "END";
-                break;
+           
+            
             default:
                 $message = "1)Internal Funds Transfer ";
 
@@ -502,17 +501,16 @@ class NCBANKUSSD extends DynamicMenuController {
 
             switch ($input) {
 
+                 case '00':
+                    $this->displayText = "Thank you for supporting NC Bank ";
+                    $this->sessionState = "END";
+                    break;
+                
                 case '0':
                     $this->firstMenu();
                     break;
-                case '00':
-                    $this->displayText = "Thank you for supporting NC Bank ";
-                    $this->sessionState = "END";
-                    break;
-                case '000':
-                    $this->displayText = "Thank you for supporting NC Bank ";
-                    $this->sessionState = "END";
-                    break;
+               
+                 
                 default:
 
                     $selectedAccount = null;
@@ -571,17 +569,16 @@ class NCBANKUSSD extends DynamicMenuController {
 
             switch ($input) {
 
-                case '0':
-                    $this->firstMenu();
-                    break;
                 case '00':
                     $this->displayText = "Thank you for supporting NC Bank ";
                     $this->sessionState = "END";
                     break;
-                case '000':
-                    $this->displayText = "Thank you for supporting NC Bank ";
-                    $this->sessionState = "END";
+                
+                case '0':
+                    $this->firstMenu();
                     break;
+                
+                
                 default:
                     $this->saveSessionVar("TRANSFERTOACCOUNT", $input);
 
@@ -613,17 +610,15 @@ class NCBANKUSSD extends DynamicMenuController {
 
             switch ($input) {
 
+                 case '00':
+                    $this->displayText = "Thank you for supporting NC Bank ";
+                    $this->sessionState = "END";
+                    break;
+                
                 case '0':
                     $this->firstMenu();
                     break;
-                case '00':
-                    $this->displayText = "Thank you for supporting NC Bank ";
-                    $this->sessionState = "END";
-                    break;
-                case '000':
-                    $this->displayText = "Thank you for supporting NC Bank ";
-                    $this->sessionState = "END";
-                    break;
+                 
                 default:
                     $this->saveSessionVar("TRANSFERTOACCOUNTNAMES", $input);
 
@@ -655,17 +650,15 @@ class NCBANKUSSD extends DynamicMenuController {
 
             switch ($input) {
 
-                case '0':
-                    $this->firstMenu();
-                    break;
                 case '00':
                     $this->displayText = "Thank you for supporting NC Bank ";
                     $this->sessionState = "END";
                     break;
-                case '000':
-                    $this->displayText = "Thank you for supporting NC Bank ";
-                    $this->sessionState = "END";
+                
+                case '0':
+                    $this->firstMenu();
                     break;
+                
                 default:
 
                     $TRANSFERFROMACCOUNT = $this->getSessionVar('TRANSFERFROMACCOUNT');
@@ -835,10 +828,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->displayText = "Thank you for supporting NC Bank ";
                 $this->sessionState = "END";
                 break;
-            case '000':
-                $this->displayText = "Thank you for supporting NC Bank ";
-                $this->sessionState = "END";
-                break;
+            
 
             case '0':
                 $this->firstMenu();
@@ -1094,17 +1084,16 @@ class NCBANKUSSD extends DynamicMenuController {
         } else {
 
             switch ($input) {
-                case '0':
-                    $this->firstMenu();
-                    break;
                 case '00':
                     $this->displayText = "Thank you for supporting NC Bank ";
                     $this->sessionState = "END";
                     break;
-                case '000':
-                    $this->displayText = "Thank you for supporting NC Bank ";
-                    $this->sessionState = "END";
+                
+                case '0':
+                    $this->firstMenu();
                     break;
+                
+                
                 default:
 
 
@@ -1227,17 +1216,16 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->nextFunction = "TopUpAmountMenu";
                 $this->previousPage = "AirtimePurchaseMenu";
                 break;
+              case '00':
+                $this->displayText = "Thank you for supporting NC Bank ";
+                $this->sessionState = "END";
+                break;
+            
             case '0':
                 $this->firstMenu();
                 break;
-            case '00':
-                $this->displayText = "Thank you for supporting NC Bank ";
-                $this->sessionState = "END";
-                break;
-            case '000':
-                $this->displayText = "Thank you for supporting NC Bank ";
-                $this->sessionState = "END";
-                break;
+          
+            
             default:
                 $message = "Invalid Selection\n Top Up"
                         . "\n.1 Own Phone"
@@ -1256,18 +1244,16 @@ class NCBANKUSSD extends DynamicMenuController {
     function MiniStatementMenu($input) {
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
         switch ($input) {
-            case '0':
-                $this->firstMenu();
-                break;
-            case '00':
+             case '00':
                 $this->displayText = "Thank you for supporting NC Bank ";
                 $this->sessionState = "END";
 
                 break;
-            case '000':
-                $this->displayText = "Thank you for supporting NC Bank ";
-                $this->sessionState = "END";
+            
+            case '0':
+                $this->firstMenu();
                 break;
+             
             default:
                 $selectedAccount = null;
                 foreach ($ACCOUNTS as $account) {
@@ -1362,17 +1348,16 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
         switch ($input) {
-            case '0':
-                $this->firstMenu();
-                break;
             case '00':
                 $this->displayText = "Thank you for supporting NC Bank ";
                 $this->sessionState = "END";
                 break;
-            case '000':
-                $this->displayText = "Thank you for supporting NC Bank ";
-                $this->sessionState = "END";
+            
+            case '0':
+                $this->firstMenu();
                 break;
+            
+            
             default:
 
                 $leaves = [50, 100];
@@ -1479,17 +1464,16 @@ class NCBANKUSSD extends DynamicMenuController {
 
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
         switch ($input) {
-            case '0':
-                $this->firstMenu();
-                break;
             case '00':
                 $this->displayText = "Thank you for supporting NC Bank ";
                 $this->sessionState = "END";
                 break;
-            case '000':
-                $this->displayText = "Thank you for supporting NC Bank ";
-                $this->sessionState = "END";
+            
+            case '0':
+                $this->firstMenu();
                 break;
+            
+            
             default:
                 //todo: checkbook number
                 $this->saveSessionVar("CHECKBOOKNUMBER", $input);
@@ -1596,9 +1580,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 break;
             
             case '0':
-//                $this->firstMenu();
-                 $this->displayText = "Really Bank ";
-                $this->sessionState = "END";
+                $this->firstMenu();            
                 break;
            
             
