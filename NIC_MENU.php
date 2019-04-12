@@ -386,21 +386,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->nextFunction = "AirtimePurchaseMenu";
                 $this->previousPage = "startPage";
                 break;
-//                case '7':
-//                    $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
-//                    $message = "Choose Account ";
-//                    $count = 0;
-//                    foreach ($ACCOUNTS as $account) {
-//                        $count = $count + 1;
-//                        $message .= "\n" . $count . ")" . $account['ACCOUNTNUMBER'];
-//                    }
-//                    $message .= "\n\n0. Home \n" . "00. Exit";
-//                    $this->displayText = $message;
-//                    $this->sessionState = "CONTINUE";
-//                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-//                    $this->nextFunction = "MiniStatementMenu";
-//                    $this->previousPage = "startPage";
-//                    break;
+            
             case '7':
 # code...
                 $message = "Account Request"
