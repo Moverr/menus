@@ -297,8 +297,10 @@ class NCBANKUSSD extends DynamicMenuController {
 //DEFAULT MENU 
             default:
 
-                $message = "\n1).Balance Enquiry "
-                        . "\n2).Mini statement " . "\n3).Change PIN";
+                $message = "Invalid Input \nSelect"
+                        . "\n1).Balance Enquiry "
+                        . "\n2).Mini statement " .
+                        "\n3).Change PIN";
 
 
                 $this->displayText = $message;
@@ -335,8 +337,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
                     break;
 //                    BILL PAYMENTS
-                case '3':
-                    $service = $this->getSessionVar('selectedService');
+                case '3': 
                     $message = "Select Utility. \n1: UMEME \n2: NWSC \n3: Pay TV";
                     $message .= "\n\n0. Home \n" . "00. Exit";
                     $this->displayText = $message;
@@ -847,6 +848,8 @@ class NCBANKUSSD extends DynamicMenuController {
 
 // 2:BALANCE ENQUIRY
     function BalanceEnquiryMenu($input) {
+        
+        
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
         switch ($input) {
             case '00':
@@ -885,21 +888,18 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->nextFunction = "BalanceEnquiryMenu";
                     $this->previousPage = "BalanceEnquiryMenu";
                 } else {
-                    $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
-//                  $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
+                    $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN'); 
                     $requestPayload = array(
                         "serviceID" => 10,
                         "flavour" => 'self',
-                        "pin" => $this->encryptPin($PINRECORD['RAWPIN'], 1),
-                        //$this->encryptPin($PINRECORD['RAWPIN'],$this->IMCREQUESTID), //$this->encryptPin($PINRECORD['RAWPIN'],1)
+                        "pin" => $this->encryptPin($PINRECORD['RAWPIN'], 1), 
                         "accountAlias" => $selectedAccount['ACCOUNTNAME'],
                         "accountID" => $selectedAccount['ACCOUNTCBSID'],
                     );
                     $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
 
                     $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
-                    $response = json_decode($result);
-//                $this->displayText = "" . print_r($result, true); 
+                    $response = json_decode($result); 
                     $this->logMessage("Balance Enquiry Response:: ", $response, 4);
                     $this->displayText = "" . ($response->DATA->MESSAGE);
                     $this->sessionState = "END";
@@ -954,8 +954,8 @@ class NCBANKUSSD extends DynamicMenuController {
         $this->saveSessionVar("MOBILENUMBERB2C", $input);
 
         $MERCHANTCODE = $this->getSessionVar("MERCHANTCODE");
-        
-            
+
+
 
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
         $message = "Select Account \n";
