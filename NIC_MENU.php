@@ -337,7 +337,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
                     break;
 //                    BILL PAYMENTS
-                case '3': 
+                case '3':
                     $message = "Select Utility. \n1: UMEME \n2: NWSC \n3: Pay TV";
                     $message .= "\n\n0. Home \n" . "00. Exit";
                     $this->displayText = $message;
@@ -848,8 +848,8 @@ class NCBANKUSSD extends DynamicMenuController {
 
 // 2:BALANCE ENQUIRY
     function BalanceEnquiryMenu($input) {
-        
-        
+
+
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
         switch ($input) {
             case '00':
@@ -888,28 +888,24 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->nextFunction = "BalanceEnquiryMenu";
                     $this->previousPage = "BalanceEnquiryMenu";
                 } else {
-                    $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN'); 
+                    $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
                     $requestPayload = array(
                         "serviceID" => 10,
                         "flavour" => 'self',
-                        "pin" => $this->encryptPin($PINRECORD['RAWPIN'], 1), 
+                        "pin" => $this->encryptPin($PINRECORD['RAWPIN'], 1),
                         "accountAlias" => $selectedAccount['ACCOUNTNAME'],
                         "accountID" => $selectedAccount['ACCOUNTCBSID'],
                     );
                     $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
 
                     $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
-                    $response = json_decode($result); 
+                    $response = json_decode($result);
                     $this->logMessage("Balance Enquiry Response:: ", $response, 4);
                     $this->displayText = "" . ($response->DATA->MESSAGE);
                     $this->sessionState = "END";
                 }
                 break;
         }
-    }
-
-    function BillPaymentsMenu() {
-        $this->serviceNotAvailable();
     }
 
     function BankToMobileMenu($input) {
@@ -951,29 +947,45 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function MSSIDNTOTRANSFERTOMONEY($input) {
 
-        $this->saveSessionVar("MOBILENUMBERB2C", $input);
 
-        $MERCHANTCODE = $this->getSessionVar("MERCHANTCODE");
+        if ($input == null) {
+            
+            $message = "Invalid Input \n"
+                    . "Enter Mobile Number";
+            $message .= "\n\n0. Home \n" . "00. Exit";
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+            $this->nextFunction = "MSSIDNTOTRANSFERTOMONEY";
+            $this->previousPage = "MSSIDNTOTRANSFERTOMONEY";
+            
+        } else {
+
+
+            $this->saveSessionVar("MOBILENUMBERB2C", $input);
+
+            $MERCHANTCODE = $this->getSessionVar("MERCHANTCODE");
 
 
 
-        $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
-        $message = "Select Account \n";
-        if ($ACCOUNTS != null) {
-            $message = "Choose Account \n";
-            $count = 0;
-            foreach ($ACCOUNTS as $account) {
-                $count = $count + 1;
-                $selectedAccount = $account;
-                $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
+            $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+            $message = "Select Account \n";
+            if ($ACCOUNTS != null) {
+                $message = "Choose Account \n";
+                $count = 0;
+                foreach ($ACCOUNTS as $account) {
+                    $count = $count + 1;
+                    $selectedAccount = $account;
+                    $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
+                }
             }
-        }
 
-        $this->displayText = $message;
-        $this->sessionState = "CONTINUE";
-        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-        $this->nextFunction = "AccountToWithdrawFromToMobileSelected";
-        $this->previousPage = "MSSIDNTOTRANSFERTOMONEY";
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+            $this->nextFunction = "AccountToWithdrawFromToMobileSelected";
+            $this->previousPage = "MSSIDNTOTRANSFERTOMONEY";
+        }
     }
 
     function AccountToWithdrawFromToMobile($input) {
