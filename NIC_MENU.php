@@ -949,7 +949,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
 
         if ($input == null) {
-            
+
             $message = "Invalid Input \n"
                     . "Enter Mobile Number";
             $message .= "\n\n0. Home \n" . "00. Exit";
@@ -958,7 +958,6 @@ class NCBANKUSSD extends DynamicMenuController {
             $this->serviceDescription = $this->SERVICE_DESCRIPTION;
             $this->nextFunction = "MSSIDNTOTRANSFERTOMONEY";
             $this->previousPage = "MSSIDNTOTRANSFERTOMONEY";
-            
         } else {
 
 
@@ -968,7 +967,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
 //            $networkID = $this->getRecipientNetworkID($recipientNumber);
 
-            
+
 
 
             $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
@@ -994,24 +993,28 @@ class NCBANKUSSD extends DynamicMenuController {
     function AccountToWithdrawFromToMobile($input) {
 
 
+        if ($input == null) {
+            
+        } else {
 
-        $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
-        $message = "Select Account \n";
-        if ($ACCOUNTS != null) {
-            $message = "Choose Account \n";
-            $count = 0;
-            foreach ($ACCOUNTS as $account) {
-                $count = $count + 1;
-                $selectedAccount = $account;
-                $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
+            $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+            $message = "Select Account \n";
+            if ($ACCOUNTS != null) {
+                $message = "Choose Account \n";
+                $count = 0;
+                foreach ($ACCOUNTS as $account) {
+                    $count = $count + 1;
+                    $selectedAccount = $account;
+                    $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
+                }
             }
-        }
 
-        $this->displayText = $message;
-        $this->sessionState = "CONTINUE";
-        $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-        $this->nextFunction = "AccountToWithdrawFromToMobileSelected";
-        $this->previousPage = "AccountToWithdrawFromToMobile";
+            $this->displayText = $message;
+            $this->sessionState = "CONTINUE";
+            $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+            $this->nextFunction = "AccountToWithdrawFromToMobileSelected";
+            $this->previousPage = "AccountToWithdrawFromToMobile";
+        }
     }
 
     function AccountToWithdrawFromToMobileSelected($input) {
