@@ -386,7 +386,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->nextFunction = "AirtimePurchaseMenu";
                 $this->previousPage = "startPage";
                 break;
-            
+
             case '7':
 # code...
                 $message = "Account Request"
@@ -1564,16 +1564,16 @@ class NCBANKUSSD extends DynamicMenuController {
     ////////////Process Pay Bill and Pay TVs
     function processPayBillMenu($input) {
 
-        switch ($input) {
+        switch ('' . $input) {
 
-            case 1:
+            case '1':
                 $this->displayText = "Enter meter number";
                 $this->sessionState = "CONTINUE";
                 $this->nextFunction = "processUmeme";
                 $this->previousPage = "processPayBillMenu";
                 break;
 
-            case 2:
+            case '2':
                 $this->displayText = "Enter meter number";
                 $this->sessionState = "CONTINUE";
                 $this->nextFunction = "processNwsc";
@@ -1581,7 +1581,7 @@ class NCBANKUSSD extends DynamicMenuController {
                 break;
 
             //PAY TV MENU
-            case 3:
+            case '3':
                 $this->displayText = "Select TV Merchant. \n1: GoTV \n2: DSTV \n3: Startimes \n4: Azam"
                         . "\n5: Zuku TV \n6: Kwese TV";
                 $this->sessionState = "CONTINUE";
@@ -1603,7 +1603,9 @@ class NCBANKUSSD extends DynamicMenuController {
                 break;
 
             default:
-                $this->displayText = "Select Utility. \n1: UMEME \n2: NWSC \n3: Pay TV";
+                $this->displayText = "Invalid Input \n"
+                        . "Select Utility. "
+                        . "\n1: UMEME \n2: NWSC \n3: Pay TV";
                 $this->sessionState = "CONTINUE";
                 $this->nextFunction = "processPayBillMenu";
                 $this->previousPage = "processPayBillMenu";
