@@ -306,8 +306,8 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->displayText = $message;
                 $this->sessionState = "CONTINUE";
                 $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-                $this->nextFunction = "menuSwitcher";
-                $this->previousPage = "startPage";
+                $this->nextFunction = "MyAccountMenu";
+                $this->previousPage = "MyAccountMenu";
 
 
                 break;
@@ -316,76 +316,76 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function menuSwitcher($input) {
 
-            
-            switch ('' . $input) {
-                case '1':
+
+        switch ('' . $input) {
+            case '1':
 # code...
-                    $this->MerchantsMenu();
-                    break;
+                $this->MerchantsMenu();
+                break;
 //                BALANCE ENQUIRY
-                case '2':
+            case '2':
 # code...
-                    $message = "\n1).Balance Enquiry "
-                            . "\n2).Mini statement " . "\n3).Change PIN";
+                $message = "\n1).Balance Enquiry "
+                        . "\n2).Mini statement " . "\n3).Change PIN";
 
-                    $this->displayText = $message;
-                    $this->sessionState = "CONTINUE";
-                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-                    $this->nextFunction = "MyAccountMenu";
-                    $this->previousPage = "menuSwitcher";
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                $this->nextFunction = "MyAccountMenu";
+                $this->previousPage = "menuSwitcher";
 
 
-                    break;
+                break;
 //                    BILL PAYMENTS
-                case '3':
-                    $message = "Select Utility. \n1: UMEME \n2: NWSC \n3: Pay TV";
-                    $message .= "\n\n0. Home \n" . "00. Exit";
-                    $this->displayText = $message;
-                    $this->sessionState = "CONTINUE";
-                    $this->nextFunction = "processPayBillMenu";
-                    $this->previousPage = "utilitySelected";
-                    break;
+            case '3':
+                $message = "Select Utility. \n1: UMEME \n2: NWSC \n3: Pay TV";
+                $message .= "\n\n0. Home \n" . "00. Exit";
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->nextFunction = "processPayBillMenu";
+                $this->previousPage = "utilitySelected";
+                break;
 
-                case '4':
+            case '4':
 # code...
 //FUNDS TRANSFER
-                    $message = "1)Internal Funds Transfer ";
+                $message = "1)Internal Funds Transfer ";
 
-                    $message .= "\n\n0. Home \n" . "00. Exit";
-                    $this->displayText = $message;
-                    $this->sessionState = "CONTINUE";
-                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-                    $this->nextFunction = "FundsTransferMenu";
-                    $this->previousPage = "startPage";
+                $message .= "\n\n0. Home \n" . "00. Exit";
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                $this->nextFunction = "FundsTransferMenu";
+                $this->previousPage = "startPage";
 
-                    break;
-                //BANK TO MOBILE
-                case '5':
+                break;
+            //BANK TO MOBILE
+            case '5':
 # code...
-                    $message = "Send to \n"
-                            . "1) MTN Funds Transfer\n"
-                            . "2) Airtel Money \n ";
+                $message = "Send to \n"
+                        . "1) MTN Funds Transfer\n"
+                        . "2) Airtel Money \n ";
 
-                    $message .= "\n\n0. Home \n" . "00. Exit";
-                    $this->displayText = $message;
-                    $this->sessionState = "CONTINUE";
-                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-                    $this->nextFunction = "BankToMobileMenu";
-                    $this->previousPage = "startPage";
+                $message .= "\n\n0. Home \n" . "00. Exit";
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                $this->nextFunction = "BankToMobileMenu";
+                $this->previousPage = "startPage";
 
 
-                    break;
-                case '6':
-                    $message = " Top Up"
-                            . "\n1) Own Phone"
-                            . "\n2) Other Phone";
-                    $message .= "\n\n0. Home \n" . "00. Exit";
-                    $this->displayText = $message;
-                    $this->sessionState = "CONTINUE";
-                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-                    $this->nextFunction = "AirtimePurchaseMenu";
-                    $this->previousPage = "startPage";
-                    break;
+                break;
+            case '6':
+                $message = " Top Up"
+                        . "\n1) Own Phone"
+                        . "\n2) Other Phone";
+                $message .= "\n\n0. Home \n" . "00. Exit";
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                $this->nextFunction = "AirtimePurchaseMenu";
+                $this->previousPage = "startPage";
+                break;
 //                case '7':
 //                    $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
 //                    $message = "Choose Account ";
@@ -401,50 +401,49 @@ class NCBANKUSSD extends DynamicMenuController {
 //                    $this->nextFunction = "MiniStatementMenu";
 //                    $this->previousPage = "startPage";
 //                    break;
-                case '7':
+            case '7':
 # code...
-                    $message = "Account Request"
-                            . "\n1) Cheque Book Request"
-                            . "\n2) Stop Cheque ";
-                    $message .= "\n\n0. Home \n" . "00. Exit";
-                    $this->displayText = $message;
-                    $this->sessionState = "CONTINUE";
-                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-                    $this->nextFunction = "ChequeRequestMenu";
-                    $this->previousPage = "startPage";
-                    break;
-                case '9':
+                $message = "Account Request"
+                        . "\n1) Cheque Book Request"
+                        . "\n2) Stop Cheque ";
+                $message .= "\n\n0. Home \n" . "00. Exit";
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                $this->nextFunction = "ChequeRequestMenu";
+                $this->previousPage = "startPage";
+                break;
+            case '9':
 # code...
-                    $message = "Please enter you new \n mobile banking pin";
+                $message = "Please enter you new \n mobile banking pin";
 
-                    $message .= "\n\n0. Home \n" . "00. Exit";
-                    $this->displayText = $message;
-                    $this->sessionState = "CONTINUE";
-                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-                    $this->nextFunction = "ChangePinMenu";
-                    $this->previousPage = "startPage";
+                $message .= "\n\n0. Home \n" . "00. Exit";
+                $this->displayText = $message;
+                $this->sessionState = "CONTINUE";
+                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                $this->nextFunction = "ChangePinMenu";
+                $this->previousPage = "startPage";
 
 
-                    break;
-                case '00':# code...
-                    $this->displayText = "Thank you for supporting NC Bank ";
-                    $this->sessionState = "END";
-                    break;
+                break;
+            case '00':# code...
+                $this->displayText = "Thank you for supporting NC Bank ";
+                $this->sessionState = "END";
+                break;
 
-                case '0':# code...
-                    $this->firstMenu();
-                    break;
+            case '0':# code...
+                $this->firstMenu();
+                break;
 
-                default:
+            default:
 # code...
-                    $this->displayText = "Invalid input. Please enter a menu number ";
-                    $this->sessionState = "CONTINUE";
-                    $this->serviceDescription = $this->SERVICE_DESCRIPTION;
-                    $this->nextFunction = "menuSwitcher";
-                    $this->previousPage = "menuSwitcher";
-                    break;
-            }
-                
+                $this->displayText = "Invalid input. Please enter a menu number ";
+                $this->sessionState = "CONTINUE";
+                $this->serviceDescription = $this->SERVICE_DESCRIPTION;
+                $this->nextFunction = "menuSwitcher";
+                $this->previousPage = "menuSwitcher";
+                break;
+        }
     }
 
     function FundsTransferMenu($input) {
