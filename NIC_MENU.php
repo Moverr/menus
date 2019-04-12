@@ -316,7 +316,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
     function menuSwitcher($input) {
 
-        if (is_numeric($input)) {
+            
             switch ('' . $input) {
                 case '1':
 # code...
@@ -444,13 +444,7 @@ class NCBANKUSSD extends DynamicMenuController {
                     $this->previousPage = "menuSwitcher";
                     break;
             }
-        } else {
-            $this->displayText = "Invalid input. Please enter a menu number ";
-            $this->sessionState = "CONTINUE";
-            $this->serviceDescription = "MTN Mula";
-            $this->nextFunction = "validateMobileNumber";
-            $this->previousPage = "validateMobileNumber";
-        }
+                
     }
 
     function FundsTransferMenu($input) {
