@@ -966,6 +966,9 @@ class NCBANKUSSD extends DynamicMenuController {
 
             $MERCHANTCODE = $this->getSessionVar("MERCHANTCODE");
 
+//            $networkID = $this->getRecipientNetworkID($recipientNumber);
+
+            
 
 
             $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
