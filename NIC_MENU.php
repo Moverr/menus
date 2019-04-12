@@ -1590,15 +1590,17 @@ class NCBANKUSSD extends DynamicMenuController {
 
                 break;
 
+             case '00':
+                $this->displayText = "Thank you for supporting NC Bank ";
+                $this->sessionState = "END";
+                break;
+            
             case '0':
 //                $this->firstMenu();
                  $this->displayText = "Really Bank ";
                 $this->sessionState = "END";
                 break;
-            case "00":
-                $this->displayText = "Thank you for supporting NC Bank ";
-                $this->sessionState = "END";
-                break;
+           
             
 
             default:
