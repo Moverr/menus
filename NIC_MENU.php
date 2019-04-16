@@ -284,8 +284,15 @@ class NCBANKUSSD extends DynamicMenuController {
                 break;
 
             case '00':# code...
-                $this->displayText = "Thank you for supporting NC Bank ";
-                $this->sessionState = "END";
+                
+                 if(strlen(trim($input)) == 1){
+                         $this->firstMenu();
+                    }else{
+                    $this->displayText = "Thank you for supporting NC Bank ";
+                    $this->sessionState = "END";
+                        
+                    }
+            
                 break;
 
             case '0':# code...
@@ -413,8 +420,14 @@ class NCBANKUSSD extends DynamicMenuController {
 
                 break;
             case '00':# code...
-                $this->displayText = "Thank you for supporting NC Bank ";
-                $this->sessionState = "END";
+                 if(strlen(trim($input)) == 1){
+                         $this->firstMenu();
+                    }else{
+                    $this->displayText = "Thank you for supporting NC Bank ";
+                    $this->sessionState = "END";
+                        
+                    }
+            
                 break;
 
             case '0':# code...
@@ -456,8 +469,14 @@ class NCBANKUSSD extends DynamicMenuController {
 
                 break;
                  case '00':
-                $this->displayText = "Thank you for supporting NC Bank ";
-                $this->sessionState = "END";
+                      if(strlen(trim($input)) == 1){
+                         $this->firstMenu();
+                    }else{
+                    $this->displayText = "Thank you for supporting NC Bank ";
+                    $this->sessionState = "END";
+                        
+                    }
+            
                 break;
             
             case '0':
@@ -502,8 +521,14 @@ class NCBANKUSSD extends DynamicMenuController {
             switch ($input) {
 
                  case '00':
+                      if(strlen(trim($input)) == 1){
+                         $this->firstMenu();
+                    }else{
                     $this->displayText = "Thank you for supporting NC Bank ";
                     $this->sessionState = "END";
+                        
+                    }
+                 
                     break;
                 
                 case '0':
@@ -570,8 +595,13 @@ class NCBANKUSSD extends DynamicMenuController {
             switch ($input) {
 
                 case '00':
+                 if(strlen(trim($input)) == 1){
+                         $this->firstMenu();
+                    }else{
                     $this->displayText = "Thank you for supporting NC Bank ";
                     $this->sessionState = "END";
+                        
+                    }
                     break;
                 
                 case '0':
@@ -611,8 +641,14 @@ class NCBANKUSSD extends DynamicMenuController {
             switch ($input) {
 
                  case '00':
+                      if(strlen(trim($input)) == 1){
+                         $this->firstMenu();
+                    }else{
                     $this->displayText = "Thank you for supporting NC Bank ";
                     $this->sessionState = "END";
+                        
+                    }
+                 
                     break;
                 
                 case '0':
@@ -651,8 +687,14 @@ class NCBANKUSSD extends DynamicMenuController {
             switch ($input) {
 
                 case '00':
+                     if(strlen(trim($input)) == 1){
+                         $this->firstMenu();
+                    }else{
                     $this->displayText = "Thank you for supporting NC Bank ";
                     $this->sessionState = "END";
+                        
+                    }
+                
                     break;
                 
                 case '0':
@@ -825,8 +867,14 @@ class NCBANKUSSD extends DynamicMenuController {
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
         switch ($input) {
             case '00':
-                $this->displayText = "Thank you for supporting NC Bank ";
-                $this->sessionState = "END";
+                 if(strlen(trim($input)) == 1){
+                         $this->firstMenu();
+                    }else{
+                    $this->displayText = "Thank you for supporting NC Bank ";
+                    $this->sessionState = "END";
+                        
+                    }
+            
                 break;
             
 
@@ -1085,8 +1133,14 @@ class NCBANKUSSD extends DynamicMenuController {
 
             switch ($input) {
                 case '00':
+                    if(strlen(trim($input)) == 1){
+                         $this->firstMenu();
+                    }else{
                     $this->displayText = "Thank you for supporting NC Bank ";
                     $this->sessionState = "END";
+                        
+                    }
+                    
                     break;
                 
                 case '0':
@@ -1217,8 +1271,14 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->previousPage = "AirtimePurchaseMenu";
                 break;
               case '00':
-                $this->displayText = "Thank you for supporting NC Bank ";
-                $this->sessionState = "END";
+                   if(strlen(trim($input)) == 1){
+                         $this->firstMenu();
+                    }else{
+                    $this->displayText = "Thank you for supporting NC Bank ";
+                    $this->sessionState = "END";
+                        
+                    }
+            
                 break;
             
             case '0':
@@ -1245,9 +1305,15 @@ class NCBANKUSSD extends DynamicMenuController {
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
         switch ($input) {
              case '00':
-                $this->displayText = "Thank you for supporting NC Bank ";
-                $this->sessionState = "END";
-
+                  if(strlen(trim($input)) == 1){
+                         $this->firstMenu();
+                    }else{
+                    $this->displayText = "Thank you for supporting NC Bank ";
+                    $this->sessionState = "END";
+                        
+                    }
+                    
+             
                 break;
             
             case '0':
@@ -1349,8 +1415,14 @@ class NCBANKUSSD extends DynamicMenuController {
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
         switch ($input) {
             case '00':
-                $this->displayText = "Thank you for supporting NC Bank ";
-                $this->sessionState = "END";
+                 if(strlen(trim($input)) == 1){
+                         $this->firstMenu();
+                    }else{
+                    $this->displayText = "Thank you for supporting NC Bank ";
+                    $this->sessionState = "END";
+                        
+                    }
+            
                 break;
             
             case '0':
@@ -1465,8 +1537,14 @@ class NCBANKUSSD extends DynamicMenuController {
         $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
         switch ($input) {
             case '00':
-                $this->displayText = "Thank you for supporting NC Bank ";
-                $this->sessionState = "END";
+                 if(strlen(trim($input)) == 1){
+                         $this->firstMenu();
+                    }else{
+                    $this->displayText = "Thank you for supporting NC Bank ";
+                    $this->sessionState = "END";
+                        
+                    }
+            
                 break;
             
             case '0':
@@ -1575,8 +1653,15 @@ class NCBANKUSSD extends DynamicMenuController {
                 break;
 
              case '00':
-                $this->displayText = "Thank you for supporting NC Bank ";
-                $this->sessionState = "END";
+                 
+                  if(strlen(trim($input)) == 1){
+                         $this->firstMenu();
+                    }else{
+                    $this->displayText = "Thank you for supporting NC Bank ";
+                    $this->sessionState = "END";
+                        
+                    }
+            
                 break;
             
             case '0':
