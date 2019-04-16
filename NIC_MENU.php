@@ -883,7 +883,7 @@ class NCBANKUSSD extends DynamicMenuController {
         if ($input . "" == "1") {
             $merchantcode = "MTNMON";
         } else if ($input . "" == "2") {
-            $merchantcode = "AIRTEL";
+            $merchantcode = "AIRTELMON";
         } else {
             $merchantcode = NULL;
         }
