@@ -77,6 +77,14 @@ class NCUGconfigs {
 
     const BILLPAY_SERVICE = "BILL_PAY"; 
     const MAX_NARRATION_LENGTH = 50;
+
+    const SAMPLEMSSDN = '256783262929';
+    const USERNAME = "system-user";
+    const PASSWORD = "lipuka";
+
+  const WALLET_USERNAME = "admin";
+    const WALLET_PASSWORD ="admin";
+
 }
 
 ?>

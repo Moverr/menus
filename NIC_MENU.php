@@ -3861,10 +3861,12 @@ class NCBANKUSSD extends DynamicMenuController {
         }
     }
 
+
+
     public function invokeAsyncWallet($payload, $channelRequestID) {
         try {
-            $username = "admin";
-            $password = "admin";
+            $username = NCUGconfigs::WALLET_USERNAME;
+            $password = NCUGconfigs::WALLET_PASSWORD;
             $apiUrl = $this->serverURL;
             $apiFunction = "processCloudRequest"; //logRequest;
             //convert array into XML format
@@ -3924,8 +3926,9 @@ class NCBANKUSSD extends DynamicMenuController {
 
     public function invokeSyncWallet($payload, $channelRequestID) {
         try {
-            $username = "admin";
-            $password = "admin";
+             $username = NCUGconfigs::WALLET_USERNAME;
+            $password = NCUGconfigs::WALLET_PASSWORD;
+            
 //            $apiUrl = $this->walletSyncRequestURL;
             $apiUrl = $this->serverURL;
             $apiFunction = "processCloudRequest";
