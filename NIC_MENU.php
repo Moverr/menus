@@ -2790,7 +2790,13 @@ class NCBANKUSSD extends DynamicMenuController {
         $accountDetails = $this->validateUMEMECustomerAccount($meterNumber);
 
 
+         $this->displayText =  print_r($accountDetails,true);
+            $this->sessionState = "CONTINUE";
+            $this->nextFunction = "processUmeme";
+            $this->previousPage = "enterMeterNumber";
+            
 
+            /*
         if ($accountDetails == "" || $accountDetails == null) {
 
             $this->displayText = "Invalid account Meter number. Please enter meter number again";
@@ -2843,6 +2849,8 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->previousPage = "processUmeme";
             }
         }
+             * */
+             
     }
 
     function enterUmemeAmount($input) {
@@ -3237,6 +3245,7 @@ class NCBANKUSSD extends DynamicMenuController {
             "packet" => $data
         );
 
+        
         $spayload = array(
             "function" => $this->hubValidationFunction,
             "payload" => json_encode($payload)
