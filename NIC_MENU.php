@@ -2790,13 +2790,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $accountDetails = $this->validateUMEMECustomerAccount($meterNumber);
 
 
-         $this->displayText ="TEST".json_decode($accountDetails);
-            $this->sessionState = "CONTINUE";
-            $this->nextFunction = "processUmeme";
-            $this->previousPage = "enterMeterNumber";
-            
 
-            /*
         if ($accountDetails == "" || $accountDetails == null) {
 
             $this->displayText = "Invalid account Meter number. Please enter meter number again";
@@ -2849,8 +2843,6 @@ class NCBANKUSSD extends DynamicMenuController {
                 $this->previousPage = "processUmeme";
             }
         }
-             * */
-             
     }
 
     function enterUmemeAmount($input) {
@@ -3245,7 +3237,6 @@ class NCBANKUSSD extends DynamicMenuController {
             "packet" => $data
         );
 
-        
         $spayload = array(
             "function" => $this->hubValidationFunction,
             "payload" => json_encode($payload)
@@ -3256,15 +3247,11 @@ class NCBANKUSSD extends DynamicMenuController {
 //$response = post("http://127.0.0.1/BeepJsonAPI/index.php",json_encode($spayload));
         $response = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
 
-        /*
         $this->logMessage("Response from hub: ", $response, 4);
         $responseArray = json_decode($response, true);
         $this->saveSessionVar("UMEMEACCOUNT", $responseArray);
 
         return $responseArray;
-        */
-        
-        return $response;
     }
 
     function validateKCCACustomerAccount($accountNumber) {
