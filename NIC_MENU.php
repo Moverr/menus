@@ -3256,11 +3256,15 @@ class NCBANKUSSD extends DynamicMenuController {
 //$response = post("http://127.0.0.1/BeepJsonAPI/index.php",json_encode($spayload));
         $response = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
 
+        /*
         $this->logMessage("Response from hub: ", $response, 4);
         $responseArray = json_decode($response, true);
         $this->saveSessionVar("UMEMEACCOUNT", $responseArray);
 
         return $responseArray;
+        */
+        
+        return $response;
     }
 
     function validateKCCACustomerAccount($accountNumber) {
