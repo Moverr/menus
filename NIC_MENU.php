@@ -2790,7 +2790,7 @@ class NCBANKUSSD extends DynamicMenuController {
         $accountDetails = $this->validateUMEMECustomerAccount($meterNumber);
 
 
-         $this->displayText =  print_r($accountDetails,true);
+         $this->displayText ="TEST".json_decode($accountDetails);
             $this->sessionState = "CONTINUE";
             $this->nextFunction = "processUmeme";
             $this->previousPage = "enterMeterNumber";
