@@ -3538,7 +3538,8 @@
            
                 curl_close($ch);
            
-
+  $this->logMessage("<<<<<<<<<<  RESULT >>>>>>>  ",$result, 4);
+          
                 return $result;
         }
 
