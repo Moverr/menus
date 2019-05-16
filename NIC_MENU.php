@@ -3536,7 +3536,7 @@
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
                 $result = curl_exec($ch);
             $this->logMessage("<<<<<<<<<<  PROCESSING ||||||||||||||||||||  ",$url, 4);
-            $this->logMessage("<<<<<<<<<<  PROCESSING ||||||||||||||||||||  ",print_r($result), 4);
+            $this->logMessage("<<<<<<<<<<  PROCESSING ||||||||||||||||||||  ",print_r($result,true), 4);
            
                 curl_close($ch);
            
