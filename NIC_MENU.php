@@ -3508,7 +3508,7 @@
                 "payload" => json_encode($payload)
             );
 
-            $response = $this->postValidationRequestToHUB("http://google.com", json_encode($spayload));
+            $response = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
 
             $responseArray = json_decode($response, true);
 
@@ -3525,7 +3525,7 @@
 
         function postValidationRequestToHUB($url, $fields) {
 
-            $this->logMessage("<<<<<<<<<<  PROCESSING >>>>>>>  ",$fields, 4);
+            $this->logMessage("<<<<<<<<<<  PROCESSING ||||||||||||||||||||  ",$url, 4);
              
 
                 $fields_string = null;
@@ -3534,12 +3534,13 @@
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                 curl_setopt($ch, CURLOPT_NOSIGNAL, 1); 
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
-                $result = curl_exec($ch); 
+                $result = curl_exec($ch);
+            $this->logMessage("<<<<<<<<<<  PROCESSING ||||||||||||||||||||  ",$url, 4);
+            $this->logMessage("<<<<<<<<<<  PROCESSING ||||||||||||||||||||  ",print_r($result,true), 4);
            
                 curl_close($ch);
            
-  $this->logMessage("<<<<<<<<<<  RESULT >>>>>>>  ",$result, 4);
-          
+
                 return $result;
         }
 
