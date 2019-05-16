@@ -37,7 +37,8 @@
         private $utl_reg = "/^(71|071|25671)(\d{7})$/";
         private $orange_reg = "/^(079|25679|79)(\d{7})$/";
         //validation configs
-        private $hubJSONAPIUrl = "http://localhost:9001/hub/services/paymentGateway/JSON/index.php";
+        // private $hubJSONAPIUrl = "http://localhost:9001/hub/services/paymentGateway/JSON/index.php";
+        private $hubJSONAPIUrl = "http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php";
         private $hubValidationFunction = "BEEP.validateAccount";
         private $hubAuthSuccessCode = "131";
         private $hubValidationSuccessCode = "307";
@@ -3245,7 +3246,7 @@
 
             $this->logMessage("payload to send to hub  ---: ", $spayload, 4);
 
-    //$response = post("http://127.0.0.1/BeepJsonAPI/index.php",json_encode($spayload));
+    //$response = post("http://127.0.0.1/BeepJsonAPI/index.php",json_encode($spayload)); dd
             $response = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
 
             $this->logMessage("Response from hub: ", $response, 4);
