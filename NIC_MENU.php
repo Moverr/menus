@@ -3246,10 +3246,47 @@
 
             $this->logMessage("payload to send to hub  ---: ", $spayload, 4);
 
-    //$response = post("http://127.0.0.1/BeepJsonAPI/index.php",json_encode($spayload)); dd
+
+             $packet = array( 
+            
+            'serviceID' => 28,
+            'serviceCode' => "UMEME",
+
+            'requestExtraData' => $extraData,
+            'extraData' => $extraData,
+            "payerTransactionID"=> rand(),
+            "invoiceNumber"=>"73737",
+            "invoiceNumber"=>"123",
+            "MSISDN"=>254779820962,
+            "amount"=>1000,
+            "accountNumber"=> "200161188",
+            "narration"=> "Beep.Payment",
+               "currencyCode"=>"KES",
+                "customerNames"=> "Muyinda Rogers",
+                "paymentMode"=> "Online Payment",
+                 "datePaymentReceived"=> "2019-05-14 11:45:18"
+            
+        );
+
+
+
+ $data[] = $packet;
+        $payload = array(
+            "credentials" => $credentials,
+            "packet" => $data
+        );
+
+        $spayload = array(
+           "function"=>"BEEP.validateAccount",
+            // "function" => "BEEP.postPayment",
+            "payload" => json_encode($payload)
+        );
+
+
+    //$response = post("http://127.0.0.1/BeepJsonAPI/index.php",json_encode($spayload)); 
             $response = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
 
-            $this->logMessage("Response from hub: ", $response, 4);
+            $this->logMessage("<<<<<<<<<<   ", $response, 4);
             $responseArray = json_decode($response, true);
             $this->saveSessionVar("UMEMEACCOUNT", $responseArray);
 
