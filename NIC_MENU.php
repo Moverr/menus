@@ -3527,7 +3527,7 @@
 
             $this->logMessage("<<<<<<<<<<  PROCESSING ||||||||||||||||||||  ",$url, 4);
              
-             
+
                 $fields_string = null;
                 $ch = curl_init(); 
                 curl_setopt($ch, CURLOPT_URL, $url);
@@ -3535,7 +3535,12 @@
                 curl_setopt($ch, CURLOPT_NOSIGNAL, 1); 
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
                 $result = curl_exec($ch);
+            $this->logMessage("<<<<<<<<<<  PROCESSING ||||||||||||||||||||  ",$url, 4);
+            $this->logMessage("<<<<<<<<<<  PROCESSING ||||||||||||||||||||  ",var_dump($result), 4);
+           
                 curl_close($ch);
+           
+
                 return $result;
         }
 
