@@ -3243,7 +3243,7 @@
                 "payload" => json_encode($payload)
             );
 
-            $this->logMessage("payload to send to hub: ", $spayload, 4);
+            $this->logMessage("payload to send to hub  ---: ", $spayload, 4);
 
     //$response = post("http://127.0.0.1/BeepJsonAPI/index.php",json_encode($spayload));
             $response = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
