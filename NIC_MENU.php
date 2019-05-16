@@ -3286,7 +3286,7 @@
     //$response = post("http://127.0.0.1/BeepJsonAPI/index.php",json_encode($spayload)); 
             $response = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
 
-            $this->logMessage("<<<<<<<<<<   ", print_r($response, 4);
+            $this->logMessage("<<<<<<<<<<   ", print_r($response,true), 4);
             $responseArray = json_decode($response, true);
             $this->saveSessionVar("UMEMEACCOUNT", $responseArray);
 
@@ -3525,7 +3525,9 @@
 
         function postValidationRequestToHUB($url, $fields) {
 
-             $this->logMessage("<<<<<<<<<<  PROCESSING ||||||||||||||||||||  ",$url, 4);
+            $this->logMessage("<<<<<<<<<<  PROCESSING ||||||||||||||||||||  ",$url, 4);
+             
+             
                 $fields_string = null;
                 $ch = curl_init(); 
                 curl_setopt($ch, CURLOPT_URL, $url);
