@@ -2790,6 +2790,8 @@ class NCBANKUSSD extends DynamicMenuController {
         $accountDetails = $this->validateUMEMECustomerAccount($meterNumber);
 
 
+ $this->logMessage("VALIDATE UMEME RESPONSE :  ", print_r($responseDataArray,true), 4);
+
 
         if ($accountDetails == "" || $accountDetails == null) {
 
