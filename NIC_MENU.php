@@ -3229,8 +3229,7 @@
             $packet = array(
                 'serviceID' => $this->umemeServiceID,
                 'serviceCode' => $this->umemeServiceCode,
-                'accountNumber' => $accountNumber,
-                'requestExtraData' => ''
+                'accountNumber' => $accountNumber 
             );
 
             $data[] = $packet;
