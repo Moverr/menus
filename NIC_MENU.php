@@ -3530,7 +3530,8 @@
 
                 $fields_string = null;
                 $ch = curl_init(); 
-                curl_setopt($ch, CURLOPT_URL, $url);
+
+                curl_setopt($ch, CURLOPT_URL, ' http://10.250.250.29:9000/hub/services/paymentGateway/JSON/index.php');
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                 curl_setopt($ch, CURLOPT_NOSIGNAL, 1); 
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
