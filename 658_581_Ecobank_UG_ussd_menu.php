@@ -525,7 +525,12 @@ class EcobankGlobalUSSDMenu extends DynamicMenuController {
     function startPage($input, $warning = null) {
 
         //Log
+        //
+        $this->displayText = "Testing Start of Application:";
+        $this->sessionState = "END";
 
+
+/*
         $this->logMessage("In the startPage ... About to load configs");
 
 
@@ -557,7 +562,7 @@ class EcobankGlobalUSSDMenu extends DynamicMenuController {
 
             $this->presentData($text, null, null, self::SESSION_STATE_END);
 
-            return;
+            return;  */
         }
 
 
