@@ -2946,66 +2946,7 @@
 
 
 
-            /*
-              } elseif ($this->previousPage == "enterAmount") {
 
-              if ($this->getSessionVar("nwscAmount") == null) {
-              $amount = (int) $input;
-              $this->saveSessionVar("nwscAmount", $amount);
-              }
-
-              $message = "You are paying NWSC UGX. " . $this->getSessionVar("nwscAmount");
-              $message .= ". Account name: " . $this->getSessionVar("nwscCustomerName") . ". ";
-              $message .= "Meter number " . $this->getSessionVar("nwscMeterNumber");
-              $message .= "\n1: Confirm \n2: Cancel";
-              $this->displayText = $message;
-              $this->sessionState = "CONTINUE";
-              $this->nextFunction = "processNwsc";
-              $this->previousPage = "confirmNwscPay";
-              } elseif ($this->previousPage == "confirmNwscPay") {
-              switch ($input) {
-              case 1:
-
-              $this->saveSessionvar('serviceID', 'BILL_PAY');
-
-              $this->saveSessionVar('amount', $this->getSessionVar("nwscAmount"));
-              $this->saveSessionVar('nomination', 'no');
-              $this->saveSessionVar('utilityBillAmount', $this->getSessionVar("nwscAmount"));
-              $this->saveSessionVar('merchantCode', 'NWSC');
-              $this->saveSessionVar('utilityBillAccountNo', $this->getSessionVar("nwscMeterNumber"));
-              $this->saveSessionVar('flavour', 'open');
-              $this->saveSessionVar('billEnrolment', "NO");
-              $this->saveSessionVar('billEnrolmentNumber', 'NULL');
-              $this->saveSessionVar('NWSCarea', $this->getSessionVar("selectedArea"));
-
-              $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
-              $message = "Select Account: \n";
-              if ($ACCOUNTS != null) {
-              $message = "Choose Account \n";
-              $count = 0;
-              foreach ($ACCOUNTS as $account) {
-              $count = $count + 1;
-              $selectedAccount = $account;
-              $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
-              }
-              }
-
-              $this->displayText = "Select account:\n" . $message;
-              $this->sessionState = "CONTINUE";
-              $this->nextFunction = "finalizeProcessingPayBill";
-
-              break;
-
-              case 2:
-              $this->startPage();
-              break;
-
-              default:
-              $this->previousPage = "enterAmount";
-              $this->processNwsc($input);
-              break;
-              }
-              } */
         }
 
         function selectAreaNWSC($input) {
@@ -3083,8 +3024,8 @@
                         }
 
                         $this->sessionState = "CONTINUE";
-                        $this->nextFunction = "processNwsc";
-                        $this->previousPage = "enterAmount";
+                        $this->nextFunction = "enterNWSCAmount";
+                        $this->previousPage = "processNwsc";
                     }
                 }
 
@@ -3119,6 +3060,69 @@
                   $this->previousPage = "enterAmount";
                   } */
             }
+        }
+
+        function enterNWSCAmount(){
+
+             
+              if ($this->getSessionVar("nwscAmount") == null) {
+              $amount = (int) $input;
+              $this->saveSessionVar("nwscAmount", $amount);
+              }
+
+              $message = "You are paying NWSC UGX. " . $this->getSessionVar("nwscAmount");
+              $message .= ". Account name: " . $this->getSessionVar("nwscCustomerName") . ". ";
+              $message .= "Meter number " . $this->getSessionVar("nwscMeterNumber");
+              $message .= "\n1: Confirm \n2: Cancel";
+              $this->displayText = $message;
+              $this->sessionState = "CONTINUE";
+              $this->nextFunction = "processNwsc";
+              $this->previousPage = "confirmNwscPay";
+              } elseif ($this->previousPage == "confirmNwscPay") {
+              switch ($input) {
+              case 1:
+
+              $this->saveSessionvar('serviceID', 'BILL_PAY');
+
+              $this->saveSessionVar('amount', $this->getSessionVar("nwscAmount"));
+              $this->saveSessionVar('nomination', 'no');
+              $this->saveSessionVar('utilityBillAmount', $this->getSessionVar("nwscAmount"));
+              $this->saveSessionVar('merchantCode', 'NWSC');
+              $this->saveSessionVar('utilityBillAccountNo', $this->getSessionVar("nwscMeterNumber"));
+              $this->saveSessionVar('flavour', 'open');
+              $this->saveSessionVar('billEnrolment', "NO");
+              $this->saveSessionVar('billEnrolmentNumber', 'NULL');
+              $this->saveSessionVar('NWSCarea', $this->getSessionVar("selectedArea"));
+
+              $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+              $message = "Select Account: \n";
+              if ($ACCOUNTS != null) {
+              $message = "Choose Account \n";
+              $count = 0;
+              foreach ($ACCOUNTS as $account) {
+              $count = $count + 1;
+              $selectedAccount = $account;
+              $message .= $count . ")" . $selectedAccount['ACCOUNTNUMBER'] . "\n";
+              }
+              }
+
+              $this->displayText = "Select account:\n" . $message;
+              $this->sessionState = "CONTINUE";
+              $this->nextFunction = "finalizeProcessingPayBill";
+
+              break;
+
+              case 2:
+              $this->startPage();
+              break;
+
+              default:
+              $this->nextFunction = "enterAmount";
+              $this->processNwsc($input);
+              break;
+              }
+              
+              
         }
 
         function processKCCA($input) {
@@ -3531,7 +3535,7 @@
                 $fields_string = null;
                 $ch = curl_init(); 
 
-                curl_setopt($ch, CURLOPT_URL, ' http://10.250.250.29:9000/hub/services/paymentGateway/JSON/index.php');
+                curl_setopt($ch, CURLOPT_URL, '');
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                 curl_setopt($ch, CURLOPT_NOSIGNAL, 1); 
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
