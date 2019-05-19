@@ -530,8 +530,9 @@ class EcobankGlobalUSSDMenu extends DynamicMenuController {
         $this->sessionState = "END";
 
 
-        return;
+       
 
+/*
         $this->logMessage("In the startPage ... About to load configs");
 
 
@@ -563,7 +564,7 @@ class EcobankGlobalUSSDMenu extends DynamicMenuController {
 
             $this->presentData($text, null, null, self::SESSION_STATE_END);
 
-            return;  */
+            return;  
         }
 
 
@@ -752,9 +753,7 @@ class EcobankGlobalUSSDMenu extends DynamicMenuController {
 
                     //The start page of the menu;
 
-                    /* $this->presentData($text,"startPage","processOneTimePin");
-
-                      return; */
+                    // $this->presentData($text,"startPage","processOneTimePin");  return; 
                 } elseif ($profileActiveStatus != 1) {
 
                     //Customer is not active
@@ -895,6 +894,7 @@ class EcobankGlobalUSSDMenu extends DynamicMenuController {
         //The start page of the menu;
 
         $this->presentData($text, "startPage", "processStartPage");
+        */
     }
 
     /*
