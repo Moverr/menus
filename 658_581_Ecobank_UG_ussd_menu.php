@@ -526,11 +526,12 @@ class EcobankGlobalUSSDMenu extends DynamicMenuController {
 
         //Log
         //
-        $this->displayText = "Testing Start of Application:";
+        $this->displayText = "Testing Start of Application";
         $this->sessionState = "END";
 
 
-/*
+        return;
+
         $this->logMessage("In the startPage ... About to load configs");
 
 
