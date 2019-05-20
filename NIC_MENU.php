@@ -3118,7 +3118,7 @@
 
               default:
               $this->nextFunction = "enterAmount";
-              $this->processNwsc($input);
+               
               break;
               }
               
