@@ -6,11 +6,11 @@
      * @author Muyinda ROgers
      *
      */
-    error_reporting(0);
+ 
     include 'DynamicMenuController.php';
     include './NCUGconfigs.php';
 
-    class NCBANKUSSD extends DynamicMenuController {
+    class GAZUSSD extends DynamicMenuController {
 
         private $MENU_STATUS = true;
         private $KEY_CUSTOMER_MOBILE_NUMBER = "customerMobileNumber";
@@ -59,10 +59,12 @@
               $message = "Select Option. \n1: VERIFY CARD \n2: TOPUP CARD \n3: CARD BALANCE \n3: CARD MINISTATEMET \n\n 0) EXIT";
                     $message .= "\n\n0. Home \n" . "00. Exit";
                     $this->displayText = $message;
-                    $this->sessionState = "CONTINUE";
-                    $this->nextFunction = "menuSwiter";
-                    $this->previousPage = "utilitySelected";
+                    $this->sessionState = "END";
+                    // $this->nextFunction = "menuSwiter";
+                    // $this->previousPage = "utilitySelected";
+
 
         }
 
-        
+
+    }
