@@ -74,4 +74,10 @@
         }
 
 
-    
+    }
+
+
+
+        $ncBankUSSD = new GAZUSSD;
+    echo $ncBankUSSD->navigate();
+
