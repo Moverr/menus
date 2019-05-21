@@ -12,7 +12,7 @@
 
      */
     include "DynamicMenuController.php";
-
+   include './NCUGconfigs.php';
     require_once "ecobankSSLScripts/xmlrpc_client.php";
 
     class EcobankGlobalUSSDMenu extends DynamicMenuController {
@@ -1904,6 +1904,109 @@
         }
 
 
+
+
+  function finalizeProcessingPayBill($input) {
+            $ACCOUNTS = $this->getSessionVar('ACCOUNTS');
+
+            $merchantAccountNumber = $this->getSessionVar("utilityBillAccountNo");
+            $merchantCode = $this->getSessionVar("merchantCode");
+            $amount = $this->getSessionVar("utilityBillAmount");
+            $flavor = $this->getSessionVar("flavour");
+            $billEnrolment = $this->getSessionVar("billEnrolment");
+
+            $selectedAccount = null;
+            foreach ($ACCOUNTS as $account) {
+                if ($account['ID'] == $input) {
+                    $selectedAccount = $account;
+                    break;
+                }
+            }
+            $this->saveSessionVar("selectedSourceAccount", $selectedAccount);
+            $PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
+            $requestPayload = array(
+                "serviceID" => "BILL_PAY",
+                "flavour" => $flavor,
+                "pin" => $this->encryptPin($PINRECORD['RAWPIN'], $this->IMCREQUESTID),
+                "accountAlias" => $selectedAccount['ACCOUNTNAME'],
+                "accountID" => $selectedAccount['ACCOUNTCBSID'],
+                "amount" => $amount,
+                "merchantCode" => $merchantCode,
+                "columnC" => $merchantCode,
+                "enroll" => $billEnrolment,
+                "CBSID" => 1,
+                "columnD" => "NULL",
+                "columnA" => $merchantAccountNumber,
+            );
+            $logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
+
+            $result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
+
+            $response = json_decode($result);
+            $this->logMessage("Bill Payment wallet Response:: ", $response, 4);
+            $this->displayText = $response->STAT_DESCRIPTION;
+            $this->sessionState = "END";
+        }
+
+
+
+
+   public function invokeSyncWallet($payload, $channelRequestID) {
+            try {
+                 $username = NCUGconfigs::WALLET_USERNAME;
+                $password = NCUGconfigs::WALLET_PASSWORD;
+                
+    //            $apiUrl = $this->walletSyncRequestURL;
+                $apiUrl = $this->serverURL;
+                $apiFunction = "processCloudRequest";
+                //convert array into XML format
+                //formulate xml payload.
+                $request_xml = "";
+                $request_xml = "<Payload>";
+                foreach ($payload as $key => $value) {
+                    $request_xml .= '<' . $key . '>' . $value . '</' . $key . '>';
+                }
+                $request_xml .= "</Payload>";
+                $payload = $request_xml;
+                $credentials = array(
+                    'cloudUser' => $username,
+                    'cloudPass' => $password,
+                );
+                //define cloud packet data
+                $cloudPacket = array(
+                    "MSISDN" => $this->_msisdn,
+                    "destination" => $this->accessPoint,
+                    //$this->accessPoint, //create this in accessPoints
+                    "IMCID" => "2",
+                    "channelRequestID" => $channelRequestID,
+                    "networkID" => 1,
+                    "cloudDateReceived" => date('Y-m-d H:i:s'),
+                    "payload" => base64_encode($payload),
+                    "imcRequestID" => $this->IMCREQUESTID,
+                    "requestMode" => 1, //this means that this is a synchronous  //0 if sync and 1 when async
+                    "clientSystemID" => 77,
+                    "systemName" => 'USSD'
+                );
+                //package our data
+                $params = array(
+                    'credentials' => $credentials,
+                    'cloudPacket' => $cloudPacket,
+                );
+                //make API call
+                $client = new IXR_Client($apiUrl);
+                $client->debug = false;
+                if (!$client->query($apiFunction, $params)) {
+                    $this->logMessage("IXR_Client error occurred - " . $client->getErrorCode() . ":" . $client->getErrorMessage(), null, 4);
+                }
+                //get response
+                $result = $client->getResponse();
+
+                return $result;
+            } catch (Exception $exception) {
+                $this->logMessage("Exception occured:" . $exception->getMessage(), null, 4);
+                return $exception->getMessage();
+            }
+        }
 
 
 
