@@ -55,8 +55,14 @@
         private $nwscAreas = "Kampala,Jinja,Entebbe,Lugazi,Iganga,Kawuku,Kajjansi,Mukono,Others";
 
         function startPage() {
-            $this->firstMenu();
-            // $this->validateCustomerPin('22222');
-    //        $this->checkPin();
-    //        $this->paySelfTest();
+            
+              $message = "Select Option. \n1: VERIFY CARD \n2: TOPUP CARD \n3: CARD BALANCE \n3: CARD MINISTATEMET \n\n 0) EXIT";
+                    $message .= "\n\n0. Home \n" . "00. Exit";
+                    $this->displayText = $message;
+                    $this->sessionState = "CONTINUE";
+                    $this->nextFunction = "menuSwiter";
+                    $this->previousPage = "utilitySelected";
+
         }
+
+        
