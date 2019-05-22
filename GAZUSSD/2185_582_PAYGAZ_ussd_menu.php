@@ -235,7 +235,7 @@ $payload = array(
 
 $responsedata = json_decode($response);
  
- $this->displayText = "PASSME";
+ $this->displayText = "".$responsedata;
                 $this->sessionState = "END";
                  
 
