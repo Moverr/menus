@@ -210,10 +210,10 @@
 
 
             $respponse = $this->postValidationRequestToHUB($this->$hubJSONAPIUrl, json_encode($spayload));
-            
+
 $result = json_decode($respponse);
 
- $this->displayText = "". json_decode($result->results[0]->statusDescription);
+ $this->displayText = "". $result->results[0]->statusDescription;
                 $this->sessionState = "END";
                  
 
