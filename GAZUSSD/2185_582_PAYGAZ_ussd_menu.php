@@ -136,8 +136,8 @@
                     $this->nextFunction = "getAmount";
                     $this->previousPage = "getAmount";
                     }else{
-                    $this->saveSessionVar("CARDNUMBER", $input);
-                    $this->displayText = "Enter TopUp Amount ";
+                    $this->saveSessionVar("CARDAMOUNT", $input);
+                    $this->displayText = "1)Confirm Transaction ";
                     $this->sessionState = "CONTRINUE";
                     $this->nextFunction = "finalizePayment";
                     $this->previousPage = "getAmount";
