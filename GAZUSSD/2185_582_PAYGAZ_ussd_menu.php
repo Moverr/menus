@@ -54,8 +54,11 @@
                 private $uraServiceCode = 'URA';
                 private $nwscAreas = "Kampala,Jinja,Entebbe,Lugazi,Iganga,Kawuku,Kajjansi,Mukono,Others";
 
-                private $hubJSONAPIUrl = "http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php";
+        
+        // private $hubJSONAPIUrl = "http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php";
 
+        // private $hubJSONAPIUrl = "http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php";
+private $hubJSONAPIUrl = "http://10.250.250.29:9000/hub/services/paymentGateway/JSON/index.php";
 
                 function startPage() {
 
