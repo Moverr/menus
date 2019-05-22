@@ -221,17 +221,20 @@
         );
 
 
-            // $respponse = $this->postValidationRequestToHUB($this->$hubJSONAPIUrl, json_encode($spayload));
+    $respponse = $this->postValidationRequestToHUB("http://10.250.250.29:9000/hub/services/paymentGateway/JSON/index.php",son_encode($spayload));
 
 
 
-$payload = array(
-    'credentials' => $credentials,
-    'packet' => $packet);
-//$params=array($function,$payload);
-//private $hubJSONAPIUrl = "http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php";
-//http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php
- $response  =  $this->postToCPGPayload($payload, "http://10.250.250.29:9000/hub/services/paymentGateway/JSON/index.php", "BEEP.postPayment");
+// $payload = array(
+//     'credentials' => $credentials,
+//     'packet' => $packet);
+// //$params=array($function,$payload);
+// //private $hubJSONAPIUrl = "http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php";
+// //http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php
+//  $response  =  $this->postToCPGPayload($payload, "http://10.250.250.29:9000/hub/services/paymentGateway/JSON/index.php", "BEEP.postPayment");
+
+
+
 // return array("SUCCESS"=>true);
 
 
@@ -293,10 +296,7 @@ function postToCPGPayload($params, $url, $method) {
 
          function postValidationRequestToHUB($url, $fields) {
              $fields_string = null;
- $this->logMessage(" .......................: ", "INIT");
-
-
-
+ 
         $ch = curl_init(); 
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -305,9 +305,7 @@ function postToCPGPayload($params, $url, $method) {
       
         $result = curl_exec($ch); 
         curl_close($ch);
-         $this->logMessage(" .......................: ", json_decode($result));
-
-
+       
 
           return $result;
         }
