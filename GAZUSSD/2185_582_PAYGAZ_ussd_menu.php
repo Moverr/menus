@@ -209,7 +209,7 @@
         );
 
 
-            $respponse = postValidationRequestToHUB($this->$hubJSONAPIUrl, json_encode($spayload));
+            $respponse = $this->postValidationRequestToHUB($this->$hubJSONAPIUrl, json_encode($spayload));
 
  $this->displayText = "Successfully logged  ";
                 $this->sessionState = "END";
