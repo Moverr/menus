@@ -59,8 +59,15 @@
 
         // private $hubJSONAPIUrl = "http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php";
 private $hubJSONAPIUrl = "http://10.250.250.29:9000/hub/services/paymentGateway/JSON/index.php";
+// private $hubJSONAPIUrl = "http://10.250.250.29:9000/hub/services/paymentGateway/JSON/index.php";
+
+ 
+
+
+// http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php"
 
                 function startPage() {
+
 
 
 
@@ -194,7 +201,7 @@ private $hubJSONAPIUrl = "http://10.250.250.29:9000/hub/services/paymentGateway/
                "currencyCode"=>"KES",
                 "customerNames"=> "Muyinda Rogers",
                 "paymentMode"=> "Online Payment",
-                 "datePaymentReceived"=> "2019-05-14 11:45:18"
+                 "datePaymentReceived"=> "2019-05-22 3:03:18"
             // "payerTransactionID"=>0779820962,
         );
 
