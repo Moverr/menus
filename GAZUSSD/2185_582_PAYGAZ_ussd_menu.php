@@ -280,6 +280,11 @@ function postToCPGPayload($params, $url, $method) {
     $output = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
+
+     $this->logMessage("||||||||||||||||||: ", $print_r($output));
+
+
+
     return $output;
 }
 
