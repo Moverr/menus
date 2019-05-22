@@ -78,7 +78,7 @@
                     switch ($input) {
                         case '1':
                             # code...
-                         $this->topUpCardMenu();
+                         $this->validateCardMenu();
   
                         break;
                         case '2':
@@ -99,20 +99,28 @@
                 }
 
             function validateCardMenu(){
-                  $this->displayText = "6437389";
-                        $this->sessionState = "CONTRINUE";
+                $this->displayText = "Under Constrution";
+                $this->sessionState = "END";
                         
 
             }
             function topUpCardMenu(){
-                 $this->displayText = "Enter Card Number";
-                        $this->sessionState = "CONTRINUE";
-                        $this->nextFunction = "getCardNumber";
-                        $this->previousPage = "topUpCardMenu";
+                $this->displayText = "Enter Card Number";
+                $this->sessionState = "CONTRINUE";
+                $this->nextFunction = "getCardNumber";
+                $this->previousPage = "topUpCardMenu";
                 
             }
 
             function getCardNumber($input){
+                if($input == ""){
+                   $this->displayText = "Invalid Input \nEnter Card Number";
+                $this->sessionState = "CONTRINUE";
+                $this->nextFunction = "getCardNumber";
+                $this->previousPage = "getCardNumber";
+                }else{
+                     $this->saveSessionVar("CARDNUMBER", $input);
+                }
 
             }
 
