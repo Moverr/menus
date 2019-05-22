@@ -223,7 +223,7 @@
 
 $result = json_decode($respponse);
 
- $this->displayText = print_r($result,TRUE);
+ $this->displayText = "".echo($result);
                 $this->sessionState = "END";
                  
 
