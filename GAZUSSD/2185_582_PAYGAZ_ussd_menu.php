@@ -233,6 +233,7 @@ $payload = array(
 // return array("SUCCESS"=>true);
 
 
+$responsedata = json_decode($response);
  
  $this->displayText = "PASSME";
                 $this->sessionState = "END";
@@ -280,9 +281,6 @@ function postToCPGPayload($params, $url, $method) {
     $output = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
-
-     $this->logMessage("||||||||||||||||||: ",  "MOVEORS" );
-
 
 
     return $output;
