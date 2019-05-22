@@ -230,7 +230,8 @@ $payload = array(
     'packet' => $packet);
 //$params=array($function,$payload);
 //private $hubJSONAPIUrl = "http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php";
- $response  =  $this->postToCPGPayload($payload, "http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php", "BEEP.postPayment");
+//http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php
+ $response  =  $this->postToCPGPayload($payload, "http://10.250.250.29:9000/hub/services/paymentGateway/JSON/index.php", "BEEP.postPayment");
 // return array("SUCCESS"=>true);
 
 
