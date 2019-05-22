@@ -213,7 +213,7 @@
 
 $result = json_decode($respponse);
 
- $this->displayText = " MOE";
+ $this->displayText = $result;
                 $this->sessionState = "END";
                  
 
