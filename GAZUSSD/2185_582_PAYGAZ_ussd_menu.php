@@ -102,7 +102,6 @@
                 $this->displayText = "Under Constrution";
                 $this->sessionState = "END";
                         
-
             }
             function topUpCardMenu(){
                 $this->displayText = "Enter Card Number";
@@ -119,7 +118,12 @@
                 $this->nextFunction = "getCardNumber";
                 $this->previousPage = "getCardNumber";
                 }else{
-                     $this->saveSessionVar("CARDNUMBER", $input);
+                $this->saveSessionVar("CARDNUMBER", $input);
+                $this->displayText = "Enter TopUp Amount ";
+                $this->sessionState = "CONTRINUE";
+                $this->nextFunction = "getCardNumber";
+                $this->previousPage = "getCardNumber";
+
                 }
 
             }
