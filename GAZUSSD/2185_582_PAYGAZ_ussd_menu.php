@@ -37,7 +37,9 @@
                 private $utl_reg = "/^(71|071|25671)(\d{7})$/";
                 private $orange_reg = "/^(079|25679|79)(\d{7})$/";
                 //validation configs
-                private $hubJSONAPIUrl = "http://localhost:9001/hub/services/paymentGateway/JSON/index.php";
+                
+                 private $hubJSONAPIUrl = "http://10.250.250.29:9000/hub/services/paymentGateway/JSON/index.php";
+                // private $hubJSONAPIUrl = "http://localhost:9001/hub/services/paymentGateway/JSON/index.php";
                 // private $hubJSONAPIUrl = "http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php";
                 private $hubValidationFunction = "BEEP.validateAccount";
                 private $hubAuthSuccessCode = "131";
@@ -219,11 +221,20 @@
         );
 
 
-            $respponse = $this->postValidationRequestToHUB($this->$hubJSONAPIUrl, json_encode($spayload));
+            // $respponse = $this->postValidationRequestToHUB($this->$hubJSONAPIUrl, json_encode($spayload));
 
-$result = ($respponse);
 
- $this->displayText = "".$result;
+
+$payload = array(
+    'credentials' => $credentials,
+    'packet' => $packet);
+//$params=array($function,$payload);
+ $response  =  $this->postToCPGPayload($payload, "http://10.250.250.29:9000/hub/services/paymentGateway/JSON/index.php", "BEEP.postPayment");
+// return array("SUCCESS"=>true);
+
+
+ 
+ $this->displayText = "PASSME";
                 $this->sessionState = "END";
                  
 
@@ -254,9 +265,32 @@ $result = ($respponse);
 
 
 
+
+function postToCPGPayload($params, $url, $method) {
+//$method="PlotUpload";
+    $payload = array('function' => $method, 'payload' => json_encode($params));
+//echo json_encode($payload);
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HEADER, false);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+
+    $output = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    return $output;
+}
+
+
+
+
          function postValidationRequestToHUB($url, $fields) {
              $fields_string = null;
  $this->logMessage(" .......................: ", "INIT");
+
+
 
         $ch = curl_init(); 
         curl_setopt($ch, CURLOPT_URL, $url);
