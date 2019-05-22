@@ -235,7 +235,7 @@ $payload = array(
 
 $responsedata = json_decode($response);
  
- $this->displayText = "".$responsedata;
+ $this->displayText = "".print_r($responsedata);
                 $this->sessionState = "END";
                  
 
