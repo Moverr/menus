@@ -54,6 +54,9 @@
                 private $uraServiceCode = 'URA';
                 private $nwscAreas = "Kampala,Jinja,Entebbe,Lugazi,Iganga,Kawuku,Kajjansi,Mukono,Others";
 
+                private $hubJSONAPIUrl = "http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php";
+
+
                 function startPage() {
 
 
@@ -75,15 +78,12 @@
                     switch ($input) {
                         case '1':
                             # code...
-                        $this->displayText = "Enter Card Number";
-                        $this->sessionState = "CONTRINUE";
-
+                         $this->topUpCardMenu();
+  
                         break;
                         case '2':
-                        $this->displayText = "Enter Card Number";
-                        $this->sessionState = "CONTRINUE";
-
-                        break;
+                          $this->topUpCardMenu();
+                       break;
                         case '3':
                         $this->cardBalanceMenu();
                         break;
@@ -98,11 +98,29 @@
                     }
                 }
 
-function validateCardMenu(){
-                //todo: Enter Card Number
+            function validateCardMenu(){
+                  $this->displayText = "6437389";
+                        $this->sessionState = "CONTRINUE";
+                        
 
             }
             function topUpCardMenu(){
+                 $this->displayText = "Enter Card Number";
+                        $this->sessionState = "CONTRINUE";
+                        $this->nextFunction = "getCardNumber";
+                        $this->previousPage = "topUpCardMenu";
+                
+            }
+
+            function getCardNumber($input){
+
+            }
+
+
+            function getAmount($input){
+
+            }
+            function finalizePayment($input){
 
             }
 
