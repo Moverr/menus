@@ -38,7 +38,7 @@
                 private $orange_reg = "/^(079|25679|79)(\d{7})$/";
                 //validation configs
                 // private $hubJSONAPIUrl = "http://localhost:9001/hub/services/paymentGateway/JSON/index.php";
-                private $hubJSONAPIUrl = "http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php";
+                // private $hubJSONAPIUrl = "http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php";
                 private $hubValidationFunction = "BEEP.validateAccount";
                 private $hubAuthSuccessCode = "131";
                 private $hubValidationSuccessCode = "307";
