@@ -236,7 +236,7 @@ $payload = array(
 
 $responsedata = (string) $response;
  
- $this->displayText = "".$responsedata;
+ $this->displayText = ":::".$responsedata;
                 $this->sessionState = "END";
                  
 
