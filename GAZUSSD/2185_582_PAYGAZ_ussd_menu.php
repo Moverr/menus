@@ -262,9 +262,10 @@ $result = json_decode($respponse);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_NOSIGNAL, 1); 
         curl_setopt($ch, CURLOPT_POSTFIELDS, $fields); 
+        return "pass";
         $result = curl_exec($ch); 
         curl_close($ch);
-        return "pass";
+        
         }
 
 
