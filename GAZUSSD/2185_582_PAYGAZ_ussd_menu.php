@@ -185,7 +185,8 @@
 
 
  
-   $packet = array( 
+
+        $packet = array( 
             
             'serviceID' => 2114,
             'serviceCode' => "PAY077PAY077",
@@ -202,7 +203,7 @@
                "currencyCode"=>"KES",
                 "customerNames"=> "Muyinda Rogers",
                 "paymentMode"=> "Online Payment",
-                 "datePaymentReceived"=> "2019-05-14 11:45:18"
+                 "datePaymentReceived"=> "2019-05-22 3:03:18"
             // "payerTransactionID"=>0779820962,
         );
 
@@ -220,11 +221,7 @@
         );
 
 
-
-        
-
-
-            $respponse = $this->postValidationRequestToHUB("http://10.250.250.29:9000/hub/services/paymentGateway/JSON/index.php", json_encode($spayload));
+            // $respponse = $this->postValidationRequestToHUB($this->$hubJSONAPIUrl, json_encode($spayload));
 
 
 
@@ -234,7 +231,7 @@
 //$params=array($function,$payload);
 //private $hubJSONAPIUrl = "http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php";
 //http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php
- // $response  =  $this->postToCPGPayload($spayload, "http://10.250.250.29:9000/hub/services/paymentGateway/JSON/index.php", "BEEP.postPayment");
+ $response  =  $this->postToCPGPayload($payload, "http://10.250.250.29:9000/hub/services/paymentGateway/JSON/index.php", "BEEP.postPayment");
 // return array("SUCCESS"=>true);
 
 
@@ -246,25 +243,6 @@ $responsedata = (string) $response;
 
 
             }
-
-
-  function postValidationRequestToHUB($url, $fields) {
-             $fields_string = null;
- 
-
-        $ch = curl_init(); 
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_NOSIGNAL, 1); 
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields); 
-      
-        $result = curl_exec($ch); 
-        curl_close($ch);
- 
-
-          return $result;
-        }
-
 
             function validateCard($input){
 
@@ -315,7 +293,9 @@ function postToCPGPayload($params, $url, $method) {
 
          function postValidationRequestToHUB($url, $fields) {
              $fields_string = null;
- 
+ $this->logMessage(" .......................: ", "INIT");
+
+
 
         $ch = curl_init(); 
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -325,7 +305,9 @@ function postToCPGPayload($params, $url, $method) {
       
         $result = curl_exec($ch); 
         curl_close($ch);
- 
+         $this->logMessage(" .......................: ", json_decode($result));
+
+
 
           return $result;
         }
