@@ -121,7 +121,7 @@
                 $this->saveSessionVar("CARDNUMBER", $input);
                 $this->displayText = "Enter TopUp Amount ";
                 $this->sessionState = "CONTRINUE";
-                $this->nextFunction = "getCardNumber";
+                $this->nextFunction = "getAmount";
                 $this->previousPage = "getCardNumber";
 
                 }
@@ -130,7 +130,19 @@
 
 
             function getAmount($input){
-
+                    if($input == ""){
+                       $this->displayText = "Invalid Input \nEnter TopUp Amount";
+                    $this->sessionState = "CONTRINUE";
+                    $this->nextFunction = "getAmount";
+                    $this->previousPage = "getAmount";
+                    }else{
+                    $this->saveSessionVar("CARDNUMBER", $input);
+                    $this->displayText = "Enter TopUp Amount ";
+                    $this->sessionState = "CONTRINUE";
+                    $this->nextFunction = "finalizePayment";
+                    $this->previousPage = "getAmount";
+                    }
+                    
             }
             function finalizePayment($input){
 
