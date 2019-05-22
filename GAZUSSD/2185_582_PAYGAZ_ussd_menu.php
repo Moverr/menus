@@ -145,69 +145,7 @@
 
             }
             function finalizePayment($input){
-
-                $credentials = array(
-                            "username" => "gazpay",
-                            "password" => "abcd@12345"
-                        );
-
-
-                        $packet = array();
-
-
-                        $extraData = json_encode(array(
-                             
-                            "authorization"=>"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdhelRvcFVwLm11bGFAY2VsbHVsYW50LmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJDJCM2IzY1luWG5yOVRkSlhWbUgwQU8ydXhSSkUvRFY3L0NuSTYzS3RycVNVZWNIQ1R1cEsyIiwidXNlcm5hbWUiOiJNdWxhX0NlbGx1bGFudCIsInJhbmRvbSI6Ik1VTEFfR0FaNDI4NjYxMTIzIiwiaWF0IjoxNTUzNzg0NTAxfQ.WBpkwbMWuRx5sgqjkmAuwgvaG1dFrduoY2bhdmi2EDw",
-                            "cardmask"=>"G001",
-                            "transactioncode"=>"CPG_TRANSACTION",
-                            "amount"=>234000
-
-                 
-
-                        )
-
-                        );
-
-
-                 
-
-                        $packet = array( 
-                            
-                            'serviceID' => 2114,
-                            'serviceCode' => "PAY077PAY077",
-
-                            'requestExtraData' => null,
-                            'extraData' => $extraData,
-                            "payerTransactionID"=> rand(),
-                            "invoiceNumber"=>"73737",
-                            "invoiceNumber"=>"123",
-                            "MSISDN"=>254779820962,
-                            "amount"=>1000,
-                            "accountNumber"=> "21140615",
-                            "narration"=> "Beep.Payment",
-                               "currencyCode"=>"KES",
-                                "customerNames"=> "Muyinda Rogers",
-                                "paymentMode"=> "Online Payment",
-                                 "datePaymentReceived"=> "2019-05-14 11:45:18"
-                            // "payerTransactionID"=>0779820962,
-                        );
-
-
-                        $data[] = $packet;
-                        $payload = array(
-                            "credentials" => $credentials,
-                            "packet" => $data
-                        );
-
-                        $spayload = array(
-                           // "function"=>"BEEP.validateAccount",
-                            "function" => "BEEP.postPayment",
-                            "payload" => json_encode($payload)
-                        );
-
-
-
-                        $respponse = $this->postValidationRequestToHUB($this->$hubJSONAPIUrl, json_encode($spayload));
+ 
 
 
             }
