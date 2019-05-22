@@ -37,7 +37,7 @@
                 private $utl_reg = "/^(71|071|25671)(\d{7})$/";
                 private $orange_reg = "/^(079|25679|79)(\d{7})$/";
                 //validation configs
-                // private $hubJSONAPIUrl = "http://localhost:9001/hub/services/paymentGateway/JSON/index.php";
+                private $hubJSONAPIUrl = "http://localhost:9001/hub/services/paymentGateway/JSON/index.php";
                 // private $hubJSONAPIUrl = "http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php";
                 private $hubValidationFunction = "BEEP.validateAccount";
                 private $hubAuthSuccessCode = "131";
@@ -58,7 +58,7 @@
         // private $hubJSONAPIUrl = "http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php";
 
         // private $hubJSONAPIUrl = "http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php";
-private $hubJSONAPIUrl = "http://10.250.250.29:9000/hub/services/paymentGateway/JSON/index.php";
+// private $hubJSONAPIUrl = "http://10.250.250.29:9000/hub/services/paymentGateway/JSON/index.php";
 // private $hubJSONAPIUrl = "http://10.250.250.29:9000/hub/services/paymentGateway/JSON/index.php";
 
  
@@ -255,16 +255,16 @@ $result = json_decode($respponse);
 
 
          function postValidationRequestToHUB($url, $fields) {
-            $fields_string = null;
+             $fields_string = null;
 
-            $ch = curl_init(); 
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_NOSIGNAL, 1); 
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $fields); 
-            $result = curl_exec($ch); 
-            curl_close($ch);
-            return $result;
+        $ch = curl_init(); 
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_NOSIGNAL, 1); 
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields); 
+        $result = curl_exec($ch); 
+        curl_close($ch);
+        return "pass";
         }
 
 
