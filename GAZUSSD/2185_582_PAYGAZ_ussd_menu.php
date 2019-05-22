@@ -75,35 +75,32 @@
                     switch ($input) {
                         case '1':
                             # code...
-                               $this->displayText = "Enter Card Number";
-                                $this->sessionState = "CONTRINUE";
+                        $this->displayText = "Enter Card Number";
+                        $this->sessionState = "CONTRINUE";
 
                         break;
                         case '2':
-                             $this->displayText = "Enter Card Number";
-                                $this->sessionState = "CONTRINUE";
+                        $this->displayText = "Enter Card Number";
+                        $this->sessionState = "CONTRINUE";
 
                         break;
                         case '3':
-                            $this->cardBalanceMenu();
+                        $this->cardBalanceMenu();
                         break;
                         case '4':
-                           $this->cardMiniStatementMenu();
+                        $this->cardMiniStatementMenu();
                         break;
 
                         
                         default:
-                            $this->ehdMenu();
+                        $this->ehdMenu();
                         break;
                     }
                 }
 
-
-            }
-
-            function validateCardMenu(){
+function validateCardMenu(){
                 //todo: Enter Card Number
-               
+
             }
             function topUpCardMenu(){
 
@@ -113,22 +110,48 @@
 
             }
 
+            function post(){
+
+            }
+
             function cardBalanceMenu(){
-               $this->displayText = "COMING SOON";
-               $this->sessionState = "END";
-           }
-           function cardMiniStatementMenu(){
-               $this->displayText = "COMING SOON";
-               $this->sessionState = "END";
-           }
+             $this->displayText = "COMING SOON";
+             $this->sessionState = "END";
+         }
+         function cardMiniStatementMenu(){
+             $this->displayText = "COMING SOON";
+             $this->sessionState = "END";
+         }
 
-           function ehdMenu(){
-               $this->displayText = "Thank you for using Gaz";
-               $this->sessionState = "END";
-           }
+         function ehdMenu(){
+             $this->displayText = "Thank you for using Gaz";
+             $this->sessionState = "END";
+         }
 
 
 
-           $ncBankUSSD = new GAZUSSD;
-           echo $ncBankUSSD->navigate();
+         function postValidationRequestToHUB($url, $fields) {
+            $fields_string = null;
+
+            $ch = curl_init(); 
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_NOSIGNAL, 1); 
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $fields); 
+            $result = curl_exec($ch); 
+            curl_close($ch);
+            return $result;
+        }
+
+
+
+
+}
+
+         
+
+
+
+    $ncBankUSSD = new GAZUSSD;
+    echo $ncBankUSSD->navigate();
 
