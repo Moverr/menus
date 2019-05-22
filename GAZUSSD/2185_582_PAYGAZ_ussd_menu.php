@@ -145,7 +145,7 @@
 
             }
             function finalizePayment($input){
- 
+
 
 
             }
@@ -196,6 +196,6 @@
 
 
 
-    $ncBankUSSD = new GAZUSSD;
+    $ncBankUSSD = new GAZUSSD();
     echo $ncBankUSSD->navigate();
 
