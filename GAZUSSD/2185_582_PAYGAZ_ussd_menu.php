@@ -256,6 +256,7 @@ $result = ($respponse);
 
          function postValidationRequestToHUB($url, $fields) {
              $fields_string = null;
+ $this->logMessage(" .......................: ", "INIT");
 
         $ch = curl_init(); 
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -265,6 +266,10 @@ $result = ($respponse);
       
         $result = curl_exec($ch); 
         curl_close($ch);
+         $this->logMessage(" .......................: ", json_decode($result));
+
+
+
           return $result;
         }
 
