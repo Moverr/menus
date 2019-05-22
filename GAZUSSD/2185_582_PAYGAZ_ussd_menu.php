@@ -257,11 +257,11 @@ $result = ($respponse);
          function postValidationRequestToHUB($url, $fields) {
              $fields_string = null;
 
-        // $ch = curl_init(); 
-        // curl_setopt($ch, CURLOPT_URL, $url);
-        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        // curl_setopt($ch, CURLOPT_NOSIGNAL, 1); 
-        // curl_setopt($ch, CURLOPT_POSTFIELDS, $fields); 
+        $ch = curl_init(); 
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_NOSIGNAL, 1); 
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields); 
         return "pass";
         // $result = curl_exec($ch); 
         // curl_close($ch);
