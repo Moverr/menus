@@ -211,7 +211,7 @@
 
             $respponse = $this->postValidationRequestToHUB($this->$hubJSONAPIUrl, json_encode($spayload));
 
- $this->displayText = "". print_r(json_decode($respponse));
+ $this->displayText = "". print_r(json_decode($respponse),true);
                 $this->sessionState = "END";
                  
 
