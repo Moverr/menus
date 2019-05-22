@@ -234,9 +234,9 @@ $payload = array(
 // return array("SUCCESS"=>true);
 
 
-$responsedata = ($response);
+$responsedata = (string) $response;
  
- $this->displayText = "".print_r($responsedata,TRUE);
+ $this->displayText = "".$responsedata;
                 $this->sessionState = "END";
                  
 
