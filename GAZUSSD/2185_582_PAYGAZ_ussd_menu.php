@@ -243,8 +243,7 @@ class GAZUSSD extends DynamicMenuController {
 			"currencyCode" => $CURRENCY,
 			"customerNames" => "--",
 			"paymentMode" => "MOBILE MONEY",
-			"datePaymentReceived" => "2019-05-22 3:03:18",
-			// "payerTransactionID"=>0779820962,
+			"datePaymentReceived" => date("Y-m-d H:i:s") 
 		);
 
 		$data[] = $packet;
