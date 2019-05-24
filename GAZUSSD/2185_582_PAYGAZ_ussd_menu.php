@@ -36,9 +36,8 @@ class GAZUSSD extends DynamicMenuController {
 	private $warid_reg = "/^(25670|70|070)(\d{7})$/";
 	private $utl_reg = "/^(71|071|25671)(\d{7})$/";
 	private $orange_reg = "/^(079|25679|79)(\d{7})$/";
-	 
 
-	private $hubJSONAPIUrl = "http://10.250.250.29:9000/hub/services/paymentGateway/JSON/index.php"; 
+	private $hubJSONAPIUrl = "http://10.250.250.29:9000/hub/services/paymentGateway/JSON/index.php";
 	private $hubValidationFunction = "BEEP.validateAccount";
 	private $hubAuthSuccessCode = "131";
 	private $hubValidationSuccessCode = "307";
@@ -58,13 +57,10 @@ class GAZUSSD extends DynamicMenuController {
 	private $BEEPUSERNAME = "gazpay";
 	private $BEEPPASSWORD = "abcd@12345";
 
-    private $NARRATION = "GAZ PAYMENT";
-    private $SERVICECODE = "PAY077PAY077";
-    private $SERVICEID = 2114;
-    private $CURRENCY = "KES";
-
-        
-
+	private $NARRATION = "GAZ PAYMENT";
+	private $SERVICECODE = "PAY077PAY077";
+	private $SERVICEID = 2114;
+	private $CURRENCY = "KES";
 
 	function startPage() {
 
@@ -132,53 +128,45 @@ class GAZUSSD extends DynamicMenuController {
 
 	function selectPaymentOption($input) {
 
-	 
-			$this->saveSessionVar("PAYMENTOPTION", $input);
+		$this->saveSessionVar("PAYMENTOPTION", $input);
 
-			switch ($input) {
-			case '1':
-				# code...
-                    $this->displayText = "Enter Mobile Number ";
-                    $this->sessionState = "CONTRINUE";
-                    $this->nextFunction = "getMobileNumber";
-                    $this->previousPage = "selectPaymentOption";
-                    # 
-				break;
+		switch ($input) {
+		case '1':
+			# code...
+			$this->displayText = "Enter Mobile Number ";
+			$this->sessionState = "CONTRINUE";
+			$this->nextFunction = "getMobileNumber";
+			$this->previousPage = "selectPaymentOption";
+			#
+			break;
 
-			default:
-				$this->displayText = "Invalid Input \nSelect payment option \n1) Mobile Money";
-				$this->sessionState = "CONTRINUE";
-				$this->nextFunction = "selectPaymentOption";
-				$this->previousPage = "selectPaymentOption";
-				break;
-			}
-
-			
-
+		default:
+			$this->displayText = "Invalid Input \nSelect payment option \n1) Mobile Money";
+			$this->sessionState = "CONTRINUE";
+			$this->nextFunction = "selectPaymentOption";
+			$this->previousPage = "selectPaymentOption";
+			break;
 		}
 
 	}
 
-    function getMobileNumber($input){ 
+	function getMobileNumber($input) {
 
-        if ($input == "") {
-            $this->displayText = "Invalid Input \n Enter Mobile Number ";
-            $this->sessionState = "CONTRINUE";
-            $this->nextFunction = "getMobileNumber";
-            $this->previousPage = "getMobileNumber";
-        } else {
-            $this->saveSessionVar("MOBILENUMBER", $input);
-            $this->displayText = "Enter TopUp Amount ";
-            $this->sessionState = "CONTRINUE";
-            $this->nextFunction = "getAmount";
-            $this->previousPage = "getMobileNumber";
+		if ($input == "") {
+			$this->displayText = "Invalid Input \n Enter Mobile Number ";
+			$this->sessionState = "CONTRINUE";
+			$this->nextFunction = "getMobileNumber";
+			$this->previousPage = "getMobileNumber";
+		} else {
+			$this->saveSessionVar("MOBILENUMBER", $input);
+			$this->displayText = "Enter TopUp Amount ";
+			$this->sessionState = "CONTRINUE";
+			$this->nextFunction = "getAmount";
+			$this->previousPage = "getMobileNumber";
 
-        }
+		}
 
-
-          
-
-    }
+	}
 
 	function getAmount($input) {
 		if ($input == "") {
@@ -188,10 +176,10 @@ class GAZUSSD extends DynamicMenuController {
 			$this->previousPage = "getAmount";
 		} else {
 			$this->saveSessionVar("CARDAMOUNT", $input);
-            $CARDNUMBER = $this->getSessionVar("CARDNUMBER");
-            $CARDAMOUNT = $this->getSessionVar("CARDAMOUNT");
+			$CARDNUMBER = $this->getSessionVar("CARDNUMBER");
+			$CARDAMOUNT = $this->getSessionVar("CARDAMOUNT");
 
-			$this->displayText = "You are paying Toping Up  : ".$CARDNUMBER." UGX Shillings  on card number :".$CARDAMOUNT." \n 1)Confirm Payment ";
+			$this->displayText = "You are paying Toping Up  : " . $CARDNUMBER . " UGX Shillings  on card number :" . $CARDAMOUNT . " \n 1)Confirm Payment ";
 			$this->sessionState = "CONTRINUE";
 			$this->nextFunction = "finalizePayment";
 			$this->previousPage = "getAmount";
@@ -199,14 +187,13 @@ class GAZUSSD extends DynamicMenuController {
 
 	}
 
-
 	function finalizePayment($input) {
 
 		$transaction_id = rand();
 		$CARDNUMBER = $this->getSessionVar("CARDNUMBER");
 		$CARDAMOUNT = $this->getSessionVar("CARDAMOUNT");
-        $MOBILENUMBER =  $this->getSessionVar("MOBILENUMBER"); 
-     
+		$MOBILENUMBER = $this->getSessionVar("MOBILENUMBER");
+
 		$credentials = array(
 			"username" => $this->BEEPUSERNAME,
 			"password" => $this->BEEPPASSWORD,
@@ -225,8 +212,6 @@ class GAZUSSD extends DynamicMenuController {
 
 		);
 
-
-
 		$packet = array(
 
 			'serviceID' => $SERVICEID,
@@ -235,7 +220,7 @@ class GAZUSSD extends DynamicMenuController {
 			'requestExtraData' => null,
 			'extraData' => $extraData,
 			"payerTransactionID" => $transaction_id,
-			"invoiceNumber" =>$transaction_id, 
+			"invoiceNumber" => $transaction_id,
 			"MSISDN" => $MOBILENUMBER,
 			"amount" => $CARDAMOUNT,
 			"accountNumber" => $CARDNUMBER,
@@ -243,7 +228,7 @@ class GAZUSSD extends DynamicMenuController {
 			"currencyCode" => $CURRENCY,
 			"customerNames" => "--",
 			"paymentMode" => "MOBILE MONEY",
-			"datePaymentReceived" => date("Y-m-d H:i:s") 
+			"datePaymentReceived" => date("Y-m-d H:i:s"),
 		);
 
 		$data[] = $packet;
@@ -258,9 +243,7 @@ class GAZUSSD extends DynamicMenuController {
 			"payload" => json_encode($payload),
 		);
 
-		 
-		$response = $this->postToCPGPayload($payload,$this->hubJSONAPIUrl, "BEEP.postPayment");
- 
+		$response = $this->postToCPGPayload($payload, $this->hubJSONAPIUrl, "BEEP.postPayment");
 
 		$responsedata = (string) $response;
 
@@ -269,8 +252,6 @@ class GAZUSSD extends DynamicMenuController {
 
 	}
 
-	 
- 
 	function cardBalanceMenu() {
 		$this->displayText = "COMING SOON";
 		$this->sessionState = "END";
@@ -285,8 +266,8 @@ class GAZUSSD extends DynamicMenuController {
 		$this->sessionState = "END";
 	}
 
-	function postToCPGPayload($params, $url, $method) { 
-		$payload = array('function' => $method, 'payload' => json_encode($params)); 
+	function postToCPGPayload($params, $url, $method) {
+		$payload = array('function' => $method, 'payload' => json_encode($params));
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -300,8 +281,6 @@ class GAZUSSD extends DynamicMenuController {
 
 		return $output;
 	}
-
-	 
 
 }
 
