@@ -36,11 +36,9 @@ class GAZUSSD extends DynamicMenuController {
 	private $warid_reg = "/^(25670|70|070)(\d{7})$/";
 	private $utl_reg = "/^(71|071|25671)(\d{7})$/";
 	private $orange_reg = "/^(079|25679|79)(\d{7})$/";
-	//validation configs
+	 
 
-	private $hubJSONAPIUrl = "http://10.250.250.29:9000/hub/services/paymentGateway/JSON/index.php";
-	// private $hubJSONAPIUrl = "http://localhost:9001/hub/services/paymentGateway/JSON/index.php";
-	// private $hubJSONAPIUrl = "http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php";
+	private $hubJSONAPIUrl = "http://10.250.250.29:9000/hub/services/paymentGateway/JSON/index.php"; 
 	private $hubValidationFunction = "BEEP.validateAccount";
 	private $hubAuthSuccessCode = "131";
 	private $hubValidationSuccessCode = "307";
@@ -219,9 +217,9 @@ class GAZUSSD extends DynamicMenuController {
 		$extraData = json_encode(array(
 
 			"authorization" => $this->AUTHORIZATION,
-			"cardmask" => $this->getSessionVar("CARDNUMBER"),
+			"cardmask" => $CARDNUMBER,
 			"transactioncode" => $transaction_id,
-			"amount" => $this->getSessionVar("CARDAMOUNT"),
+			"amount" => $CARDAMOUNT,
 
 		)
 
@@ -261,16 +259,9 @@ class GAZUSSD extends DynamicMenuController {
 			"payload" => json_encode($payload),
 		);
 
-		// $respponse = $this->postValidationRequestToHUB($this->$hubJSONAPIUrl, json_encode($spayload));
-
-// $payload = array(
-		//     'credentials' => $credentials,
-		//     'packet' => $packet);
-		//$params=array($function,$payload);
-		//private $hubJSONAPIUrl = "http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php";
-		//http://197.159.100.247:9000/hub/services/paymentGateway/JSON/index.php
-		$response = $this->postToCPGPayload($payload, "http://10.250.250.29:9000/hub/services/paymentGateway/JSON/index.php", "BEEP.postPayment");
-// return array("SUCCESS"=>true);
+		 
+		$response = $this->postToCPGPayload($payload,$this->hubJSONAPIUrl, "BEEP.postPayment");
+ 
 
 		$responsedata = (string) $response;
 
@@ -279,14 +270,8 @@ class GAZUSSD extends DynamicMenuController {
 
 	}
 
-	function validateCard($input) {
-
-	}
-
-	function post() {
-
-	}
-
+	 
+ 
 	function cardBalanceMenu() {
 		$this->displayText = "COMING SOON";
 		$this->sessionState = "END";
@@ -301,10 +286,8 @@ class GAZUSSD extends DynamicMenuController {
 		$this->sessionState = "END";
 	}
 
-	function postToCPGPayload($params, $url, $method) {
-//$method="PlotUpload";
-		$payload = array('function' => $method, 'payload' => json_encode($params));
-//echo json_encode($payload);
+	function postToCPGPayload($params, $url, $method) { 
+		$payload = array('function' => $method, 'payload' => json_encode($params)); 
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -319,22 +302,7 @@ class GAZUSSD extends DynamicMenuController {
 		return $output;
 	}
 
-	function postValidationRequestToHUB($url, $fields) {
-		$fields_string = null;
-		$this->logMessage(" .......................: ", "INIT");
-
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
-
-		$result = curl_exec($ch);
-		curl_close($ch);
-		$this->logMessage(" .......................: ", json_decode($result));
-
-		return $result;
-	}
+	 
 
 }
 
