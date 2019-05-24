@@ -126,17 +126,28 @@ class GAZUSSD extends DynamicMenuController {
 
 	function selectPaymentOption($input) {
 
-		if ($input == "") {
-			$this->displayText = "Invalid Input \nSelect payment option \n1) Mobile Money";
-			$this->sessionState = "CONTRINUE";
-			$this->nextFunction = "selectPaymentOption";
-			$this->previousPage = "selectPaymentOption";
-		} else {
-			$this->saveSessionVar("CARDNUMBER", $input);
-			$this->displayText = "Enter TopUp Amount ";
-			$this->sessionState = "CONTRINUE";
-			$this->nextFunction = "getAmount";
-			$this->previousPage = "getCardNumber";
+	 
+			$this->saveSessionVar("PAYMENTOPTION", $input);
+
+			switch ($input) {
+			case '1':
+				# code...
+                    $this->displayText = "Enter TopUp Amount ";
+                    $this->sessionState = "CONTRINUE";
+                    $this->nextFunction = "getAmount";
+                    $this->previousPage = "getCardNumber";
+                    # 
+				break;
+
+			default:
+				$this->displayText = "Invalid Input \nSelect payment option \n1) Mobile Money";
+				$this->sessionState = "CONTRINUE";
+				$this->nextFunction = "selectPaymentOption";
+				$this->previousPage = "selectPaymentOption";
+				break;
+			}
+
+			
 
 		}
 
