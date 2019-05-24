@@ -180,7 +180,7 @@ class GAZUSSD extends DynamicMenuController {
 			$CARDAMOUNT = $this->getSessionVar("CARDAMOUNT");
 			$MOBILENUMBER = $this->getSessionVar("MOBILENUMBER");
 
-			$this->displayText = "You are paying Toping Up  : " . $CARDNUMBER . " UGX Shillings  on card number :" . $CARDAMOUNT . " from " . $MOBILENUMBER . " \n 1)Confirm Payment ";
+			$this->displayText = "You are paying Toping Up  : " . $CARDAMOUNT . " UGX Shillings  on card number :" . $CARDNUMBER . " from " . $MOBILENUMBER . " \n 1)Confirm Payment ";
 			$this->sessionState = "CONTRINUE";
 			$this->nextFunction = "finalizePayment";
 			$this->previousPage = "getAmount";
