@@ -182,13 +182,18 @@ class GAZUSSD extends DynamicMenuController {
 			$this->previousPage = "getAmount";
 		} else {
 			$this->saveSessionVar("CARDAMOUNT", $input);
-			$this->displayText = "1)Confirm Transaction ";
+            $CARDNUMBER = $this->getSessionVar("CARDNUMBER");
+            $CARDAMOUNT = $this->getSessionVar("CARDAMOUNT");
+
+			$this->displayText = "You are paying Amount : ".$CARDNUMBER." on card number :".$CARDAMOUNT." \n 1)Confirm Payment ";
 			$this->sessionState = "CONTRINUE";
 			$this->nextFunction = "finalizePayment";
 			$this->previousPage = "getAmount";
 		}
 
 	}
+
+
 	function finalizePayment($input) {
 
 		$transaction_id = rand();
