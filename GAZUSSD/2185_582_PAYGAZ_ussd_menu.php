@@ -215,8 +215,8 @@ class GAZUSSD extends DynamicMenuController {
 
 		$packet = array(
 
-			'serviceID' => $this->$SERVICEID,
-			'serviceCode' => $this->$SERVICECODE,
+			'serviceID' => 2114,
+			// 'serviceCode' => $this->$SERVICECODE,
 
 			'requestExtraData' => null,
 			'extraData' => $extraData,
@@ -226,7 +226,7 @@ class GAZUSSD extends DynamicMenuController {
 			"amount" => $CARDAMOUNT,
 			"accountNumber" => $CARDNUMBER,
 			"narration" => "GAZ TOPUP",
-			"currencyCode" => $CURRENCY,
+			"currencyCode" => "KES",
 			"customerNames" => "--",
 			"paymentMode" => "MOBILE MONEY",
 			"datePaymentReceived" => date("Y-m-d H:i:s"),
