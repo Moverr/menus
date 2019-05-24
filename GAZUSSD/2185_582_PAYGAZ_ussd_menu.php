@@ -60,6 +60,12 @@ class GAZUSSD extends DynamicMenuController {
 	private $BEEPUSERNAME = "gazpay";
 	private $BEEPPASSWORD = "abcd@12345";
 
+    $NARRATION = "GAZ PAYMENT";
+    $SERVICECODE = "PAY077PAY077";
+    $SERVICEID = 2114;
+        
+
+
 	function startPage() {
 
 		$message = "Select Option. \n1: Verify card   \n2: Topup card \n3: Card balance \n4: Card ministatement \n\n 0) Exit";
@@ -185,7 +191,7 @@ class GAZUSSD extends DynamicMenuController {
             $CARDNUMBER = $this->getSessionVar("CARDNUMBER");
             $CARDAMOUNT = $this->getSessionVar("CARDAMOUNT");
 
-			$this->displayText = "You are paying Amount : ".$CARDNUMBER." on card number :".$CARDAMOUNT." \n 1)Confirm Payment ";
+			$this->displayText = "You are paying Toping Up  : ".$CARDNUMBER." UGX Shillings  on card number :".$CARDAMOUNT." \n 1)Confirm Payment ";
 			$this->sessionState = "CONTRINUE";
 			$this->nextFunction = "finalizePayment";
 			$this->previousPage = "getAmount";
@@ -218,18 +224,17 @@ class GAZUSSD extends DynamicMenuController {
 
 		);
 
-		$NARRATION = "GAZ PAYMENT";
+
 
 		$packet = array(
 
-			'serviceID' => 2114,
-			'serviceCode' => "PAY077PAY077",
+			'serviceID' => $SERVICEID,
+			'serviceCode' => $SERVICECODE,
 
 			'requestExtraData' => null,
 			'extraData' => $extraData,
-			"payerTransactionID" => rand(),
-			"invoiceNumber" => "73737",
-			"invoiceNumber" => "123",
+			"payerTransactionID" => $transaction_id,
+			"invoiceNumber" =>$transaction_id, 
 			"MSISDN" => 254779820962,
 			"amount" => 1000,
 			"accountNumber" => "21140615",
