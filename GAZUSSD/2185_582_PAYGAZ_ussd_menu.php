@@ -242,7 +242,7 @@ class GAZUSSD extends DynamicMenuController {
 			"narration" => "GAZ TOPUP",
 			"currencyCode" => $CURRENCY,
 			"customerNames" => "--",
-			"paymentMode" => "Online Payment",
+			"paymentMode" => "MOBILE MONEY",
 			"datePaymentReceived" => "2019-05-22 3:03:18",
 			// "payerTransactionID"=>0779820962,
 		);
