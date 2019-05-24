@@ -215,7 +215,7 @@ class GAZUSSD extends DynamicMenuController {
 
 		$packet = array(
 
-			'serviceID' => 2114,
+			'serviceID' => $this->SERVICEID,
 			// 'serviceCode' => $this->$SERVICECODE,
 
 			'requestExtraData' => null,
