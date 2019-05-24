@@ -158,7 +158,7 @@ class GAZUSSD extends DynamicMenuController {
 			$this->nextFunction = "getMobileNumber";
 			$this->previousPage = "getMobileNumber";
 		} else {
-			$this->saveSessionVar("MOBILENUMBER", "256" . $input);
+			$this->saveSessionVar("MOBILENUMBER", "256" . (int) $input);
 			$this->displayText = "Enter TopUp Amount ";
 			$this->sessionState = "CONTRINUE";
 			$this->nextFunction = "getAmount";
@@ -175,7 +175,7 @@ class GAZUSSD extends DynamicMenuController {
 			$this->nextFunction = "getAmount";
 			$this->previousPage = "getAmount";
 		} else {
-			$this->saveSessionVar("CARDAMOUNT", $input);
+			$this->saveSessionVar("CARDAMOUNT", (float) $input);
 			$CARDNUMBER = $this->getSessionVar("CARDNUMBER");
 			$CARDAMOUNT = $this->getSessionVar("CARDAMOUNT");
 			$MOBILENUMBER = $this->getSessionVar("MOBILENUMBER");
