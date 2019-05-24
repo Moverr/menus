@@ -161,19 +161,16 @@ class GAZUSSD extends DynamicMenuController {
             $this->nextFunction = "getMobileNumber";
             $this->previousPage = "getMobileNumber";
         } else {
-            $this->saveSessionVar("CARDNUMBER", $input);
+            $this->saveSessionVar("MOBILENUMBER", $input);
             $this->displayText = "Enter TopUp Amount ";
             $this->sessionState = "CONTRINUE";
-            $this->nextFunction = "getMobileNumber";
-            $this->previousPage = "selectPaymentOption";
+            $this->nextFunction = "getAmount";
+            $this->previousPage = "getMobileNumber";
 
         }
 
 
-            $this->displayText = "Enter TopUp Amount ";
-            $this->sessionState = "CONTRINUE";
-            $this->nextFunction = "getAmount";
-            $this->previousPage = "selectPaymentOption";
+          
 
     }
 
