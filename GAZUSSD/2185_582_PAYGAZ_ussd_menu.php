@@ -75,7 +75,7 @@ class GAZUSSD extends DynamicMenuController {
 		switch ($input) {
 		case '1':
 			# code...
-			$this->validateCardMenu();
+			$this->registerCard();
 
 			break;
 		case '2':
@@ -94,8 +94,8 @@ class GAZUSSD extends DynamicMenuController {
 		}
 	}
 
-	function validateCardMenu() {
-		$this->displayText = "Under Constrution";
+	function registerCard() {
+		$this->displayText = "Coming Soon";
 		$this->sessionState = "END";
 
 	}
@@ -142,6 +142,8 @@ class GAZUSSD extends DynamicMenuController {
 	function finalizePayment($input) {
 
 		$transaction_id = rand();
+		$CARDNUMBER = $this->getSessionVar("CARDNUMBER");
+		$CARDAMOUNT = $this->getSessionVar("CARDAMOUNT");
 
 		$credentials = array(
 			"username" => $this->BEEPUSERNAME,
@@ -153,13 +155,15 @@ class GAZUSSD extends DynamicMenuController {
 		$extraData = json_encode(array(
 
 			"authorization" => $this->AUTHORIZATION,
-			"cardmask" => "G001",
+			"cardmask" => $this->getSessionVar("CARDNUMBER"),
 			"transactioncode" => $transaction_id,
-			"amount" => 12345,
+			"amount" => $this->getSessionVar("CARDAMOUNT"),
 
 		)
 
 		);
+
+		$NARRATION = "GAZ PAYMENT";
 
 		$packet = array(
 
@@ -174,9 +178,9 @@ class GAZUSSD extends DynamicMenuController {
 			"MSISDN" => 254779820962,
 			"amount" => 1000,
 			"accountNumber" => "21140615",
-			"narration" => "Beep.Payment",
+			"narration" => "GAZ PAYMENT",
 			"currencyCode" => "KES",
-			"customerNames" => "Muyinda Rogers",
+			"customerNames" => "--",
 			"paymentMode" => "Online Payment",
 			"datePaymentReceived" => "2019-05-22 3:03:18",
 			// "payerTransactionID"=>0779820962,
