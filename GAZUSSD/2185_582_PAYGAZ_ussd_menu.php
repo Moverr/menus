@@ -60,9 +60,11 @@ class GAZUSSD extends DynamicMenuController {
 	private $BEEPUSERNAME = "gazpay";
 	private $BEEPPASSWORD = "abcd@12345";
 
-    $NARRATION = "GAZ PAYMENT";
-    $SERVICECODE = "PAY077PAY077";
-    $SERVICEID = 2114;
+    private $NARRATION = "GAZ PAYMENT";
+    private $SERVICECODE = "PAY077PAY077";
+    private $SERVICEID = 2114;
+    private $CURRENCY = "KES";
+
         
 
 
@@ -205,7 +207,8 @@ class GAZUSSD extends DynamicMenuController {
 		$transaction_id = rand();
 		$CARDNUMBER = $this->getSessionVar("CARDNUMBER");
 		$CARDAMOUNT = $this->getSessionVar("CARDAMOUNT");
-
+        $MOBILENUMBER =  $this->getSessionVar("MOBILENUMBER"); 
+     
 		$credentials = array(
 			"username" => $this->BEEPUSERNAME,
 			"password" => $this->BEEPPASSWORD,
@@ -235,11 +238,11 @@ class GAZUSSD extends DynamicMenuController {
 			'extraData' => $extraData,
 			"payerTransactionID" => $transaction_id,
 			"invoiceNumber" =>$transaction_id, 
-			"MSISDN" => 254779820962,
-			"amount" => 1000,
-			"accountNumber" => "21140615",
-			"narration" => "GAZ PAYMENT",
-			"currencyCode" => "KES",
+			"MSISDN" => $MOBILENUMBER,
+			"amount" => $CARDAMOUNT,
+			"accountNumber" => $CARDNUMBER,
+			"narration" => "GAZ TOPUP",
+			"currencyCode" => $CURRENCY,
 			"customerNames" => "--",
 			"paymentMode" => "Online Payment",
 			"datePaymentReceived" => "2019-05-22 3:03:18",
