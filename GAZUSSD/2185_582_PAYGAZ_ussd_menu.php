@@ -115,6 +115,24 @@ class GAZUSSD extends DynamicMenuController {
 			$this->previousPage = "getCardNumber";
 		} else {
 			$this->saveSessionVar("CARDNUMBER", $input);
+			$this->displayText = "Select payment option \n1) Mobile Money ";
+			$this->sessionState = "CONTRINUE";
+			$this->nextFunction = "selectPaymentOption";
+			$this->previousPage = "getCardNumber";
+
+		}
+
+	}
+
+	function selectPaymentOption($input) {
+
+		if ($input == "") {
+			$this->displayText = "Invalid Input \nSelect payment option \n1) Mobile Money";
+			$this->sessionState = "CONTRINUE";
+			$this->nextFunction = "selectPaymentOption";
+			$this->previousPage = "selectPaymentOption";
+		} else {
+			$this->saveSessionVar("CARDNUMBER", $input);
 			$this->displayText = "Enter TopUp Amount ";
 			$this->sessionState = "CONTRINUE";
 			$this->nextFunction = "getAmount";
