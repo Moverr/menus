@@ -246,9 +246,9 @@ class GAZUSSD extends DynamicMenuController {
 
 		$response = $this->postToCPGPayload($payload, $this->hubJSONAPIUrl, "BEEP.postPayment");
 
-		$responsedata = (string) $response;
+		$responsedata = json_decode($response);
 
-		$this->displayText = ":::" . $responsedata;
+		$this->displayText = ":::" . (string) $responsedata;
 		$this->sessionState = "END";
 
 	}

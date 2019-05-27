@@ -18,6 +18,7 @@ class NCBANKUSSD extends DynamicMenuController {
 
 	private $MENU_STATUS = true;
 	private $KEY_CUSTOMER_MOBILE_NUMBER = "customerMobileNumber";
+
 	private $KEY_AMOUNT = "amount";
 	private $MAX_AMOUNT = 4000000;
 	private $MIN_AMOUNT = 500;
@@ -3029,7 +3030,7 @@ class NCBANKUSSD extends DynamicMenuController {
 			break;
 
 		default:
-			$this->nextFunction = "enterAmount";
+			$this->nextFunction = "enterNWSCAmount";
 
 			break;
 		}
