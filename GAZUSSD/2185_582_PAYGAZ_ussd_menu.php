@@ -247,12 +247,12 @@ class GAZUSSD extends DynamicMenuController {
 		$response = $this->postToCPGPayload($payload, $this->hubJSONAPIUrl, "BEEP.postPayment");
 
 		$responsedata = json_decode($response);
- $messsage = (string) $responsedata->results[0]->statusDescription;
-        if( $responsedata->results[0]->statusCode ==  139){
-            $messsage = " Payment  is being proccessed, you will shortly receive a confirmation message. \nRef :".$responsedata->results[0]->beepTransactionID
-        }
+		$messsage = (string) $responsedata->results[0]->statusDescription;
+		if ($responsedata->results[0]->statusCode == 139) {
+			$messsage = " Payment  is being proccessed, you will shortly receive a confirmation message. \nRef :" . $responsedata->results[0]->beepTransactionID;
+		}
 
-		$this->displayText = $messsage
+		$this->displayText = $messsage;
 		$this->sessionState = "END";
 
 	}
