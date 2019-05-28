@@ -60,7 +60,14 @@ class GazProcessor {
 			. "Account validation request received for processing is :"
 			. json_encode($data));
 		//Do account look Up
-		$response = $this->postValidationRequestToHUB("fcsexternalservice.azurewebsites.net/auth/customerAccount");
+		// $response = $this->postValidationRequestToHUB("http://fcsexternalservice.azurewebsites.net/auth/customerAccount");
+		$params = array(
+
+			"cardmask" => $cardmask,
+
+		);
+
+		$response = $this->postValidationRequestToHUB(json_encode($params), $authorization);
 
 		$resp = $this->formulateResponse($response);
 		$this->log->info(ALTXConfigs::INFO, $this->request->accountNumber, "Returning the following response: " . json_encode($resp));
@@ -77,7 +84,7 @@ class GazProcessor {
 		$fields_string = null;
 		$ch = curl_init();
 		//set the url, number of POST vars, POST data
-		curl_setopt($ch, CURLOPT_URL, $this->RemobiUrl);
+		curl_setopt($ch, CURLOPT_URL, "http://fcsexternalservice.azurewebsites.net/auth/customerAccount");
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
 		// curl_setopt($ch, CURLOPT_POST, count($fields));
