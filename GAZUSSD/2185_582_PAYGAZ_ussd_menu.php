@@ -64,7 +64,7 @@ class GAZUSSD extends DynamicMenuController {
 
 	function startPage() {
 
-		$message = "Select Option. \n1: Verify card   \n2: Topup card \n3: Card balance \n4: Card ministatement \n\n 0) Exit";
+		$message = "Select Option. \n1: Register card   \n2: Topup card \n3: Card balance \n4: Card ministatement \n\n 0) Exit";
 
 		$this->displayText = $message;
 		$this->sessionState = "CONTINUE";
