@@ -16,9 +16,9 @@ class GazProcessor {
 	private $curlErr = "";
 	private $httpStatus = 0;
 
-	/*
-		         * Class constructor
-	*/
+	private $authorization = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdhelRvcFVwLm11bGFAY2VsbHVsYW50LmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJDJCM2IzY1luWG5yOVRkSlhWbUgwQU8ydXhSSkUvRFY3L0NuSTYzS3RycVNVZWNIQ1R1cEsyIiwidXNlcm5hbWUiOiJNdWxhX0NlbGx1bGFudCIsInJhbmRvbSI6Ik1VTEFfR0FaNDI4NjYxMTIzIiwiaWF0IjoxNTUzNzg0NTAxfQ.WBpkwbMWuRx5sgqjkmAuwgvaG1dFrduoY2bhdmi2EDw";
+
+	private $tovutiUrl = "http://fcsexternalservice.azurewebsites.net/auth/customerAccount";
 
 	public function __construct() {
 		$this->log = new BeepLogger();
@@ -32,46 +32,41 @@ class GazProcessor {
 	public function processRecord(ValidationHandler $data) {
 		$this->request = $data;
 
-		// $payload = json_decode($data->extraData, true);
-
-		$authorization = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdhelRvcFVwLm11bGFAY2VsbHVsYW50LmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJDJCM2IzY1luWG5yOVRkSlhWbUgwQU8ydXhSSkUvRFY3L0NuSTYzS3RycVNVZWNIQ1R1cEsyIiwidXNlcm5hbWUiOiJNdWxhX0NlbGx1bGFudCIsInJhbmRvbSI6Ik1VTEFfR0FaNDI4NjYxMTIzIiwiaWF0IjoxNTUzNzg0NTAxfQ.WBpkwbMWuRx5sgqjkmAuwgvaG1dFrduoY2bhdmi2EDw";
+		$payload = json_decode($data->extraData, true);
 
 		// $payload['authorization'];
-		$cardmask = "GOO1";
-		//$payload['cardmask'];
-
-		if ($cardmask == null || empty($cardmask) || $cardmask == '') {
-			$this->log->info(ALTXConfigs::INFO, $this->request->accountNumber, "Caard Mask  not found in payload");
-			$this->curlErr = "Card number not provided";
-			$resp = $this->formulateResponse(0);
-			$this->log->info(ALTXConfigs::INFO, $this->request->accountNumber, "Returning the following response: " . json_encode($resp));
-			return $resp;
-		}
-
-		if ($authorization == null || empty($authorization) || $authorization == '') {
-			$this->log->info(ALTXConfigs::INFO, $this->request->accountNumber, "Authorization   not found in payload");
-			$this->curlErr = "Authorization number not provided";
-			$resp = $this->formulateResponse(0);
-			$this->log->info(ALTXConfigs::INFO, $this->request->accountNumber, "Returning the following response: " . json_encode($resp));
-			return $resp;
-		}
-
-		$this->log->info(ALTXConfigs::INFO, $this->request->accountNumber, "processRecord() | "
-			. "Account validation request received for processing is :"
-			. json_encode($data));
-		//Do account look Up
-		// $response = $this->postValidationRequestToHUB("http://fcsexternalservice.azurewebsites.net/auth/customerAccount");
+		$cardmask = $this->request->accountNumber;
 		$params = array(
 
 			"cardmask" => $cardmask,
 
 		);
 
-		$response = $this->postValidationRequestToHUB(json_encode($params), $authorization);
+		$response = $this->postValidationRequestToHUB(json_encode($params), $this->authorization);
 
-		$resp = $this->formulateResponse($response);
-		$this->log->info(ALTXConfigs::INFO, $this->request->accountNumber, "Returning the following response: " . json_encode($resp));
-		return $resp;
+		$result = json_decode($response);
+
+		if ((int) $result->error->error_code == 200) {
+			$status['accountNumber'] = $result;
+			$status['statusCode'] = Config::GENERIC_SUCCESS;
+			$status['statusDescription'] = "Account has been validated successfully";
+			$status['accountValid'] = "yes";
+			$status['accountActive'] = "yes";
+			$status['extraData'] = $result->Message;
+			return $status;
+
+		} else {
+
+			$status['accountNumber'] = $cardmask;
+			$status['statusCode'] = 404;
+			$status['statusDescription'] = "Account has not veen verified";
+			$status['accountValid'] = "no";
+			$status['accountActive'] = "no";
+			$status['extraData'] = (string) $response;
+			return $status;
+
+		}
+
 	}
 
 	/**
@@ -84,7 +79,7 @@ class GazProcessor {
 		$fields_string = null;
 		$ch = curl_init();
 		//set the url, number of POST vars, POST data
-		curl_setopt($ch, CURLOPT_URL, "http://fcsexternalservice.azurewebsites.net/auth/customerAccount");
+		curl_setopt($ch, CURLOPT_URL, $this->tovutiUrl);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
 		// curl_setopt($ch, CURLOPT_POST, count($fields));
@@ -103,48 +98,6 @@ class GazProcessor {
 
 		return $result;
 
-	}
-
-	/**
-	 * @param $statusCode
-	 * @param $statusDesc
-	 * @param null $result
-	 * @return Response on about account status
-	 */
-	private function formulateResponse($result = null) {
-
-		$record = json_decode($result);
-
-		$response = array();
-		$statusCode = $record->error->error_code;
-		if ($statusCode == 200) {
-			$response["statusCode"] = Config::GENERIC_SUCCESS;
-			$response["statusDescription"] = "Card Number  recognized";
-			$response["accountValid"] = "yes";
-			$response["accountActive"] = "yes";
-			$response["customerName"] = "";
-			$response['extraData'] = (string) $result;
-		} elseif ($statusCode == 404) {
-			$response["statusCode"] = Config::GENERIC_SUCCESS;
-			$response["statusDescription"] = "Card Number is not recognized";
-			$response["accountValid"] = "no";
-			$response["accountActive"] = "no";
-			$response['extraData'] = '';
-		} elseif ($statusCode == 400) {
-			$response["statusCode"] = Config::GENERIC_FAILURE;
-			$response["statusDescription"] = "Bad request"; //"Account number is Invalid";
-			$response["accountValid"] = "no";
-			$response["accountActive"] = "no";
-			$response['extraData'] = "";
-		} else {
-			$response["statusCode"] = Config::GENERIC_FAILURE;
-			$response["statusDescription"] = $this->curlErr;
-			$response["accountValid"] = "no";
-			$response["accountActive"] = "no";
-			$response['extraData'] = "";
-		}
-
-		return $response;
 	}
 
 }
