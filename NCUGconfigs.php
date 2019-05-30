@@ -41,7 +41,7 @@ class NCUGconfigs {
 	const ZUKU_PACKAGES = "Smart=10500, Classic=23500, Premium=33500";
 	const KWESE_PACKAGES = "3 days=17000, 7 days=32000, 30 days=106000";
 
-	const DSTV_SERVICE_ID = 33;
+	const DSTV_SERVICE_ID = 45;
 	const DSTV_SERVICE_CODE = "DSTVUG";
 	const DSTVUG_CODE = "DSTV";
 	const DSTV_WALLET_MERCHANT_CODE = "DSTV_UGANDA";
