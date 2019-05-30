@@ -3422,6 +3422,7 @@ class NCBANKUSSD extends DynamicMenuController {
 		if ($responseArray['results'][0]['statusCode'] != 307) {
 			return null;
 		}
+
 		$body = json_decode($responseArray['results'][0]['responseExtraData']);
 
 		$this->saveSessionVar("PAYTVACCOUNT", $body);
@@ -3443,6 +3444,9 @@ class NCBANKUSSD extends DynamicMenuController {
 		$result = curl_exec($ch);
 //close connection
 		curl_close($ch);
+
+		$this->logMessage(" |||||||||||||||||||| : ", (string) $result, 4);
+
 		return $result;
 	}
 
