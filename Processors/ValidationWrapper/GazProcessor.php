@@ -2,23 +2,20 @@
 <?php
 
 /**
- * @author egima
+ * @author rodgers.muyinda@cellulant.com
  *
  */
-require_once __DIR__ . '/../../lib/integrationConfigs/ALTXConfigs.php';
+require_once __DIR__ . '/../../lib/integrationConfigs/GazConfigs.php';
 require_once __DIR__ . '/../../lib/Config.php';
 require_once __DIR__ . '/../../lib/logger/BeepLogger.php';
 
 class GazProcessor {
 
 	private $log;
-	private $request;
-	private $curlErr = "";
-	private $httpStatus = 0;
-
-	private $authorization = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdhelRvcFVwLm11bGFAY2VsbHVsYW50LmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJDJCM2IzY1luWG5yOVRkSlhWbUgwQU8ydXhSSkUvRFY3L0NuSTYzS3RycVNVZWNIQ1R1cEsyIiwidXNlcm5hbWUiOiJNdWxhX0NlbGx1bGFudCIsInJhbmRvbSI6Ik1VTEFfR0FaNDI4NjYxMTIzIiwiaWF0IjoxNTUzNzg0NTAxfQ.WBpkwbMWuRx5sgqjkmAuwgvaG1dFrduoY2bhdmi2EDw";
-
-	private $tovutiUrl = "http://fcsexternalservice.azurewebsites.net/auth/customerAccount";
+	private $request; 
+	private $authorization = GazConfigs::AUTHORIZATION;	 
+	private $tovutiUrl =  GazConfigs::MERCHANTURL."/auth/customerAccount";
+	 
 
 	public function __construct() {
 		$this->log = new BeepLogger();
@@ -33,8 +30,6 @@ class GazProcessor {
 		$this->request = $data;
 
 		$payload = json_decode($data->extraData, true);
-
-		// $payload['authorization'];
 		$cardmask = $this->request->accountNumber;
 		$params = array(
 
