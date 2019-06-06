@@ -12,33 +12,31 @@ require_once __DIR__ . '/../../lib/logger/BeepLogger.php';
 class GazProcessor {
 
 	private $log;
-	private $request; 
-	private $authorization = GazConfigs::AUTHORIZATION;	 
-	private $tovutiUrl =  GazConfigs::MERCHANTURL."/auth/customerAccount";
-	 
+	private $request;
+	private $authorization = GazConfigs::AUTHORIZATION;
+	private $tovutiUrl = GazConfigs::MERCHANTURL . "/auth/customerAccount";
 
 	public function __construct() {
 		$this->log = new BeepLogger();
 	}
 
-	/**
-	 * Function process validation request
-	 * @param type $data
-	 * @return type
-	 */
 	public function processRecord(ValidationHandler $data) {
 		$this->request = $data;
+		$response = $this->validateCardMask();
+		return $this->processResponse($response);
+	}
 
-		$payload = json_decode($data->extraData, true);
+	function validateCardMask() {
 		$cardmask = $this->request->accountNumber;
 		$params = array(
-
 			"cardmask" => $cardmask,
 
 		);
+		$response = $this->postData(json_encode($params), $this->authorization);
+		return $response;
+	}
 
-		$response = $this->postValidationRequestToHUB(json_encode($params), $this->authorization);
-
+	function processResponse($response) {
 		$result = json_decode($response);
 
 		if ((int) $result->error->error_code == 200) {
@@ -61,34 +59,22 @@ class GazProcessor {
 			return $status;
 
 		}
-
 	}
 
-	/**
-	 * @param $url
-	 * @param $jsonData
-	 * @return array|mixed
-	 */
-	function postValidationRequestToHUB($fields, $authorization) {
+	function postData($fields, $authorization) {
 
 		$fields_string = null;
 		$ch = curl_init();
-		//set the url, number of POST vars, POST data
 		curl_setopt($ch, CURLOPT_URL, $this->tovutiUrl);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
-		// curl_setopt($ch, CURLOPT_POST, count($fields));
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
-
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 			'Authorization:' . $authorization,
 			'Content-type:application/json',
 
 		));
-
-		//execute post
 		$result = curl_exec($ch);
-		//close connection
 		curl_close($ch);
 
 		return $result;
