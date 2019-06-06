@@ -11,7 +11,10 @@ class GazProcessorTest extends PHPUnit_Framework_TestCase {
 		// your code here
 	}
 
+	//todo: intergration tests instead ::
+
 	public function testComparesNumbers() {
+		$instance = new GazProcessor();
 		$this->assertTrue(1 == 1);
 	}
 
