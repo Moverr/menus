@@ -22,8 +22,7 @@ class GazProcessor {
 
 	public function processRecord(ValidationHandler $data) {
 		$this->request = $data;
-		$response = $this->validateCardMask();
-		return $this->processResponse($response);
+		return $this->validateCardMask();
 	}
 
 	function validateCardMask() {
@@ -33,7 +32,8 @@ class GazProcessor {
 
 		);
 		$response = $this->postData(json_encode($params), $this->authorization);
-		return $response;
+		return $this->processResponse($response);
+
 	}
 
 	function processResponse($response) {
