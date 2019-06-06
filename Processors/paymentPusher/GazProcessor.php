@@ -10,11 +10,7 @@ include_once __DIR__ . '/../../lib/IXR_Library.php';
 /* rodgers.muyinda@cellulant.com  */
 
 class GazProcessor {
-	/**
-	 * Log class instance.
-	 *
-	 * @var object
-	 */
+
 	private $log;
 	private $authorization = GazConfigs::AUTHORIZATION;
 	private $tovutiAPI = GazConfigs::MERCHANTURL . "/topup";
