@@ -29,9 +29,11 @@ class GazProcessor {
 
 	public function processRecord(PaymentHandler $data) {
 
-		$this->log->info(Config::INFO, $data->beepTransactionID, "This the "
-			. "request i received for processing "
-			. $this->log->printArray($data));
+		$this->log->info(Config::INFO, $data->beepTransactionID, $this->log->printArray($data));
+		return $this->processTopup($data);
+	}
+
+	function processTopup($data) {
 
 		$status['beepTransactionID'] = (int) $data->beepTransactionID;
 		$status['payerTransactionID'] = $data->payerTransactionID;
