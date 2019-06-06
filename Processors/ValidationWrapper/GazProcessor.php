@@ -14,7 +14,7 @@ class GazProcessor {
 	private $log;
 	private $request;
 	private $authorization = GazConfigs::AUTHORIZATION;
-	private $tovutiUrl = GazConfigs::MERCHANTURL . "/auth/customerAccount";
+	private $tovutiAPI = GazConfigs::MERCHANTURL . "/auth/customerAccount";
 
 	public function __construct() {
 		$this->log = new BeepLogger();
@@ -65,7 +65,7 @@ class GazProcessor {
 
 		$fields_string = null;
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $this->tovutiUrl);
+		curl_setopt($ch, CURLOPT_URL, $this->tovutiAPI);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
