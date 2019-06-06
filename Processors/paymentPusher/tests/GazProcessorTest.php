@@ -1,4 +1,7 @@
  <?php
+
+include_once '../GazProcessor.php';
+
 class GazProcessorTest extends PHPUnit_Framework_TestCase {
 	public function setUp() {
 		// your code here
