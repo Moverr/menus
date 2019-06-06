@@ -39,13 +39,15 @@ class GazProcessor {
 		$status['payerTransactionID'] = $data->payerTransactionID;
 
 		$payload = json_decode($data->paymentExtraData, true);
-
 		$authorization = $this->authorization;
-
 		$params = $this->populateEntity($payload);
-
 		$response = $this->postData(json_encode($params), $authorization);
 		$responsedata = json_decode($response);
+		return $this->populateResponse($responsedata);
+
+	}
+
+	function populateResponse($responsedata) {
 
 		$error_code = $response_data->error->error_code;
 
@@ -66,7 +68,6 @@ class GazProcessor {
 		}
 
 		return $status;
-
 	}
 
 	function populateEntity($payload) {
