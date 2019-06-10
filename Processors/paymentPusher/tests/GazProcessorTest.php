@@ -13,9 +13,32 @@ class GazProcessorTest extends PHPUnit_Framework_TestCase {
 
 	//todo: intergration tests instead ::
 
-	public function testComparesNumbers() {
+	public function testValidCardNumber() {
+		print_r("Test  if card is valid");
+
 		$instance = new GazProccessorCaller();
-		$this->assertTrue(1 == 1);
+		$response = $instance->init("G002");
+
+		$statusCode = $response->results[0]->statusCode;
+
+		var_dump($response->results[0]->statusCode);
+
+		$this->assertEquals(307, $statusCode);
+
+	}
+
+	public function testInvalidCardNumber() {
+		print_r("Test  if card is Invalid ");
+
+		$instance = new GazProccessorCaller();
+		$response = $instance->init("invalidNumber");
+
+		$statusCode = $response->results[0]->statusCode;
+
+		var_dump($response->results[0]->statusCode);
+
+		$this->assertEquals(174, $statusCode);
+
 	}
 
 }

@@ -1,5 +1,5 @@
 	<?php
-header("Access-Control-Allow-Origin: *");
+// header("Access-Control-Allow-Origin: *");
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -18,7 +18,7 @@ class GazProccessorCaller {
 		# code...
 	}
 
-	function init() {
+	function init($cardMask) {
 
 		$credentials = array(
 			"username" => "gazpay",
@@ -36,7 +36,7 @@ class GazProccessorCaller {
 		$packet = array(
 			'serviceID' => 2114,
 			'serviceCode' => "PAY077PAY077",
-			'accountNumber' => "G002",
+			'accountNumber' => $cardMask,
 			'requestExtraData' => null,
 			'extraData' => null,
 		);
@@ -54,7 +54,7 @@ class GazProccessorCaller {
 
 		$respponse = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
 
-		var_dump(json_decode($respponse));
+		return json_decode($respponse);
 
 	}
 
@@ -207,6 +207,6 @@ class GazProccessorCaller {
 
 // processRecord($_POST);
 
-$gazProcessosr = new GazProccessorCaller();
-$gazProcessosr->init();
+// $gazProcessosr = new GazProccessorCaller();
+// $gazProcessosr->init();
 ?>
