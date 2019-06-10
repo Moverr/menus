@@ -65,42 +65,6 @@ class NCBANKUSSD extends DynamicMenuController {
 		//        $this->paySelfTest();
 	}
 
-	function paySelfTest() {
-		/*
-			                      $receipient = 256779820962;
-			                      $sid = 14;
-			                      $encryptedpin = $this->encryptPin(1234,1);
-			                      $accountID = 1985;
-			                      $accountAlias = 'teddy';
-			                      $amount = 10;
-		*/
-		$encryptedpin = $this->encryptPin(1234, 1);
-		/*
-			                      $fields = array(
-			                      "serviceID" => $sid,
-			                      "flavour" => "self",
-			                      "pin" => $encryptedpin,
-			                      "accountAlias" => $accountAlias,
-			                      "amount" => $amount,
-			                      "accountID" => $accountID,
-			                      "columnA" => $receipient
-			                      );
-		*/
-		$fields = array(
-			"MSISDN" => '256783262929',
-			"USERNAME" => "system-user",
-			"PASSWORD" => "lipuka",
-			"PIN" => 1234,
-		);
-//authenticateCustomerPin
-		$url = $this->serverURL;
-		$request = xmlrpc_encode_request('validatePIN', $fields);
-		$results = $this->http_post($url, $fields, $request);
-		$message .= " --- " . print_r(xmlrpc_decode($results), TRUE);
-//                (var_dump($server_output));
-		$this->displayText = $message;
-	}
-
 	function init() {
 		$fields_string = null;
 		$fields = null;
@@ -116,7 +80,6 @@ class NCBANKUSSD extends DynamicMenuController {
 		$response = $this->http_post($this->walletUrl, $fields, $fields_string);
 		$clientProfile = json_decode($response, true);
 		$this->saveSessionVar("CLIENTPROFILE", $clientProfile);
-//        $this->firstMenu();
 	}
 
 	function firstMenu() {
@@ -137,18 +100,12 @@ class NCBANKUSSD extends DynamicMenuController {
 			if ($authenticatedPIN != null) {
 				if ($authenticatedPIN['STATUSCODE'] == 1) {
 					$message = $this->getDefaultMenu();
-
-//                            "Hello " . ($clientProfiledata['customerNames']) . "\n1. Merchants \n" . "2. Balance Enquiry \n" .
-					//                            "3. Bill Payment \n" . "4. Funds Transfer \n" . "5. Bank to Mobile \n" . "6. Airtime Purchase \n" .
-					//                            "7. Mini statement \n" . "8. Cheque Requests \n" . "9. Change PIN";
-
 					$this->displayText = $message;
 					$this->sessionState = "CONTINUE";
 					$this->serviceDescription = $this->SERVICE_DESCRIPTION;
 					$this->nextFunction = "menuSwitcher";
 					$this->previousPage = "startPage";
 				} else {
-					//todo validate pin :
 					$message = "Enter Your mobile banking Pin";
 					$this->displayText = $message;
 					$this->sessionState = "CONTINUE";
@@ -157,7 +114,6 @@ class NCBANKUSSD extends DynamicMenuController {
 					$this->previousPage = "startPage";
 				}
 			} else {
-				//todo validate pin :
 				$message = "Enter Your mobile banking Pin";
 				$this->displayText = $message;
 				$this->sessionState = "CONTINUE";
@@ -729,7 +685,7 @@ class NCBANKUSSD extends DynamicMenuController {
 	function ChangePinMenu($input) {
 
 		if ($input == null || !is_numeric($input)) {
-			$message = "Please enter your current mobile banking pin ";
+			$message = "Invalid Input " . "\nPlease enter you new \n mobile banking pin";
 
 			$message .= "\n\n0. Home \n" . "00. Exit";
 			$this->displayText = $message;
@@ -768,8 +724,6 @@ class NCBANKUSSD extends DynamicMenuController {
 
 			$result = $this->invokeSyncWallet($requestPayload, $logRequest['DATA']['LAST_INSERT_ID']);
 			$response = json_decode($result);
-
-//                $this->displayText = "" . print_r($result, true);
 			$this->logMessage("Validate Customer PIN Response:: ", $response, 4);
 			$this->displayText = "" . ($response->DATA->MESSAGE);
 			$this->sessionState = "END";
@@ -781,7 +735,7 @@ class NCBANKUSSD extends DynamicMenuController {
 			$this->sessionState = "CONTINUE";
 			$this->serviceDescription = $this->SERVICE_DESCRIPTION;
 			$this->nextFunction = "changePinMenuHandler";
-			$this->previousPage = "validatePinMenu";
+			$this->previousPage = "changePinMenuHandler";
 		}
 	}
 
@@ -1137,7 +1091,8 @@ class NCBANKUSSD extends DynamicMenuController {
 			$this->nextFunction = "TopUpAmountMenu";
 			$this->previousPage = "TopUpAmountMenu";
 		} else {
-			$this->saveSessionVar("AirtimeRecipient", $input);
+			$mobile_number = "256" . (int) $input;
+			$this->saveSessionVar("AirtimeRecipient", $mobile_number);
 			$message = "Enter Top Up Amount";
 			$message .= "\n0. Home \n" . "00. Exit";
 
