@@ -8,7 +8,7 @@
  */
 //error_reporting(0);
 include 'DynamicMenuController.php';
-include 'NCUGconfigs.php';
+include 'ncussduganda/NCUGconfigs.php';
 
 class NCBANKUSSD extends DynamicMenuController {
 
@@ -283,7 +283,7 @@ class NCBANKUSSD extends DynamicMenuController {
 			$this->displayText = $message;
 			$this->sessionState = "CONTINUE";
 			$this->serviceDescription = $this->SERVICE_DESCRIPTION;
-			$this->nextFunction = "MyAccountMenu";
+			$this->nextFunction = "ChangePinMenu";
 
 			break;
 
@@ -735,7 +735,7 @@ class NCBANKUSSD extends DynamicMenuController {
 			$this->displayText = $message;
 			$this->sessionState = "CONTINUE";
 			$this->serviceDescription = $this->SERVICE_DESCRIPTION;
-			$this->nextFunction = "changePinMenuHandler";
+			$this->nextFunction = "ChangePinMenu";
 			$this->previousPage = "ChangePinMenu";
 		} else {
 			//todo: save session

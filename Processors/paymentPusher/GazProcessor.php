@@ -1,11 +1,23 @@
   <?php
 
+//active includes
+//
+/*
 require_once __DIR__ . '/../../lib/integrationConfigs/GazConfigs.php';
 require_once __DIR__ . '/../../lib/Config.php';
 require_once __DIR__ . '/../../lib/logger/BeepLogger.php';
 require_once __DIR__ . '/../../lib/CoreUtils.php';
 require_once __DIR__ . '/../../lib/Encryption.php';
 include_once __DIR__ . '/../../lib/IXR_Library.php';
+ */
+
+//testing includes
+require_once '../../lib/GazConfigs.php';
+// require_once '../../lib/Config.php';
+require_once '../../lib/BeepLogger.php';
+// require_once '../../lib/CoreUtils.php';
+// require_once '../../lib/Encryption.php';
+// include_once '../../lib/IXR_Library.php';
 
 /* rodgers.muyinda@cellulant.com  */
 
@@ -16,18 +28,20 @@ class GazProcessor {
 	private $tovutiAPI = GazConfigs::MERCHANTURL . "/topup";
 
 	public function __construct() {
-		$this->log = new BeepLogger();
+		@$this->log = new BeepLogger();
 
 	}
+	function attach($log) {
+		$this->log = $log;
+	}
 
-	public function processRecord(PaymentHandler $data) {
+	public function processRecord($data) {
 
 		$this->log->info(Config::INFO, $data->beepTransactionID, $this->log->printArray($data));
 		return $this->processTopup($data);
 	}
 
 	function processTopup($data) {
-
 		$status['beepTransactionID'] = (int) $data->beepTransactionID;
 		$status['payerTransactionID'] = $data->payerTransactionID;
 

@@ -1,44 +1,41 @@
  <?php
 
-include_once './GazProccessorCaller.php';
+include_once './../GazProcessor.php';
 
 class GazProcessorTest extends PHPUnit_Framework_TestCase {
+
+	private $instance = null;
 	public function setUp() {
-		// your code here
+
+		$instance = new GazProcessor();
+		$observer = $this->getMockBuilder(BeepLogger::class)
+			->setMethods(['update'])
+			->getMock();
+
+		$instance->attach($observer);
+
+		$this->instance = $instance;
+
 	}
 
 	public function tearDown() {
 		// your code here
-	}
-
-	//todo: intergration tests instead ::
-
-	public function testValidCardNumber() {
-		print_r("Test  if card is valid");
-
-		$instance = new GazProccessorCaller();
-		$response = $instance->init("G002");
-
-		$statusCode = $response->results[0]->statusCode;
-
-		var_dump($response->results[0]->statusCode);
-
-		$this->assertEquals(307, $statusCode);
 
 	}
 
-	public function testInvalidCardNumber() {
-		print_r("Test  if card is Invalid ");
+	public function testPushAndPop() {
 
-		$instance = new GazProccessorCaller();
-		$response = $instance->init("invalidNumber");
+		$data = array('mosee', 'meoe');
+		$this->instance->processRecord($data);
+		$stack = [];
+		$this->assertSame(0, count($stack));
 
-		$statusCode = $response->results[0]->statusCode;
+		array_push($stack, 'foo');
+		$this->assertSame('foo', $stack[count($stack) - 1]);
+		$this->assertSame(1, count($stack));
 
-		var_dump($response->results[0]->statusCode);
-
-		$this->assertEquals(174, $statusCode);
-
+		$this->assertSame('foo', array_pop($stack));
+		$this->assertSame(0, count($stack));
 	}
 
 }
