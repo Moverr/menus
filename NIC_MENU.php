@@ -248,7 +248,7 @@ class NCBANKUSSD extends DynamicMenuController {
 			if (strlen(trim($input)) == 1) {
 				$this->firstMenu();
 			} else {
-				$this->displayText = "Thank you for supporting NC Bank ";
+				$this->displayText = "Thank you for choosing NC Bank NC Bank ";
 				$this->sessionState = "END";
 
 			}
@@ -375,7 +375,7 @@ class NCBANKUSSD extends DynamicMenuController {
 			if (strlen(trim($input)) == 1) {
 				$this->firstMenu();
 			} else {
-				$this->displayText = "Thank you for supporting NC Bank ";
+				$this->displayText = "Thank you for choosing NC Bank NC Bank ";
 				$this->sessionState = "END";
 
 			}
@@ -422,7 +422,7 @@ class NCBANKUSSD extends DynamicMenuController {
 			if (strlen(trim($input)) == 1) {
 				$this->firstMenu();
 			} else {
-				$this->displayText = "Thank you for supporting NC Bank ";
+				$this->displayText = "Thank you for choosing NC Bank NC Bank ";
 				$this->sessionState = "END";
 
 			}
@@ -472,7 +472,7 @@ class NCBANKUSSD extends DynamicMenuController {
 				if (strlen(trim($input)) == 1) {
 					$this->firstMenu();
 				} else {
-					$this->displayText = "Thank you for supporting NC Bank ";
+					$this->displayText = "Thank you for choosing NC Bank NC Bank ";
 					$this->sessionState = "END";
 
 				}
@@ -544,7 +544,7 @@ class NCBANKUSSD extends DynamicMenuController {
 				if (strlen(trim($input)) == 1) {
 					$this->firstMenu();
 				} else {
-					$this->displayText = "Thank you for supporting NC Bank ";
+					$this->displayText = "Thank you for choosing NC Bank NC Bank ";
 					$this->sessionState = "END";
 
 				}
@@ -588,7 +588,7 @@ class NCBANKUSSD extends DynamicMenuController {
 				if (strlen(trim($input)) == 1) {
 					$this->firstMenu();
 				} else {
-					$this->displayText = "Thank you for supporting NC Bank ";
+					$this->displayText = "Thank you for choosing NC Bank NC Bank ";
 					$this->sessionState = "END";
 
 				}
@@ -632,7 +632,7 @@ class NCBANKUSSD extends DynamicMenuController {
 				if (strlen(trim($input)) == 1) {
 					$this->firstMenu();
 				} else {
-					$this->displayText = "Thank you for supporting NC Bank ";
+					$this->displayText = "Thank you for choosing NC Bank NC Bank ";
 					$this->sessionState = "END";
 
 				}
@@ -784,16 +784,16 @@ class NCBANKUSSD extends DynamicMenuController {
 
 	function generalMenu($input) {
 		if ($input == '0') {
-			$this->displayText = "Thank you for supporting NC BANK";
+			$this->displayText = "Thank you for choosing NC Bank NC BANK";
 			$this->sessionState = "END";
 		} else if ($input == '0') {
-			$this->displayText = "Thank you for supporting NC BANK";
+			$this->displayText = "Thank you for choosing NC Bank NC BANK";
 			$this->sessionState = "END";
 		} else if ($input == '0') {
-			$this->displayText = "Thank you for supporting NC BANK";
+			$this->displayText = "Thank you for choosing NC Bank NC BANK";
 			$this->sessionState = "END";
 		} else if ($input == '0') {
-			$this->displayText = "Thank you for supporting NC BANK";
+			$this->displayText = "Thank you for choosing NC Bank NC BANK";
 			$this->sessionState = "END";
 		}
 	}
@@ -807,7 +807,7 @@ class NCBANKUSSD extends DynamicMenuController {
 			if (strlen(trim($input)) == 1) {
 				$this->firstMenu();
 			} else {
-				$this->displayText = "Thank you for supporting NC Bank ";
+				$this->displayText = "Thank you for choosing NC Bank NC Bank ";
 				$this->sessionState = "END";
 
 			}
@@ -1062,7 +1062,7 @@ class NCBANKUSSD extends DynamicMenuController {
 				if (strlen(trim($input)) == 1) {
 					$this->firstMenu();
 				} else {
-					$this->displayText = "Thank you for supporting NC Bank ";
+					$this->displayText = "Thank you for choosing NC Bank NC Bank ";
 					$this->sessionState = "END";
 
 				}
@@ -1199,7 +1199,7 @@ class NCBANKUSSD extends DynamicMenuController {
 			if (strlen(trim($input)) == 1) {
 				$this->firstMenu();
 			} else {
-				$this->displayText = "Thank you for supporting NC Bank ";
+				$this->displayText = "Thank you for choosing NC Bank NC Bank ";
 				$this->sessionState = "END";
 
 			}
@@ -1232,7 +1232,7 @@ class NCBANKUSSD extends DynamicMenuController {
 			if (strlen(trim($input)) == 1) {
 				$this->firstMenu();
 			} else {
-				$this->displayText = "Thank you for supporting NC Bank ";
+				$this->displayText = "Thank you for choosing NC Bank NC Bank ";
 				$this->sessionState = "END";
 
 			}
@@ -1341,7 +1341,7 @@ class NCBANKUSSD extends DynamicMenuController {
 			if (strlen(trim($input)) == 1) {
 				$this->firstMenu();
 			} else {
-				$this->displayText = "Thank you for supporting NC Bank ";
+				$this->displayText = "Thank you for choosing NC Bank NC Bank ";
 				$this->sessionState = "END";
 
 			}
@@ -1461,7 +1461,7 @@ class NCBANKUSSD extends DynamicMenuController {
 			if (strlen(trim($input)) == 1) {
 				$this->firstMenu();
 			} else {
-				$this->displayText = "Thank you for supporting NC Bank ";
+				$this->displayText = "Thank you for choosing NC Bank NC Bank ";
 				$this->sessionState = "END";
 
 			}
@@ -1576,7 +1576,7 @@ class NCBANKUSSD extends DynamicMenuController {
 			if (strlen(trim($input)) == 1) {
 				$this->firstMenu();
 			} else {
-				$this->displayText = "Thank you for supporting NC Bank ";
+				$this->displayText = "Thank you for choosing NC Bank NC Bank ";
 				$this->sessionState = "END";
 
 			}
