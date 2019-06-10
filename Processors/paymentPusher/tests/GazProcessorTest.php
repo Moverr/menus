@@ -1,6 +1,6 @@
  <?php
 
-include_once '../GazProcessor.php';
+include_once './GazProccessorCaller.php';
 
 class GazProcessorTest extends PHPUnit_Framework_TestCase {
 	public function setUp() {
@@ -14,7 +14,7 @@ class GazProcessorTest extends PHPUnit_Framework_TestCase {
 	//todo: intergration tests instead ::
 
 	public function testComparesNumbers() {
-		$instance = new GazProcessor();
+		$instance = new GazProccessorCaller();
 		$this->assertTrue(1 == 1);
 	}
 

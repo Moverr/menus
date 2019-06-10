@@ -15,9 +15,6 @@ class GazProcessor {
 	private $authorization = GazConfigs::AUTHORIZATION;
 	private $tovutiAPI = GazConfigs::MERCHANTURL . "/topup";
 
-	/**
-	 * Class constructor
-	 */
 	public function __construct() {
 		$this->log = new BeepLogger();
 
