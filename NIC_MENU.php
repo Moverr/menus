@@ -324,8 +324,11 @@ class NCBANKUSSD extends DynamicMenuController {
 		case '5':
 # code...
 			$message = "Send to \n"
-				. "1) MTN Funds Transfer\n"
-				. "2) Airtel Money \n ";
+				. "1) MTN \n"
+				. "2) Airtel  \n "
+				. "3) AFRICEL \n "
+
+			;
 
 			$message .= "\n\n0. Home \n" . "00. Exit";
 			$this->displayText = $message;
@@ -869,21 +872,22 @@ class NCBANKUSSD extends DynamicMenuController {
 		} else if ($input . "" == "2") {
 			$merchantcode = "AIRTELMON";
 		} else {
-			$merchantcode = NULL;
+			$merchantcode = "";
 		}
 
-		if ($merchantcode == null) {
+		if ($input == null) {
 
 			$message = "Invalid selction \n Send to \n"
-				. "1) MTN Funds Transfer\n"
-				. "2) Airtel Money \n ";
+				. "1) MTN \n"
+				. "2) Airtel  \n "
+				. "3) Africell  \n ";
 
 			$message .= "\n\n0. Home \n" . "00. Exit";
 			$this->displayText = $message;
 			$this->sessionState = "CONTINUE";
 			$this->serviceDescription = $this->SERVICE_DESCRIPTION;
 			$this->nextFunction = "BankToMobileMenu";
-			$this->previousPage = "startPage";
+			$this->previousPage = "BankToMobileMenu";
 		} else {
 
 			$this->saveSessionVar("MERCHANTCODE", $merchantcode);
@@ -911,6 +915,7 @@ class NCBANKUSSD extends DynamicMenuController {
 			$this->previousPage = "MSSIDNTOTRANSFERTOMONEY";
 		} else {
 
+			$mobileNumberB2c = "256" . (int) $input;
 			$this->saveSessionVar("MOBILENUMBERB2C", $input);
 
 			$MERCHANTCODE = $this->getSessionVar("MERCHANTCODE");
@@ -1025,7 +1030,7 @@ class NCBANKUSSD extends DynamicMenuController {
 			"accountID" => $ACCOUNTB2C['ACCOUNTCBSID'],
 			"amount" => $input,
 			"columnA" => $MOBILENUMBERB2C,
-			"merchantCode" => $MERCHANTCODE,
+			"merchantCode" => $this->getAirtimeWalletMerchantCodes($MOBILENUMBERB2C),
 			"CBSID" => 1,
 			"enrollmentAlias" => $MOBILENUMBERB2C,
 			"enroll" => "NO",
