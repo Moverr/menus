@@ -1282,7 +1282,8 @@ class NCBANKUSSD extends DynamicMenuController {
 
 				$response = json_decode($result);
 				$this->logMessage("Balance Enquiry Response:: ", $response, 4);
-				$this->displayText = "" . ($response->DATA->MESSAGE);
+				$this->displayText = "Request Logged Succesfully, Message coming shortly";
+				// . ($response->DATA->MESSAGE);
 
 				$this->sessionState = "END";
 			}
