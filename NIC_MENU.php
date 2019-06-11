@@ -3421,6 +3421,12 @@ class NCBANKUSSD extends DynamicMenuController {
 				break;
 			}
 		}
+
+		$columnF = 'NULL';
+		if ($merchantCode == $this->nwscServiceCode) {
+			$columnF = $this->getSessionVar('NWSCarea');
+		}
+
 		$this->saveSessionVar("selectedSourceAccount", $selectedAccount);
 		$PINRECORD = $this->getSessionVar('AUTHENTICATEDPIN');
 		$requestPayload = array(
@@ -3436,6 +3442,7 @@ class NCBANKUSSD extends DynamicMenuController {
 			"CBSID" => 1,
 			"columnD" => "NULL",
 			"columnA" => $merchantAccountNumber,
+			"columnF" => $columnF,
 		);
 		$logRequest = $this->logChannelRequest($requestPayload, $this->STATUS_CODE, NULL, 359);
 
