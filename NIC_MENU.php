@@ -57,6 +57,7 @@ class NCBANKUSSD extends DynamicMenuController {
 	private $uraServiceID = '4';
 	private $uraServiceCode = 'URA';
 	private $nwscAreas = "Kampala,Jinja,Entebbe,Lugazi,Iganga,Kawuku,Kajjansi,Mukono,Others";
+	private $clientSystemID = 51;
 
 	function startPage() {
 		$this->firstMenu();
@@ -325,10 +326,7 @@ class NCBANKUSSD extends DynamicMenuController {
 # code...
 			$message = "Send to \n"
 				. "1) MTN \n"
-				. "2) Airtel  \n "
-				. "3) AFRICEL \n "
-
-			;
+				. "2) Airtel  \n ";
 
 			$message .= "\n\n0. Home \n" . "00. Exit";
 			$this->displayText = $message;
@@ -880,7 +878,7 @@ class NCBANKUSSD extends DynamicMenuController {
 			$message = "Invalid selction \n Send to \n"
 				. "1) MTN \n"
 				. "2) Airtel  \n "
-				. "3) Africell  \n ";
+			;
 
 			$message .= "\n\n0. Home \n" . "00. Exit";
 			$this->displayText = $message;
@@ -1030,7 +1028,8 @@ class NCBANKUSSD extends DynamicMenuController {
 			"accountID" => $ACCOUNTB2C['ACCOUNTCBSID'],
 			"amount" => $input,
 			"columnA" => $MOBILENUMBERB2C,
-			"merchantCode" => $this->getAirtimeWalletMerchantCodes($MOBILENUMBERB2C),
+			"merchantCode" => $MERCHANTCODE,
+			// $this->getAirtimeWalletMerchantCodes($MOBILENUMBERB2C),
 			"CBSID" => 1,
 			"enrollmentAlias" => $MOBILENUMBERB2C,
 			"enroll" => "NO",
@@ -3770,7 +3769,7 @@ class NCBANKUSSD extends DynamicMenuController {
 				"payload" => base64_encode($payload),
 				"imcRequestID" => $this->IMCREQUESTID,
 				"requestMode" => "0", //0 if sync and 1 when async
-				"clientSystemID" => 77,
+				"clientSystemID" => $this->clientSystemID,
 				"systemName" => 'USSD',
 			);
 			//package our data
@@ -3832,7 +3831,8 @@ class NCBANKUSSD extends DynamicMenuController {
 				"payload" => base64_encode($payload),
 				"imcRequestID" => $this->IMCREQUESTID,
 				"requestMode" => 1, //this means that this is a synchronous  //0 if sync and 1 when async
-				"clientSystemID" => 77,
+				"clientSystemID" => $this->clientSystemID,
+				// 77,
 				"systemName" => 'USSD',
 			);
 			//package our data
