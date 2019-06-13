@@ -39,6 +39,8 @@ class GAZUSSD extends DynamicMenuController {
 
 	private $hubJSONAPIUrl = "http://10.250.250.29:9000/hub/services/paymentGateway/JSON/index.php";
 	private $hubValidationFunction = "BEEP.validateAccount";
+	private $hubPaymentFunction = "BEEP.postPayment";
+
 	private $hubAuthSuccessCode = "131";
 	private $hubValidationSuccessCode = "307";
 
@@ -52,15 +54,13 @@ class GAZUSSD extends DynamicMenuController {
 	private $uraServiceCode = 'URA';
 	private $nwscAreas = "Kampala,Jinja,Entebbe,Lugazi,Iganga,Kawuku,Kajjansi,Mukono,Others";
 
-	private $AUTHORIZATION = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdhelRvcFVwLm11bGFAY2VsbHVsYW50LmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJDJCM2IzY1luWG5yOVRkSlhWbUgwQU8ydXhSSkUvRFY3L0NuSTYzS3RycVNVZWNIQ1R1cEsyIiwidXNlcm5hbWUiOiJNdWxhX0NlbGx1bGFudCIsInJhbmRvbSI6Ik1VTEFfR0FaNDI4NjYxMTIzIiwiaWF0IjoxNTUzNzg0NTAxfQ.WBpkwbMWuRx5sgqjkmAuwgvaG1dFrduoY2bhdmi2EDw";
-
 	private $BEEPUSERNAME = "gazpay";
 	private $BEEPPASSWORD = "abcd@12345";
 
 	private $NARRATION = "GAZ PAYMENT";
 	private $SERVICECODE = "PAY077PAY077";
 	private $SERVICEID = 2114;
-	private $CURRENCY = "KES";
+	private $CURRENCY_CODE = "KES";
 
 	function startPage() {
 
@@ -212,8 +212,6 @@ class GAZUSSD extends DynamicMenuController {
 		$packet = array();
 
 		$extraData = json_encode(array(
-
-			"authorization" => $this->AUTHORIZATION,
 			"cardmask" => $CARDNUMBER,
 			"transactioncode" => $transaction_id,
 			"amount" => $CARDAMOUNT,
@@ -235,9 +233,9 @@ class GAZUSSD extends DynamicMenuController {
 			"amount" => $CARDAMOUNT,
 			"accountNumber" => $CARDNUMBER,
 			"narration" => "GAZ TOPUP",
-			"currencyCode" => "KES",
+			"currencyCode" => $this->CURRENCY_CODE,
 			"customerNames" => "--",
-			"paymentMode" => "MOBILE MONEY",
+			"paymentMode" => "USSD",
 			"datePaymentReceived" => date("Y-m-d H:i:s"),
 		);
 
@@ -249,11 +247,11 @@ class GAZUSSD extends DynamicMenuController {
 
 		$spayload = array(
 			// "function"=>"BEEP.validateAccount",
-			"function" => "BEEP.postPayment",
+			"function" => $this->hubPaymentFunction,
 			"payload" => json_encode($payload),
 		);
 
-		$response = $this->postToCPGPayload($payload, $this->hubJSONAPIUrl, "BEEP.postPayment");
+		$response = $this->postToCPGPayload($payload, $this->hubJSONAPIUrl, $this->hubPaymentFunction);
 
 		$responsedata = json_decode($response);
 		$messsage = (string) $responsedata->results[0]->statusDescription;
