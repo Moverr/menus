@@ -131,6 +131,54 @@ class GAZUSSD extends DynamicMenuController {
 
 	function validateCard($cardMask) {
 
+		if (!isset($cardmask)) {
+			return FALSE;
+		}
+
+		$transaction_id = rand();
+		$CARDNUMBER = $this->getSessionVar("CARDNUMBER");
+		$CARDAMOUNT = $this->getSessionVar("CARDAMOUNT");
+		$MOBILENUMBER = $this->getSessionVar("MOBILENUMBER");
+
+		$credentials = array(
+			"username" => $this->BEEPUSERNAME,
+			"password" => $this->BEEPPASSWORD,
+		);
+
+		$packet = array();
+
+		$packet = array(
+
+			'serviceID' => $this->SERVICEID,
+			'serviceCode' => $this->SERVICECODE,
+			'accountNumber' => $cardMask,
+			'requestExtraData' => null,
+			'extraData' => null,
+
+		);
+
+		$data[] = $packet;
+		$payload = array(
+			"credentials" => $credentials,
+			"packet" => $data,
+		);
+
+		$spayload = array(
+			"function" => $this->hubValidationFunction,
+			"payload" => json_encode($payload),
+		);
+
+		$response = $this->postToCPGPayload($payload, $this->hubJSONAPIUrl, $this->hubValidationFunction);
+
+		$responsedata = json_decode($response);
+		$messsage = (string) $responsedata->results[0]->statusDescription;
+		if ($responsedata->results[0]->statusCode == 139) {
+			$messsage = " Payment  is being proccessed, you will shortly receive a confirmation message. \nRef :" . $responsedata->results[0]->beepTransactionID;
+		}
+
+		$this->displayText = $messsage;
+		$this->sessionState = "END";
+
 		return "";
 
 	}
