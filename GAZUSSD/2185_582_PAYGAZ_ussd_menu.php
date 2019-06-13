@@ -64,7 +64,7 @@ class GAZUSSD extends DynamicMenuController {
 
 	function startPage() {
 
-		$message = "Select Option. \n1: Register card   \n2: Topup card \n3: Card balance \n4: Card ministatement \n\n 0) Exit";
+		$message = "Select Option.  \n1: Topup card \n2: Register card   \n3: Card balance \n4: Card ministatement \n\n 0) Exit";
 
 		$this->displayText = $message;
 		$this->sessionState = "CONTINUE";
@@ -77,11 +77,11 @@ class GAZUSSD extends DynamicMenuController {
 		switch ($input) {
 		case '1':
 			# code...
-			$this->registerCard();
+			$this->topUpCardMenu();
 
 			break;
 		case '2':
-			$this->topUpCardMenu();
+			$this->registerCard();
 			break;
 		case '3':
 			$this->cardBalanceMenu();
@@ -351,5 +351,5 @@ class GAZUSSD extends DynamicMenuController {
 
 }
 
-$ncBankUSSD = new GAZUSSD();
-echo $ncBankUSSD->navigate();
+$gazUSSD = new GAZUSSD();
+echo $gazUSSD->navigate();
