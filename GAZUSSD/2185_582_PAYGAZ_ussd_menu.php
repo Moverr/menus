@@ -117,12 +117,21 @@ class GAZUSSD extends DynamicMenuController {
 			$this->previousPage = "getCardNumber";
 		} else {
 			$this->saveSessionVar("CARDNUMBER", $input);
+
+			$response = $this->validateCard($input);
+
 			$this->displayText = "Select payment option \n1) Mobile Money ";
 			$this->sessionState = "CONTRINUE";
 			$this->nextFunction = "selectPaymentOption";
 			$this->previousPage = "getCardNumber";
 
 		}
+
+	}
+
+	function validateCard($cardMask) {
+
+		return "";
 
 	}
 
