@@ -119,11 +119,19 @@ class GAZUSSD extends DynamicMenuController {
 			$this->saveSessionVar("CARDNUMBER", $input);
 
 			$response = $this->validateCard($input);
+			if ($response == TRUE) {
 
-			$this->displayText = "Select payment option \n1) Mobile Money ";
-			$this->sessionState = "CONTRINUE";
-			$this->nextFunction = "selectPaymentOption";
-			$this->previousPage = "getCardNumber";
+				$this->displayText = "Select payment option \n1) Mobile Money ";
+				$this->sessionState = "CONTRINUE";
+				$this->nextFunction = "selectPaymentOption";
+				$this->previousPage = "getCardNumber";
+
+			} else {
+
+				$this->displayText = " The Card : " . $input . " is invalid";
+				$this->sessionState = "END";
+
+			}
 
 		}
 
@@ -171,15 +179,14 @@ class GAZUSSD extends DynamicMenuController {
 		$response = $this->postToCPGPayload($payload, $this->hubJSONAPIUrl, $this->hubValidationFunction);
 
 		$responsedata = json_decode($response);
-		$messsage = (string) $responsedata->results[0]->statusDescription;
-		if ($responsedata->results[0]->statusCode == 139) {
-			$messsage = " Payment  is being proccessed, you will shortly receive a confirmation message. \nRef :" . $responsedata->results[0]->beepTransactionID;
+
+		$statusCode = $responsedata->results[0]->statusCode;
+
+		if ($statusCode == 307) {
+			return TRUE;
+		} else {
+			return FALSE;
 		}
-
-		$this->displayText = $messsage;
-		$this->sessionState = "END";
-
-		return "";
 
 	}
 
