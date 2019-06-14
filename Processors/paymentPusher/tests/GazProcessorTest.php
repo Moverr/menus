@@ -9,10 +9,10 @@ class GazProcessorTest extends PHPUnit_Framework_TestCase {
 
 		$instance = new GazProcessor();
 		$observer = $this->getMockBuilder(BeepLogger::class)
-			->setMethods(['update'])
+			->setMethods(['info'])
 			->getMock();
 
-		$instance->attach($observer);
+		$instance->attachBeepLogger($observer);
 
 		$this->instance = $instance;
 
