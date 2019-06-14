@@ -2930,12 +2930,10 @@ class NCBANKUSSD extends DynamicMenuController {
 		}
 	}
 
-	function enterNWSCAmount() {
+	function enterNWSCAmount($input) {
 
-		if ($this->getSessionVar("nwscAmount") == null) {
-			$amount = (int) $input;
-			$this->saveSessionVar("nwscAmount", $amount);
-		}
+		$amount = (int) $input;
+		$this->saveSessionVar("nwscAmount", $amount);
 
 		$message = "You are paying NWSC UGX. " . $this->getSessionVar("nwscAmount");
 		$message .= ". Account name: " . $this->getSessionVar("nwscCustomerName") . ". ";
