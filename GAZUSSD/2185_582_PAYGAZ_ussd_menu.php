@@ -320,11 +320,11 @@ class GAZUSSD extends DynamicMenuController {
 	}
 
 	function cardBalanceMenu() {
-		$this->displayText = "COMING SOON";
+		$this->displayText = "Coming soon ";
 		$this->sessionState = "END";
 	}
 	function cardMiniStatementMenu() {
-		$this->displayText = "COMING SOON";
+		$this->displayText = "Coming soon";
 		$this->sessionState = "END";
 	}
 
