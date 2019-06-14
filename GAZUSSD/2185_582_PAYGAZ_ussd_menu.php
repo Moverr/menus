@@ -140,7 +140,7 @@ class GAZUSSD extends DynamicMenuController {
 	function validateCard($cardMask) {
 
 		if (!isset($cardmask)) {
-			return FALSE;
+			return TRUE;
 		}
 
 		$transaction_id = rand();
@@ -185,7 +185,7 @@ class GAZUSSD extends DynamicMenuController {
 		if ($statusCode == 307) {
 			return TRUE;
 		} else {
-			return FALSE;
+			return TRUE;
 		}
 
 	}
