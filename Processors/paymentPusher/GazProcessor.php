@@ -39,7 +39,6 @@ class GazProcessor {
 	}
 
 	function processTopup($data) {
-		$status = array();
 
 		$status['beepTransactionID'] = (int) $data->beepTransactionID;
 		$status['payerTransactionID'] = $data->payerTransactionID;
