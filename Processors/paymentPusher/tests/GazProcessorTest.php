@@ -9,7 +9,7 @@ class GazProcessorTest extends PHPUnit_Framework_TestCase {
 
 		$instance = new GazProcessor();
 		$observer = $this->getMockBuilder(BeepLogger::class)
-			->setMethods(['info'])
+			->setMethods(['info', 'printArray'])
 			->getMock();
 
 		$instance->attachBeepLogger($observer);
@@ -23,19 +23,44 @@ class GazProcessorTest extends PHPUnit_Framework_TestCase {
 
 	}
 
-	public function testPushAndPop() {
+// testing  topup with invalid card
+	public function testTopupWithInvalidCard() {
 
-		$data = array('mosee', 'meoe');
-		$this->instance->processRecord($data);
-		$stack = [];
-		$this->assertSame(0, count($stack));
+		$data = new stdClass;
+		$data->beepTransactionID = "2333";
+		$data->payerTransactionID = 122;
 
-		array_push($stack, 'foo');
-		$this->assertSame('foo', $stack[count($stack) - 1]);
-		$this->assertSame(1, count($stack));
+		$someJSON = '{"cardmask":"false","amount":"7837"}';
 
-		$this->assertSame('foo', array_pop($stack));
-		$this->assertSame(0, count($stack));
+		$paymentExtraDat = $someJSON;
+		$data->paymentExtraData = $paymentExtraDat;
+
+		$responseData = $this->instance->processRecord($data);
+
+		var_dump($responseData);
+
+		$this->assertEquals(141, $responseData['statusCode']);
+
+	}
+
+// testing successful topup with valid card
+	public function testTopupWithValidCard() {
+
+		$data = new stdClass;
+		$data->beepTransactionID = "2333";
+		$data->payerTransactionID = 122;
+
+		$someJSON = '{"cardmask":"G001","amount":"7837"}';
+
+		$paymentExtraDat = $someJSON;
+		$data->paymentExtraData = $paymentExtraDat;
+
+		$responseData = $this->instance->processRecord($data);
+
+		var_dump($responseData);
+
+		$this->assertEquals(140, $responseData['statusCode']);
+
 	}
 
 }
