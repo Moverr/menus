@@ -1,7 +1,7 @@
   <?php
 
-//active includes
-//
+// LIVE INCLUDES
+
 /*
 require_once __DIR__ . '/../../lib/integrationConfigs/GazConfigs.php';
 require_once __DIR__ . '/../../lib/Config.php';
@@ -11,16 +11,12 @@ require_once __DIR__ . '/../../lib/Encryption.php';
 include_once __DIR__ . '/../../lib/IXR_Library.php';
  */
 
-//testing includes
+// TEST INCLUDES
 require_once '../../lib/GazConfigs.php';
 require_once '../../lib/Config.php';
-// require_once '../../lib/BeepLogger.php';
-// require_once '../../lib/CoreUtils.php';
-// require_once '../../lib/Encryption.php';
-// include_once '../../lib/IXR_Library.php';
+require_once '../../lib/BeepLogger.php';
 
 /* rodgers.muyinda@cellulant.com  */
-
 class GazProcessor {
 
 	private $log;
@@ -28,7 +24,7 @@ class GazProcessor {
 	private $tovutiAPI = GazConfigs::MERCHANTURL . "/topup";
 
 	public function __construct() {
-		// @$this->log = new BeepLogger();
+		@$this->log = new BeepLogger();
 
 	}
 
@@ -43,20 +39,23 @@ class GazProcessor {
 	}
 
 	function processTopup($data) {
+		$status = array();
+
 		$status['beepTransactionID'] = (int) $data->beepTransactionID;
 		$status['payerTransactionID'] = $data->payerTransactionID;
 
 		$payload = json_decode($data->paymentExtraData, true);
 		$authorization = $this->authorization;
-		$params = $this->populateEntity($payload);
+		$params = $this->populateEntity($payload, $status);
+		var_dump($params);
 		$response = $this->postData(json_encode($params), $authorization);
+
 		$responsedata = json_decode($response);
 		return $this->populateResponse($responsedata);
 
 	}
 
-	function populateResponse($responsedata) {
-
+	function populateResponse($response_data) {
 		$error_code = $response_data->error->error_code;
 
 		if ($error_code == 200) {
@@ -66,6 +65,8 @@ class GazProcessor {
 
 			$status['statusCode'] = Config::PUSH_STATUS_PAYMENT_ACCEPTED;
 			$status['statusDescription'] = $message . " ! " . $transactionRef;
+			$status['status'] = $error_code;
+			$status['receipt'] = $transactionRef;
 
 		} else {
 
@@ -78,7 +79,7 @@ class GazProcessor {
 		return $status;
 	}
 
-	function populateEntity($payload) {
+	function populateEntity($payload, $status) {
 		$cardmask = $payload['cardmask'];
 		$transactioncode = $status['beepTransactionID'];
 		$amount = $payload['amount'];
