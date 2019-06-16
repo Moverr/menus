@@ -48,11 +48,10 @@ class GazProcessor {
 		$response = $this->postData(json_encode($params), $authorization);
 
 		$responseDd = json_decode($response_data);
-		$error_code = $responseDd->error->error_code;
 
 		// $responsedata = json_decode($response);
 		$status['statusCode'] = Config::PUSH_STATUS_PAYMENT_ACCEPTED;
-		$status['statusDescription'] = "ddd";
+		$status['statusDescription'] = (string) $responseDd;
 
 		//
 		// $status[] = $responsedata;
