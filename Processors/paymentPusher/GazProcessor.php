@@ -53,27 +53,31 @@ class GazProcessor {
 	}
 
 	function populateResponse($response_data) {
-		$error_code = $response_data->error->error_code;
 
-		if ($error_code == 200) {
-
-			$message = $response_data->Message;
-			// $transactionRef = $response_data->TransactionalRef;
-
-			$status['statusCode'] = Config::PUSH_STATUS_PAYMENT_ACCEPTED;
-			$status['statusDescription'] = $message . " ! " . $transactionRef;
-			$status['status'] = $error_code;
-			// $status['receipt'] = $transactionRef;
-
-		} else {
-
-			$error_message = $response_data->error->error_message;
-			$status['statusCode'] = Config::PUSH_STATUS_PAYMENT_REJECTED;
-			$status['statusDescription'] = "EORRRRR";
-
-		}
+		$status['statusCode'] = Config::PUSH_STATUS_PAYMENT_ACCEPTED;
 
 		return $status;
+		// $error_code = $response_data->error->error_code;
+
+		// if ($error_code == 200) {
+
+		// 	$message = $response_data->Message;
+		// 	// $transactionRef = $response_data->TransactionalRef;
+
+		// 	$status['statusCode'] = Config::PUSH_STATUS_PAYMENT_ACCEPTED;
+		// 	$status['statusDescription'] = $message . " ! " . $transactionRef;
+		// 	$status['status'] = $error_code;
+		// 	// $status['receipt'] = $transactionRef;
+
+		// } else {
+
+		// 	$error_message = $response_data->error->error_message;
+		// 	$status['statusCode'] = Config::PUSH_STATUS_PAYMENT_REJECTED;
+		// 	$status['statusDescription'] = "EORRRRR";
+
+		// }
+
+		// return $status;
 	}
 
 	function populateEntity($payload, $status) {
