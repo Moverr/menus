@@ -49,45 +49,19 @@ class GazProcessor {
 
 		// $responsedata = json_decode($response);
 		// return $this->populateResponse($responsedata, $status);
-		$status['statusCode'] = Config::PUSH_STATUS_PAYMENT_ACCEPTED;
 
 		$responseData = json_decode($response);
 		$error = ($responseData->error);
-		$status['statusDescription'] = (string) json_encode($error->error_code);
-		// json_encode($response);
+		$status['statusDescription'] = (string) json_encode($response);
 
-/*
-"{\"Message\":\"Customer Account Successfully Credited\",\"CardMask\":\"G002\",\"TransactionalRef\":\"MULAGAZ7484535625\",
-
-\"error\":{\"error\":false,\"error_code\":200,\"error_message\":\"Success\"}}";
-
- */
+		if ($error->error_code == 200) {
+			$status['statusCode'] = Config::PUSH_STATUS_PAYMENT_ACCEPTED;
+		} else {
+			$status['statusCode'] = Config::PUSH_STATUS_PAYMENT_ACCEPTED;
+		}
 
 		return $status;
-	}
 
-	function populateResponse($response_data, $status) {
-		// $error_code = $response_data->error->error_code;
-
-		// if ($error_code == 200) {
-
-		// 	$message = $response_data->Message;
-		// 	$transactionRef = $response_data->TransactionalRef;
-
-		// 	$status['statusCode'] = Config::PUSH_STATUS_PAYMENT_ACCEPTED;
-		// 	$status['statusDescription'] = $message . " ! " . $transactionRef;
-		// 	$status['status'] = $error_code;
-		// 	$status['receipt'] = $transactionRef;
-
-		// } else {
-
-		// 	$error_message = $response_data->error->error_message;
-		// 	$status['statusCode'] = Config::PUSH_STATUS_PAYMENT_REJECTED;
-		// 	$status['statusDescription'] = $error_message;
-
-		// }
-
-		return $status;
 	}
 
 	function populateEntity($payload, $status) {
