@@ -180,7 +180,7 @@ class GAZUSSD extends DynamicMenuController {
 
 		$responsedata = json_decode($response);
 
-		$statusCode = $responsedata->results[0]->statusCode;
+		// $statusCode = $responsedata->results[0]->statusCode;
 
 		// if ($statusCode == 131) {
 		// 	return TRUE;
@@ -188,7 +188,7 @@ class GAZUSSD extends DynamicMenuController {
 		// 	return FALSE;
 		// }
 		//
-		return $statusCode;
+		return $responsedata;
 
 	}
 
