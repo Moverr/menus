@@ -45,7 +45,7 @@ class GazProcessor {
 
 		$params = $this->populateEntity($payload, $status);
 
-		// $response = $this->postData(json_encode($params), $this->authorization);
+		$response = $this->postData(json_encode($params), $this->authorization);
 
 		// $responsedata = json_decode($response);
 		// return $this->populateResponse($responsedata, $status);
