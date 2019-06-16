@@ -45,7 +45,7 @@ class GazProcessor {
 		$authorization = $this->authorization;
 		$params = $this->populateEntity($payload, $status);
 
-		// $response = $this->postData(json_encode($params), $authorization);
+		$response = $this->postData(json_encode($params), $authorization);
 
 		$status['statusCode'] = Config::PUSH_STATUS_PAYMENT_ACCEPTED;
 
