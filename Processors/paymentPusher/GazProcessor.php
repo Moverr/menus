@@ -53,7 +53,7 @@ class GazProcessor {
 	}
 
 	function populateResponse($response_data, $status) {
-		$error_code = $response_data->error->error_code;
+		// $error_code = $response_data->error->error_code;
 
 		// if ($error_code == 200) {
 
