@@ -140,7 +140,7 @@ class GAZUSSD extends DynamicMenuController {
 	function validateCard($cardMask) {
 
 		if (!isset($cardmask)) {
-			return TRUE;
+			return FALSE;
 		}
 
 		$transaction_id = rand();
@@ -182,10 +182,10 @@ class GAZUSSD extends DynamicMenuController {
 
 		$statusCode = $responsedata->results[0]->statusCode;
 
-		if ($statusCode == 307) {
+		if ($statusCode == 131) {
 			return TRUE;
 		} else {
-			return TRUE;
+			return FALSE;
 		}
 
 	}
@@ -278,8 +278,6 @@ class GAZUSSD extends DynamicMenuController {
 		$packet = array(
 
 			'serviceID' => $this->SERVICEID,
-			// 'serviceCode' => $this->$SERVICECODE,
-
 			'requestExtraData' => null,
 			'extraData' => $extraData,
 			"payerTransactionID" => $transaction_id,
@@ -301,7 +299,6 @@ class GAZUSSD extends DynamicMenuController {
 		);
 
 		$spayload = array(
-			// "function"=>"BEEP.validateAccount",
 			"function" => $this->hubPaymentFunction,
 			"payload" => json_encode($payload),
 		);
