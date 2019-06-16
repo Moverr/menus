@@ -24,12 +24,13 @@ class GazProcessorTest extends PHPUnit_Framework_TestCase {
 
 	}
 
-// testing  topup with invalid card
-	public function testTopupWithInvalidCard() {
+// testing CARD VALIDATION WITH VALID CARD
+	public function testValidationWithCorrectCard() {
 
 		$data = new stdClass;
 		$data->beepTransactionID = "2333";
 		$data->payerTransactionID = 122;
+		$data->accountNumber = "G002";
 
 		$someJSON = '{"cardmask":"false","amount":"7837"}';
 
@@ -40,18 +41,19 @@ class GazProcessorTest extends PHPUnit_Framework_TestCase {
 
 		var_dump($responseData);
 
-		$this->assertEquals(141, $responseData['statusCode']);
+		$this->assertEquals(131, $responseData['statusCode']);
 
 	}
 
-// testing successful topup with valid card
-	public function testTopupWithValidCard() {
+// TESTING CARD VALIDATION WITH INVALID CARD
+	public function testValidationWithInvalidCard() {
 
 		$data = new stdClass;
 		$data->beepTransactionID = "2333";
 		$data->payerTransactionID = 122;
+		$data->accountNumber = "INVALID";
 
-		$someJSON = '{"cardmask":"G001","amount":"7837"}';
+		$someJSON = '{"cardmask":"false","amount":"7837"}';
 
 		$paymentExtraDat = $someJSON;
 		$data->paymentExtraData = $paymentExtraDat;
@@ -60,7 +62,7 @@ class GazProcessorTest extends PHPUnit_Framework_TestCase {
 
 		var_dump($responseData);
 
-		$this->assertEquals(140, $responseData['statusCode']);
+		$this->assertEquals(132, $responseData['statusCode']);
 
 	}
 

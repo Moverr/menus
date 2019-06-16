@@ -28,19 +28,28 @@ class GazProcessor {
 		$this->log = new BeepLogger();
 	}
 
-	public function processRecord(ValidationHandler $data) {
-		$this->request = $data;
-		return $this->validateCardMask();
+	function attachBeepLogger($log) {
+		$this->log = $log;
 	}
 
-	function validateCardMask() {
-		$cardmask = $this->request->accountNumber;
+	public function processRecord($data) {
+		$this->request = $data;
+		return $this->validateCardMask($data);
+	}
+
+	function validateCardMask($data) {
+
+		$cardmask = $data->accountNumber;
+
 		$params = array(
 			"cardmask" => $cardmask,
 
 		);
 		$response = $this->postData(json_encode($params), $this->authorization);
-		return $this->processResponse($response);
+
+		$result = $this->processResponse($response);
+
+		return $result;
 
 	}
 
@@ -49,7 +58,7 @@ class GazProcessor {
 
 		if ((int) $result->error->error_code == 200) {
 			$status['accountNumber'] = $result;
-			$status['statusCode'] = Config::GENERIC_SUCCESS;
+			$status['statusCode'] = Config::AUTHENTICATION_SUCCESS;
 			$status['statusDescription'] = "Account has been validated successfully";
 			$status['accountValid'] = "yes";
 			$status['accountActive'] = "yes";
@@ -58,8 +67,7 @@ class GazProcessor {
 
 		} else {
 
-			$status['accountNumber'] = $cardmask;
-			$status['statusCode'] = 404;
+			$status['statusCode'] = Config::AUTHENTICATION_FAILED;
 			$status['statusDescription'] = "Account has not veen verified";
 			$status['accountValid'] = "no";
 			$status['accountActive'] = "no";
@@ -67,6 +75,7 @@ class GazProcessor {
 			return $status;
 
 		}
+
 	}
 
 	function postData($fields, $authorization) {
