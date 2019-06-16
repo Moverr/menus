@@ -38,15 +38,16 @@ class GazProcessor {
 
 	function processTopup($data) {
 
-		$status['beepTransactionID'] = (int) $data->beepTransactionID;
-		$status['payerTransactionID'] = $data->payerTransactionID;
+/*		$status['beepTransactionID'] = (int) $data->beepTransactionID;
+$status['payerTransactionID'] = $data->payerTransactionID;
 
-		$payload = json_decode($data->paymentExtraData, true);
-		$authorization = $this->authorization;
-		$params = $this->populateEntity($payload, $status);
+$payload = json_decode($data->paymentExtraData, true);
+$authorization = $this->authorization;
+$params = $this->populateEntity($payload, $status);
 
-		$response = $this->postData(json_encode($params), $authorization);
+$response = $this->postData(json_encode($params), $authorization);
 
+ */
 		// $responsedata = json_decode($response);
 		return $this->populateResponse(null);
 
