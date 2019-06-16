@@ -30,6 +30,8 @@ class GazProcessorTest extends PHPUnit_Framework_TestCase {
 		$data = new stdClass;
 		$data->beepTransactionID = "2333";
 		$data->payerTransactionID = 122;
+		$data->accountNumber = "invalid";
+		$data->amount = 122;
 
 		$someJSON = '{"cardmask":"false","amount":"7837"}';
 
@@ -50,6 +52,8 @@ class GazProcessorTest extends PHPUnit_Framework_TestCase {
 		$data = new stdClass;
 		$data->beepTransactionID = "2333";
 		$data->payerTransactionID = 122;
+		$data->accountNumber = "G002";
+		$data->amount = 122;
 
 		$someJSON = '{"cardmask":"G001","amount":"7837"}';
 

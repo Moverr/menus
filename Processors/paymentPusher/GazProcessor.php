@@ -2,18 +2,20 @@
 
 // LIVE INCLUDES
 
+/*
 require_once __DIR__ . '/../../lib/integrationConfigs/GazConfigs.php';
 require_once __DIR__ . '/../../lib/Config.php';
 require_once __DIR__ . '/../../lib/logger/BeepLogger.php';
 require_once __DIR__ . '/../../lib/CoreUtils.php';
 require_once __DIR__ . '/../../lib/Encryption.php';
 include_once __DIR__ . '/../../lib/IXR_Library.php';
+ */
 
 // TEST INCLUDES
-/*require_once '../../lib/GazConfigs.php';
+require_once '../../lib/GazConfigs.php';
 require_once '../../lib/Config.php';
 require_once '../../lib/BeepLogger.php';
- */
+
 /* rodgers.muyinda@cellulant.com  */
 class GazProcessor {
 
@@ -40,8 +42,6 @@ class GazProcessor {
 
 		$status['beepTransactionID'] = (int) $data->beepTransactionID;
 		$status['payerTransactionID'] = $data->payerTransactionID;
-
-		// $payload = json_decode($data->paymentExtraData, true);
 
 		$params = $this->populateEntity($data);
 
@@ -91,7 +91,7 @@ class GazProcessor {
 	}
 
 	function populateEntity($data) {
-		$cardmask = $cardmask = $data->accountNumber;
+		$cardmask = $data->accountNumber;
 		$transactioncode = (int) $data->beepTransactionID;
 		$amount = $data->amount;
 
