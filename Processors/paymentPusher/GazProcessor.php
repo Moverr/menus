@@ -52,8 +52,15 @@ class GazProcessor {
 		$status['statusCode'] = Config::PUSH_STATUS_PAYMENT_ACCEPTED;
 
 		$responseData = json_decode($response);
-		$status['statusDescription'] = (string) json_encode($response);
+		$status['statusDescription'] = (string) json_encode($responseData->error);
 		// json_encode($response);
+
+/*
+"{\"Message\":\"Customer Account Successfully Credited\",\"CardMask\":\"G002\",\"TransactionalRef\":\"MULAGAZ7484535625\",
+
+\"error\":{\"error\":false,\"error_code\":200,\"error_message\":\"Success\"}}";
+
+ */
 
 		return $status;
 	}
