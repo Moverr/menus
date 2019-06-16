@@ -48,11 +48,11 @@ class GazProcessor {
 		$response = $this->postData(json_encode($params), $authorization);
 
 		$responsedata = json_decode($response);
-		return $this->populateResponse($responsedata);
+		return $this->populateResponse($responsedata, $status);
 
 	}
 
-	function populateResponse($response_data) {
+	function populateResponse($response_data, $status) {
 		$error_code = $response_data->error->error_code;
 
 		if ($error_code == 200) {
