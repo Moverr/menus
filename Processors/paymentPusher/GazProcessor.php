@@ -91,7 +91,7 @@ class GazProcessor {
 		$amount = $payload['amount'];
 
 		$params = array(
-			"cardmask" => $cardmask,
+			"cardmask" => "G002",
 			"transactioncode" => $transactioncode,
 			"amount" => $amount,
 
