@@ -52,7 +52,7 @@ class GazProcessor {
 		//
 		// $status[] = $responsedata;
 
-		return $this->populateResponse($responsedata, $status);
+		$status = $this->populateResponse($responsedata, $status);
 		//
 		return $status;
 
