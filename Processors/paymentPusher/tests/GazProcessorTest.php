@@ -20,6 +20,7 @@ class GazProcessorTest extends PHPUnit_Framework_TestCase {
 
 	public function tearDown() {
 		// your code here
+		$this->instance = null;
 
 	}
 

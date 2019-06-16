@@ -24,7 +24,7 @@ class GazProcessor {
 	private $tovutiAPI = GazConfigs::MERCHANTURL . "/topup";
 
 	public function __construct() {
-		@$this->log = new BeepLogger();
+		$this->log = new BeepLogger();
 
 	}
 

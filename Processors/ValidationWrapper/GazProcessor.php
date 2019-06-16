@@ -5,9 +5,17 @@
  * @author rodgers.muyinda@cellulant.com
  *
  */
+/*
+// live includes
 require_once __DIR__ . '/../../lib/integrationConfigs/GazConfigs.php';
 require_once __DIR__ . '/../../lib/Config.php';
 require_once __DIR__ . '/../../lib/logger/BeepLogger.php';
+ */
+
+// TEST INCLUDES
+require_once '../../lib/GazConfigs.php';
+require_once '../../lib/Config.php';
+require_once '../../lib/BeepLogger.php';
 
 class GazProcessor {
 
