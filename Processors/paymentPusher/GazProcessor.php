@@ -49,7 +49,7 @@ class GazProcessor {
 
 		// $responsedata = json_decode($response);
 		// return $this->populateResponse($responsedata, $status);
-		$status['statusCode'] = 340;
+		$status['statusCode'] = Config::PUSH_STATUS_PAYMENT_ACCEPTED;
 
 		return $status;
 	}
