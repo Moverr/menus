@@ -58,12 +58,12 @@ class GazProcessor {
 		if ($error_code == 200) {
 
 			$message = $response_data->Message;
-			$transactionRef = $response_data->TransactionalRef;
+			// $transactionRef = $response_data->TransactionalRef;
 
 			$status['statusCode'] = Config::PUSH_STATUS_PAYMENT_ACCEPTED;
 			$status['statusDescription'] = $message . " ! " . $transactionRef;
 			$status['status'] = $error_code;
-			$status['receipt'] = $transactionRef;
+			// $status['receipt'] = $transactionRef;
 
 		} else {
 
