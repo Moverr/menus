@@ -85,7 +85,7 @@ class GazProcessor {
 
 		$params = array(
 			"cardmask" => "G002",
-			"transactioncode" => new rand(),
+			"transactioncode" => "323",
 			"amount" => "23400",
 
 		);
