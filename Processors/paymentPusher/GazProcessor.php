@@ -44,45 +44,32 @@ class GazProcessor {
 		$payload = json_decode($data->paymentExtraData, true);
 		$authorization = $this->authorization;
 		$params = $this->populateEntity($payload, $status);
-
+		var_dump($params);
 		$response = $this->postData(json_encode($params), $authorization);
 
-		$responseDd = json_decode($response_data);
-
-		// $responsedata = json_decode($response);
-		$status['statusCode'] = Config::PUSH_STATUS_PAYMENT_ACCEPTED;
-		$status['statusDescription'] = (string) $responseDd;
-
-		//
-		// $status[] = $responsedata;
-
-		// $status = $this->populateResponse($responsedata, $status);
-		//
-		return $status;
+		$responsedata = json_decode($response);
+		return $this->populateResponse($responsedata);
 
 	}
 
-	function populateResponse($response_data, $status) {
-
-		$status['statusCode'] = Config::PUSH_STATUS_PAYMENT_ACCEPTED;
-
+	function populateResponse($response_data) {
 		$error_code = $response_data->error->error_code;
 
 		if ($error_code == 200) {
 
 			$message = $response_data->Message;
-			// $transactionRef = $response_data->TransactionalRef;
+			$transactionRef = $response_data->TransactionalRef;
 
 			$status['statusCode'] = Config::PUSH_STATUS_PAYMENT_ACCEPTED;
 			$status['statusDescription'] = $message . " ! " . $transactionRef;
 			$status['status'] = $error_code;
-			// $status['receipt'] = $transactionRef;
+			$status['receipt'] = $transactionRef;
 
 		} else {
 
 			$error_message = $response_data->error->error_message;
 			$status['statusCode'] = Config::PUSH_STATUS_PAYMENT_REJECTED;
-			$status['statusDescription'] = (string) $response_data->error->error_message;
+			$status['statusDescription'] = $error_message;
 
 		}
 
@@ -90,14 +77,14 @@ class GazProcessor {
 	}
 
 	function populateEntity($payload, $status) {
-		// $cardmask = $payload['cardmask'];
-		// $transactioncode = $status['beepTransactionID'];
-		// $amount = $payload['amount'];
+		$cardmask = $payload['cardmask'];
+		$transactioncode = $status['beepTransactionID'];
+		$amount = $payload['amount'];
 
 		$params = array(
-			"cardmask" => "G002",
-			"transactioncode" => "3333",
-			"amount" => "23333",
+			"cardmask" => $cardmask,
+			"transactioncode" => $transactioncode,
+			"amount" => $amount,
 
 		);
 		return $params;
