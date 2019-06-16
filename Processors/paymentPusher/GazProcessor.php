@@ -44,12 +44,12 @@ class GazProcessor {
 		$payload = json_decode($data->paymentExtraData, true);
 
 		$params = $this->populateEntity($payload, $status);
-		var_dump($params);
-		$response = $this->postData(json_encode($params), $this->authorization);
+
+		// $response = $this->postData(json_encode($params), $this->authorization);
 
 		// $responsedata = json_decode($response);
 		// return $this->populateResponse($responsedata, $status);
-		$status['statusCode'] = Config::PUSH_STATUS_PAYMENT_ACCEPTED;
+		$status['statusCode'] = 340;
 
 		return $status;
 	}
