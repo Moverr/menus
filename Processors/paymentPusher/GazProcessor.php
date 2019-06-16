@@ -41,11 +41,11 @@ class GazProcessor {
 		$status['beepTransactionID'] = (int) $data->beepTransactionID;
 		$status['payerTransactionID'] = $data->payerTransactionID;
 
-		$payload = json_decode($data->paymentExtraData, true);
+		// $payload = json_decode($data->paymentExtraData, true);
 
 		$cardmask = $cardmask = $data->accountNumber;
 		$transactioncode = (int) $data->beepTransactionID;
-		$amount = (float) $data->amount;
+		$amount = $data->amount;
 
 		$params = array(
 			"cardmask" => $cardmask,
@@ -54,7 +54,7 @@ class GazProcessor {
 
 		);
 
-		$params = $this->populateEntity($payload, $status);
+		// $params = $this->populateEntity($payload, $status);
 
 		$response = $this->postData(json_encode($params), $this->authorization);
 
