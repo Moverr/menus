@@ -52,7 +52,7 @@ class GazProcessor {
 		$status['statusCode'] = Config::PUSH_STATUS_PAYMENT_ACCEPTED;
 
 		$responseData = json_decode($response);
-		$status['statusDescription'] = (string) json_encode($responseData);
+		$status['statusDescription'] = (string) json_encode($response);
 		// json_encode($response);
 
 		return $status;
