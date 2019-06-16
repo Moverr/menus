@@ -69,7 +69,7 @@ class GazProcessor {
 
 			$error_message = $response_data->error->error_message;
 			$status['statusCode'] = Config::PUSH_STATUS_PAYMENT_REJECTED;
-			$status['statusDescription'] = (string) $response_data;
+			$status['statusDescription'] = "EORRRRR";
 
 		}
 
