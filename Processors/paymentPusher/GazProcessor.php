@@ -101,6 +101,8 @@ class GazProcessor {
 			"amount" => $amount,
 
 		);
+
+		return $params;
 	}
 
 	function postData($fields, $authorization) {
