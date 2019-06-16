@@ -43,6 +43,17 @@ class GazProcessor {
 
 		$payload = json_decode($data->paymentExtraData, true);
 
+		$cardmask = $cardmask = $data->accountNumber;
+		$transactioncode = (int) $data->beepTransactionID;
+		$amount = (float) $data->amount;
+
+		$params = array(
+			"cardmask" => $cardmask,
+			"transactioncode" => $transactioncode,
+			"amount" => $amount,
+
+		);
+
 		$params = $this->populateEntity($payload, $status);
 
 		$response = $this->postData(json_encode($params), $this->authorization);
@@ -90,11 +101,11 @@ class GazProcessor {
 		return $status;
 	}
 
-	function populateEntity($payload, $status) {
-		// $cardmask = $payload['cardmask'];
-		// $transactioncode = $status['beepTransactionID'];
-		// $amount = $payload['amount'];
-
+	function populateEntity($payload, $data) {
+		$cardmask = $payload['cardmask'];
+		$transactioncode = $status['beepTransactionID'];
+		$amount = $payload['amount'];
+// $cardmask = $data->accountNumber;
 		$params = array(
 			"cardmask" => "G002",
 			"transactioncode" => "323",
