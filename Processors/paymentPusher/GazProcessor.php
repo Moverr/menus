@@ -43,7 +43,7 @@ class GazProcessor {
 
 		$payload = json_decode($data->paymentExtraData, true);
 		$authorization = $this->authorization;
-		// $params = $this->populateEntity($payload, $status);
+		$params = $this->populateEntity($payload, $status);
 
 		// $response = $this->postData(json_encode($params), $authorization);
 
