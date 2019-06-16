@@ -119,16 +119,16 @@ class GAZUSSD extends DynamicMenuController {
 			$this->saveSessionVar("CARDNUMBER", $input);
 
 			$response = $this->validateCard($input);
-			if ($response == TRUE) {
+			// if ($response == TRUE) {
 
-				$this->displayText = "Select payment option \n1) Mobile Money ";
-				$this->sessionState = "CONTRINUE";
-				$this->nextFunction = "selectPaymentOption";
-				$this->previousPage = "getCardNumber";
+				// $this->displayText = "Select payment option \n1) Mobile Money ";
+				// $this->sessionState = "CONTRINUE";
+				// $this->nextFunction = "selectPaymentOption";
+				// $this->previousPage = "getCardNumber";
 
-			} else {
+			// } else {
 
-				$this->displayText = " The Card : " . $input . " is invalid";
+				$this->displayText = (string) $response;
 				$this->sessionState = "END";
 
 			}
@@ -182,11 +182,13 @@ class GAZUSSD extends DynamicMenuController {
 
 		$statusCode = $responsedata->results[0]->statusCode;
 
-		if ($statusCode == 131) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
+		// if ($statusCode == 131) {
+		// 	return TRUE;
+		// } else {
+		// 	return FALSE;
+		// }
+		//
+		return $statusCode;
 
 	}
 
