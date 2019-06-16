@@ -119,29 +119,25 @@ class GAZUSSD extends DynamicMenuController {
 			$this->saveSessionVar("CARDNUMBER", $input);
 
 			$response = $this->validateCard($input);
-			// if ($response == TRUE) {
+			if ($response == TRUE) {
 
-			// $this->displayText = "Select payment option \n1) Mobile Money ";
-			// $this->sessionState = "CONTRINUE";
-			// $this->nextFunction = "selectPaymentOption";
-			// $this->previousPage = "getCardNumber";
+				$this->displayText = "Select payment option \n1) Mobile Money ";
+				$this->sessionState = "CONTRINUE";
+				$this->nextFunction = "selectPaymentOption";
+				$this->previousPage = "getCardNumber";
 
-			// } else {
+			} else {
 
-			$this->displayText = (string) $response;
-			$this->sessionState = "END";
+				$this->displayText = " The Card : " . $input . " is invalid";
+				$this->sessionState = "END";
 
-			// }
+			}
 
 		}
 
 	}
 
 	function validateCard($cardMask) {
-
-		if (!isset($cardmask)) {
-			return FALSE;
-		}
 
 		$transaction_id = rand();
 		$CARDNUMBER = $this->getSessionVar("CARDNUMBER");
@@ -152,8 +148,6 @@ class GAZUSSD extends DynamicMenuController {
 			"username" => $this->BEEPUSERNAME,
 			"password" => $this->BEEPPASSWORD,
 		);
-
-		$packet = array();
 
 		$packet = array(
 
@@ -180,15 +174,13 @@ class GAZUSSD extends DynamicMenuController {
 
 		$responsedata = json_decode($response);
 
-		// $statusCode = $responsedata->results[0]->statusCode;
+		$statusCode = $responsedata->results[0]->statusCode;
 
-		// if ($statusCode == 131) {
-		// 	return TRUE;
-		// } else {
-		// 	return FALSE;
-		// }
-		//
-		return $responsedata;
+		if ($statusCode == 131) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
 
 	}
 
@@ -346,6 +338,30 @@ class GAZUSSD extends DynamicMenuController {
 		curl_close($ch);
 
 		return $output;
+	}
+
+	function postValidationRequestToHUB($url, $fields, $authorization = null) {
+		$fields_string = null;
+
+		$curl = curl_init($url);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($curl, CURLOPT_HEADER, false);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+			"Content-type: application/json",
+			"Authorization:" . $authorization,
+		));
+		curl_setopt($curl, CURLOPT_POST, true);
+		curl_setopt($curl, CURLOPT_POSTFIELDS, $fields);
+
+		$response = curl_exec($curl);
+
+		$curlErrorNumber = curl_errno($curl);
+		$status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+		curl_close($curl);
+
+		return $response;
 	}
 
 }
