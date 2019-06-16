@@ -53,7 +53,7 @@ class GazProcessor {
 
 		$responseData = json_decode($response);
 		$error = json_encode($responseData->error);
-		$status['statusDescription'] = (string) $error->error_code;
+		$status['statusDescription'] = (string) $error['error_code'];
 		// json_encode($response);
 
 /*
