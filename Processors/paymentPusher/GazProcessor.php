@@ -86,14 +86,14 @@ class GazProcessor {
 	}
 
 	function populateEntity($payload, $status) {
-		$cardmask = $payload['cardmask'];
-		$transactioncode = $status['beepTransactionID'];
-		$amount = $payload['amount'];
+		// $cardmask = $payload['cardmask'];
+		// $transactioncode = $status['beepTransactionID'];
+		// $amount = $payload['amount'];
 
 		$params = array(
 			"cardmask" => "G002",
-			"transactioncode" => $transactioncode,
-			"amount" => $amount,
+			"transactioncode" => "3333",
+			"amount" => "23333",
 
 		);
 		return $params;
