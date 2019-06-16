@@ -121,17 +121,17 @@ class GAZUSSD extends DynamicMenuController {
 			$response = $this->validateCard($input);
 			// if ($response == TRUE) {
 
-				// $this->displayText = "Select payment option \n1) Mobile Money ";
-				// $this->sessionState = "CONTRINUE";
-				// $this->nextFunction = "selectPaymentOption";
-				// $this->previousPage = "getCardNumber";
+			// $this->displayText = "Select payment option \n1) Mobile Money ";
+			// $this->sessionState = "CONTRINUE";
+			// $this->nextFunction = "selectPaymentOption";
+			// $this->previousPage = "getCardNumber";
 
 			// } else {
 
-				$this->displayText = (string) $response;
-				$this->sessionState = "END";
+			$this->displayText = (string) $response;
+			$this->sessionState = "END";
 
-			}
+			// }
 
 		}
 
