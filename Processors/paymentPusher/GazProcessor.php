@@ -18,8 +18,8 @@ require_once '../../lib/BeepLogger.php';
 class GazProcessor {
 
 	private $log;
-	private $authorization = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdhelRvcFVwLm11bGFAY2VsbHVsYW50LmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJDJCM2IzY1luWG5yOVRkSlhWbUgwQU8ydXhSSkUvRFY3L0NuSTYzS3RycVNVZWNIQ1R1cEsyIiwidXNlcm5hbWUiOiJNdWxhX0NlbGx1bGFudCIsInJhbmRvbSI6Ik1VTEFfR0FaNDI4NjYxMTIzIiwiaWF0IjoxNTUzNzg0NTAxfQ.WBpkwbMWuRx5sgqjkmAuwgvaG1dFrduoY2bhdmi2EDw";
-	private $tovutiAPI = "https://fcsexternalservice.azurewebsites.net/topup";
+	private $authorization = GazConfigs::AUTHORIZATION;
+	private $tovutiAPI = GazConfigs::MERCHANTURL . "/topup";
 
 	public function __construct() {
 		$this->log = new BeepLogger();
@@ -44,7 +44,7 @@ class GazProcessor {
 		$payload = json_decode($data->paymentExtraData, true);
 		$authorization = $this->authorization;
 		$params = $this->populateEntity($payload, $status);
-
+		var_dump($params);
 		$response = $this->postData(json_encode($params), $authorization);
 
 		$responsedata = json_decode($response);
@@ -69,7 +69,7 @@ class GazProcessor {
 
 			$error_message = $response_data->error->error_message;
 			$status['statusCode'] = Config::PUSH_STATUS_PAYMENT_REJECTED;
-			$status['statusDescription'] = $error_message;
+			$status['statusDescription'] = (string) $response_data;
 
 		}
 
