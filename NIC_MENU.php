@@ -2932,17 +2932,28 @@ class NCBANKUSSD extends DynamicMenuController {
 
 	function enterNWSCAmount($input) {
 
-		$amount = (int) $input;
-		$this->saveSessionVar("nwscAmount", $amount);
+		if ($input == null) {
+			$this->displayText = "Invalid input \n Enter Amount to pay";
+			$this->sessionState = "CONTINUE";
+			$this->nextFunction = "enterNWSCAmount";
+			$this->previousPage = "enterNWSCAmount";
 
-		$message = "You are paying NWSC UGX. " . $this->getSessionVar("nwscAmount");
-		$message .= ". Account name: " . $this->getSessionVar("nwscCustomerName") . ". ";
-		$message .= "Meter number " . $this->getSessionVar("nwscMeterNumber");
-		$message .= "\n1: Confirm \n2: Cancel";
-		$this->displayText = $message;
-		$this->sessionState = "CONTINUE";
-		$this->nextFunction = "confirmNwscPay";
-		$this->previousPage = "enterNWSCAmount";
+		} else {
+
+			$amount = (int) $input;
+			$this->saveSessionVar("nwscAmount", $amount);
+
+			$message = "You are paying NWSC UGX. " . $this->getSessionVar("nwscAmount");
+			$message .= ". Account name: " . $this->getSessionVar("nwscCustomerName") . ". ";
+			$message .= "Meter number " . $this->getSessionVar("nwscMeterNumber");
+			$message .= "\n1: Confirm \n2: Cancel";
+			$this->displayText = $message;
+			$this->sessionState = "CONTINUE";
+			$this->nextFunction = "confirmNwscPay";
+			$this->previousPage = "enterNWSCAmount";
+
+		}
+
 	}
 
 	function confirmNwscPay($input) {
