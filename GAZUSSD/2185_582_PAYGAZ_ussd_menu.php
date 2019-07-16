@@ -1,8 +1,8 @@
-            <?php
+<?php
 
 /*
  * GAZ USSD Collections
- *
+ * test
  * @author Muyinda ROgers
  *
  */
@@ -61,6 +61,9 @@ class GAZUSSD extends DynamicMenuController {
 	private $SERVICECODE = "PAY077PAY077";
 	private $SERVICEID = 2114;
 	private $CURRENCY_CODE = "KES";
+
+	private $checkout_URL = "http://10.250.250.29:9001/hub/channels/api/momoCheckout/index.php";
+	private $callbackurl =  'http://10.250.250.29:9001/hub/channels/api/momoCheckout/index.php';
 
 	function startPage() {
 
@@ -139,6 +142,10 @@ class GAZUSSD extends DynamicMenuController {
 
 	function validateCard($cardMask) {
 
+		if (!isset($cardmask)) {
+			return FALSE;
+		}
+
 		$transaction_id = rand();
 		$CARDNUMBER = $this->getSessionVar("CARDNUMBER");
 		$CARDAMOUNT = $this->getSessionVar("CARDAMOUNT");
@@ -148,6 +155,8 @@ class GAZUSSD extends DynamicMenuController {
 			"username" => $this->BEEPUSERNAME,
 			"password" => $this->BEEPPASSWORD,
 		);
+
+		$packet = array();
 
 		$packet = array(
 
@@ -176,7 +185,7 @@ class GAZUSSD extends DynamicMenuController {
 
 		$statusCode = $responsedata->results[0]->statusCode;
 
-		if ($statusCode == 307) {
+		if ($statusCode == 131) {
 			return TRUE;
 		} else {
 			return FALSE;
@@ -253,59 +262,39 @@ class GAZUSSD extends DynamicMenuController {
 		$CARDAMOUNT = $this->getSessionVar("CARDAMOUNT");
 		$MOBILENUMBER = $this->getSessionVar("MOBILENUMBER");
 
-		$credentials = array(
-			"username" => $this->BEEPUSERNAME,
-			"password" => $this->BEEPPASSWORD,
-		);
-
-		$packet = array();
-
-		$extraData = json_encode(array(
-			"cardmask" => $CARDNUMBER,
-			"transactioncode" => $transaction_id,
-			"amount" => $CARDAMOUNT,
-
-		)
-
-		);
-
-		$packet = array(
-
+		$jsonData = array(
+			'username' => $this->BEEPUSERNAME,
+			'password' => $this->BEEPPASSWORD,
+			'merchantTransactionID' => $transaction_id,
+			'MSISDN' => $MOBILENUMBER,
 			'serviceID' => $this->SERVICEID,
-			'requestExtraData' => null,
-			'extraData' => $extraData,
-			"payerTransactionID" => $transaction_id,
-			"invoiceNumber" => $transaction_id,
-			"MSISDN" => $MOBILENUMBER,
-			"amount" => $CARDAMOUNT,
-			"accountNumber" => $CARDNUMBER,
-			"narration" => "GAZ TOPUP",
-			"currencyCode" => $this->CURRENCY_CODE,
-			"customerNames" => "--",
-			"paymentMode" => "USSD",
-			"datePaymentReceived" => date("Y-m-d H:i:s"),
+			'serviceCode' => $this->SERVICECODE,
+			'accountNumber' => $CARDNUMBER,
+			'currency' => $this->CURRENCY_CODE,
+			'amount' => $CARDAMOUNT,
+			'callbackURL' => $this->callbackurl,
+			'raiseInvoice' => false,
 		);
+		$jsonDataEncoded = json_encode($jsonData);
+		CoreUtils::flog4php(4, $this->msisdn, array("MESSAGE" => "About to send a request payment with data:: " . $jsonDataEncoded), __FILE__, __FUNCTION__, __LINE__, "ussdinfo", USSD_LOG_PROPERTIES);
+		$requestPaymentResponse = $this->requestMomo($jsonDataEncoded);
+		if ($requestPaymentResponse == null) {
+			$display = "Sorry, We could not send you a Pin Prompt at the moment. Please try again later. Cinnamon";
+		} else {
+			CoreUtils::flog4php(4, $this->msisdn, array("MESSAGE" => "Response MomoCheckout:: " . $requestPaymentResponse), __FILE__, __FUNCTION__, __LINE__, "ussdinfo", USSD_LOG_PROPERTIES);
+			$payResponse = json_decode($requestPaymentResponse);
+			$result = $payResponse->result;
+			if ($result) {
+				$display = "Dear Customer Your request   is being processed."
+					. " You will receive a PIN prompt on shortly. "
+					. "Cinnamon";
+			} else {
+				$display = $payResponse->statusDescription;
 
-		$data[] = $packet;
-		$payload = array(
-			"credentials" => $credentials,
-			"packet" => $data,
-		);
-
-		$spayload = array(
-			"function" => $this->hubPaymentFunction,
-			"payload" => json_encode($payload),
-		);
-
-		$response = $this->postToCPGPayload($payload, $this->hubJSONAPIUrl, $this->hubPaymentFunction);
-
-		$responsedata = json_decode($response);
-		$messsage = (string) $responsedata->results[0]->statusDescription;
-		if ($responsedata->results[0]->statusCode == 139) {
-			$messsage = " Payment  is being proccessed, you will shortly receive a confirmation message. \nRef :" . $responsedata->results[0]->beepTransactionID;
+			}
 		}
-
-		$this->displayText = $messsage;
+		$this->displayText = $display;
+		$this->serviceDescription = "Gaz Oil Mula";
 		$this->sessionState = "END";
 
 	}
@@ -340,28 +329,31 @@ class GAZUSSD extends DynamicMenuController {
 		return $output;
 	}
 
-	function postValidationRequestToHUB($url, $fields, $authorization = null) {
-		$fields_string = null;
+	/**
+	 * Make a call to MMO and get the Response
+	 * @param $requestPayload : The Request to Be sent to MMO
+	 * @return MMO Response
+	 */
+	public function requestMomo($requestPayload) {
 
-		$curl = curl_init($url);
-		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-		curl_setopt($curl, CURLOPT_HEADER, false);
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-			"Content-type: application/json",
-			"Authorization:" . $authorization,
-		));
-		curl_setopt($curl, CURLOPT_POST, true);
-		curl_setopt($curl, CURLOPT_POSTFIELDS, $fields);
+		$ch = curl_init($this->checkout_URL); //Initiate cURL.
+		//Attach our encoded JSON string to the POST fields.
+		curl_setopt($ch, CURLOPT_URL, $this->checkout_URL);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_FAILONERROR, 1);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $requestPayload);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+			'Content-Type: application/json',
+			'Content-Length: ' . strlen($requestPayload))
+		);
+		$result = curl_exec($ch);
+		curl_close($ch);
+		$json = json_decode($result, true);
 
-		$response = curl_exec($curl);
-
-		$curlErrorNumber = curl_errno($curl);
-		$status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-
-		curl_close($curl);
-
-		return $response;
+		return json_encode($json);
 	}
 
 }
