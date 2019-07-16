@@ -63,7 +63,7 @@ class GAZUSSD extends DynamicMenuController {
 	private $CURRENCY_CODE = "KES";
 
 	private $checkout_URL = "http://10.250.250.29:9001/hub/channels/api/momoCheckout/index.php";
-	private $callbackurl =  'http://10.250.250.29:9001/hub/channels/api/momoCheckout/index.php';
+	private $callbackurl = 'http://10.250.250.29:9001/hub/channels/api/momoCheckout/index.php';
 
 	function startPage() {
 
@@ -185,7 +185,7 @@ class GAZUSSD extends DynamicMenuController {
 
 		$statusCode = $responsedata->results[0]->statusCode;
 
-		if ($statusCode == 131) {
+		if ($statusCode == 307) {
 			return TRUE;
 		} else {
 			return FALSE;
