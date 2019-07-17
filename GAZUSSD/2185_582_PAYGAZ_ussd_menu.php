@@ -37,7 +37,8 @@ class GAZUSSD extends DynamicMenuController {
 	private $utl_reg = "/^(71|071|25671)(\d{7})$/";
 	private $orange_reg = "/^(079|25679|79)(\d{7})$/";
 
-	private $hubJSONAPIUrl = "http://197.159.100.247:9000/hub/paymentRouter/JSON/index.php";
+	private $hubJSONAPIUrl = "http://10.250.250.29:9000/hub/services/paymentGateway/JSON/index.php";
+
 	private $hubValidationFunction = "BEEP.validateAccount";
 	private $hubPaymentFunction = "BEEP.postPayment";
 
@@ -185,7 +186,7 @@ class GAZUSSD extends DynamicMenuController {
 
 		$statusCode = $responsedata->results[0]->statusCode;
 
-		if ($statusCode == 307) {
+		if ($statusCode == $this->hubValidationSuccessCode) {
 			return TRUE;
 		} else {
 			return FALSE;
