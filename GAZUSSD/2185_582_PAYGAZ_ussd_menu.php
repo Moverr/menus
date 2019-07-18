@@ -124,34 +124,25 @@ class GAZUSSD extends DynamicMenuController {
 
 			$response = $this->validateCard($input);
 
-			$statusCode = $response->results[0]->statusCode;
+			$statusCode = $responsedata->results[0]->statusCode;
 
-			$this->displayText = "Select payment option \n1) Mobile Money ";
-			$this->sessionState = "CONTRINUE";
-			$this->nextFunction = "selectPaymentOption";
-			$this->previousPage = "getCardNumber";
+			if ($statusCode == $this->hubValidationSuccessCode) {
+				$this->displayText = "Select payment option \n1) Mobile Money ";
+				$this->sessionState = "CONTRINUE";
+				$this->nextFunction = "selectPaymentOption";
+				$this->previousPage = "getCardNumber";
 
-			// if ($statusCode == $this->hubValidationSuccessCode) {
-			// 	$this->displayText = "Select payment option \n1) Mobile Money ";
-			// 	$this->sessionState = "CONTRINUE";
-			// 	$this->nextFunction = "selectPaymentOption";
-			// 	$this->previousPage = "getCardNumber";
+			} else {
 
-			// } else {
-
-			// 	$this->displayText = (string) ($response);
-			// 	$this->sessionState = "END";
-			// }
+				$this->displayText = (string) ($response);
+				$this->sessionState = "END";
+			}
 
 		}
 
 	}
 
 	function validateCard($cardMask) {
-
-		if (!isset($cardmask)) {
-			return FALSE;
-		}
 
 		$transaction_id = rand();
 		$CARDNUMBER = $this->getSessionVar("CARDNUMBER");
@@ -278,6 +269,7 @@ class GAZUSSD extends DynamicMenuController {
 		);
 		$jsonDataEncoded = json_encode($jsonData);
 		CoreUtils::flog4php(4, $this->msisdn, array("MESSAGE" => "About to send a request payment with data:: " . $jsonDataEncoded), __FILE__, __FUNCTION__, __LINE__, "ussdinfo", USSD_LOG_PROPERTIES);
+
 		$requestPaymentResponse = $this->requestMomo($jsonDataEncoded);
 		if ($requestPaymentResponse == null) {
 			$display = "Sorry, We could not send you a Pin Prompt at the moment. Please try again later. Cinnamon";
