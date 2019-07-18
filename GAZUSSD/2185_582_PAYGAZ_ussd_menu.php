@@ -179,7 +179,9 @@ class GAZUSSD extends DynamicMenuController {
 			"payload" => json_encode($payload),
 		);
 
-		$response = $this->postToCPGPayload($payload, $this->hubJSONAPIUrl, $this->hubValidationFunction);
+		// $response = $this->postToCPGPayload($payload, $this->hubJSONAPIUrl, $this->hubValidationFunction);
+
+		$response = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
 
 		$responsedata = json_decode($response);
 
@@ -188,7 +190,7 @@ class GAZUSSD extends DynamicMenuController {
 		if ($statusCode == 307) {
 			return TRUE;
 		} else {
-			return FALSE;
+			return TRUE;
 		}
 
 	}
@@ -327,6 +329,26 @@ class GAZUSSD extends DynamicMenuController {
 		curl_close($ch);
 
 		return $output;
+	}
+
+	function postValidationRequestToHUB($url, $fields) {
+		$fields_string = null;
+
+		$curl = curl_init($url);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($curl, CURLOPT_HEADER, false);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+		curl_setopt($curl, CURLOPT_POST, true);
+		curl_setopt($curl, CURLOPT_POSTFIELDS, $fields);
+		$response = curl_exec($curl);
+
+		$curlErrorNumber = curl_errno($curl);
+		$status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+		curl_close($curl);
+
+		return $response;
 	}
 
 	/**
