@@ -124,7 +124,7 @@ class GAZUSSD extends DynamicMenuController {
 
 			$response = $this->validateCard($input);
 
-			$statusCode = $responsedata->results[0]->statusCode;
+			$statusCode = $response->results[0]->statusCode;
 
 			if ($statusCode == $this->hubValidationSuccessCode) {
 				$this->displayText = "Select payment option \n1) Mobile Money ";
@@ -134,7 +134,7 @@ class GAZUSSD extends DynamicMenuController {
 
 			} else {
 
-				$this->displayText = (string) ($response);
+				$this->displayText = ($response);
 				$this->sessionState = "END";
 			}
 
