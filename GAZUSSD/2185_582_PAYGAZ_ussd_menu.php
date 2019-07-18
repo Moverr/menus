@@ -126,17 +126,22 @@ class GAZUSSD extends DynamicMenuController {
 
 			$statusCode = $response->results[0]->statusCode;
 
-			if ($statusCode == $this->hubValidationSuccessCode) {
-				$this->displayText = "Select payment option \n1) Mobile Money ";
-				$this->sessionState = "CONTRINUE";
-				$this->nextFunction = "selectPaymentOption";
-				$this->previousPage = "getCardNumber";
+			$this->displayText = "Select payment option \n1) Mobile Money ";
+			$this->sessionState = "CONTRINUE";
+			$this->nextFunction = "selectPaymentOption";
+			$this->previousPage = "getCardNumber";
 
-			} else {
+			// if ($statusCode == $this->hubValidationSuccessCode) {
+			// 	$this->displayText = "Select payment option \n1) Mobile Money ";
+			// 	$this->sessionState = "CONTRINUE";
+			// 	$this->nextFunction = "selectPaymentOption";
+			// 	$this->previousPage = "getCardNumber";
 
-				$this->displayText = (string) ($response);
-				$this->sessionState = "END";
-			}
+			// } else {
+
+			// 	$this->displayText = (string) ($response);
+			// 	$this->sessionState = "END";
+			// }
 
 		}
 
