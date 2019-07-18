@@ -132,7 +132,7 @@ class GAZUSSD extends DynamicMenuController {
 
 			} else {
 
-				$this->displayText = " The Card : " . $input . " is invalid";
+				$this->displayText = " The Card : " . (string($response)) . " is invalid";
 				$this->sessionState = "END";
 
 			}
@@ -189,7 +189,7 @@ class GAZUSSD extends DynamicMenuController {
 		if ($statusCode == $this->hubValidationSuccessCode) {
 			return TRUE;
 		} else {
-			return FALSE;
+			return $responsedata;
 		}
 
 	}
