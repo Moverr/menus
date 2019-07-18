@@ -37,8 +37,7 @@ class GAZUSSD extends DynamicMenuController {
 	private $utl_reg = "/^(71|071|25671)(\d{7})$/";
 	private $orange_reg = "/^(079|25679|79)(\d{7})$/";
 
-	private $hubJSONAPIUrl = "http://197.159.100.249:9000/hub/services/paymentGateway/JSON/index.php";
-
+	private $hubJSONAPIUrl = "http://localhost:9000/hub/services/paymentGateway/JSON/index.php";
 	private $hubValidationFunction = "BEEP.validateAccount";
 	private $hubPaymentFunction = "BEEP.postPayment";
 
@@ -123,10 +122,8 @@ class GAZUSSD extends DynamicMenuController {
 			$this->saveSessionVar("CARDNUMBER", $input);
 
 			$response = $this->validateCard($input);
+			if ($response == TRUE) {
 
-			$statusCode = $response->results[0]->statusCode;
-
-			if ($statusCode == $this->hubValidationSuccessCode) {
 				$this->displayText = "Select payment option \n1) Mobile Money ";
 				$this->sessionState = "CONTRINUE";
 				$this->nextFunction = "selectPaymentOption";
@@ -134,8 +131,9 @@ class GAZUSSD extends DynamicMenuController {
 
 			} else {
 
-				$this->displayText = "" . ($statusCode);
+				$this->displayText = " The Card : " . $input . " is invalid";
 				$this->sessionState = "END";
+
 			}
 
 		}
@@ -144,12 +142,21 @@ class GAZUSSD extends DynamicMenuController {
 
 	function validateCard($cardMask) {
 
+		if (!isset($cardmask)) {
+			return FALSE;
+		}
+
 		$transaction_id = rand();
+		$CARDNUMBER = $this->getSessionVar("CARDNUMBER");
+		$CARDAMOUNT = $this->getSessionVar("CARDAMOUNT");
+		$MOBILENUMBER = $this->getSessionVar("MOBILENUMBER");
 
 		$credentials = array(
 			"username" => $this->BEEPUSERNAME,
 			"password" => $this->BEEPPASSWORD,
 		);
+
+		$packet = array();
 
 		$packet = array(
 
@@ -172,11 +179,17 @@ class GAZUSSD extends DynamicMenuController {
 			"payload" => json_encode($payload),
 		);
 
-		$respponse = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
+		$response = $this->postToCPGPayload($payload, $this->hubJSONAPIUrl, $this->hubValidationFunction);
 
-		$responsedata = json_decode($respponse);
+		$responsedata = json_decode($response);
 
-		return $responsedata;
+		$statusCode = $responsedata->results[0]->statusCode;
+
+		if ($statusCode == 307) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
 
 	}
 
@@ -264,7 +277,6 @@ class GAZUSSD extends DynamicMenuController {
 		);
 		$jsonDataEncoded = json_encode($jsonData);
 		CoreUtils::flog4php(4, $this->msisdn, array("MESSAGE" => "About to send a request payment with data:: " . $jsonDataEncoded), __FILE__, __FUNCTION__, __LINE__, "ussdinfo", USSD_LOG_PROPERTIES);
-
 		$requestPaymentResponse = $this->requestMomo($jsonDataEncoded);
 		if ($requestPaymentResponse == null) {
 			$display = "Sorry, We could not send you a Pin Prompt at the moment. Please try again later. Cinnamon";
@@ -315,26 +327,6 @@ class GAZUSSD extends DynamicMenuController {
 		curl_close($ch);
 
 		return $output;
-	}
-
-	function postValidationRequestToHUB($url, $fields) {
-		$fields_string = null;
-
-		$curl = curl_init($url);
-		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-		curl_setopt($curl, CURLOPT_HEADER, false);
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-		curl_setopt($curl, CURLOPT_POST, true);
-		curl_setopt($curl, CURLOPT_POSTFIELDS, $fields);
-		$response = curl_exec($curl);
-
-		$curlErrorNumber = curl_errno($curl);
-		$status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-
-		curl_close($curl);
-
-		return $response;
 	}
 
 	/**
