@@ -154,8 +154,6 @@ class GAZUSSD extends DynamicMenuController {
 			"password" => $this->BEEPPASSWORD,
 		);
 
-		$packet = array();
-
 		$packet = array(
 
 			'serviceID' => $this->SERVICEID,
@@ -179,7 +177,7 @@ class GAZUSSD extends DynamicMenuController {
 
 		$respponse = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
 
-		$responsedata = json_decode($response);
+		$responsedata = json_decode($respponse);
 
 		return $responsedata;
 
