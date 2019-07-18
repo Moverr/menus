@@ -132,7 +132,7 @@ class GAZUSSD extends DynamicMenuController {
 
 			} else {
 
-				$this->displayText = $response;
+				$this->displayText = (string) $response;
 				$this->sessionState = "END";
 
 			}
