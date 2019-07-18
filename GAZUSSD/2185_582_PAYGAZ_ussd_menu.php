@@ -132,7 +132,7 @@ class GAZUSSD extends DynamicMenuController {
 
 			} else {
 
-				$this->displayText = json_encode($response);
+				$this->displayText = var_dump($response);
 				$this->sessionState = "END";
 
 			}
@@ -189,7 +189,8 @@ class GAZUSSD extends DynamicMenuController {
 		if ($statusCode == $this->hubValidationSuccessCode) {
 			return TRUE;
 		} else {
-			return $responsedata;
+			// return $responsedata;
+			return TRUE;
 		}
 
 	}
