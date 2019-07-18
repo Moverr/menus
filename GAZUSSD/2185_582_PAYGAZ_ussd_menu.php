@@ -185,7 +185,7 @@ class GAZUSSD extends DynamicMenuController {
 
 		$responsedata = json_decode($response);
 
-		return $responsedata = json_decode($response);
+		return $responsedata;
 
 	}
 
