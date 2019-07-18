@@ -134,7 +134,7 @@ class GAZUSSD extends DynamicMenuController {
 
 			} else {
 
-				$this->displayText = ($input);
+				$this->displayText = "" . ($statusCode);
 				$this->sessionState = "END";
 			}
 
@@ -145,9 +145,6 @@ class GAZUSSD extends DynamicMenuController {
 	function validateCard($cardMask) {
 
 		$transaction_id = rand();
-		$CARDNUMBER = $this->getSessionVar("CARDNUMBER");
-		$CARDAMOUNT = $this->getSessionVar("CARDAMOUNT");
-		$MOBILENUMBER = $this->getSessionVar("MOBILENUMBER");
 
 		$credentials = array(
 			"username" => $this->BEEPUSERNAME,
