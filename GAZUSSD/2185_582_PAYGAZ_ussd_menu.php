@@ -122,19 +122,35 @@ class GAZUSSD extends DynamicMenuController {
 			$this->saveSessionVar("CARDNUMBER", $input);
 
 			$response = $this->validateCard($input);
-			if ($response == TRUE) {
 
-				$this->displayText = "Select payment option \n1) Mobile Money ";
-				$this->sessionState = "CONTRINUE";
-				$this->nextFunction = "selectPaymentOption";
-				$this->previousPage = "getCardNumber";
+			$responsedata = json_decode($response);
 
-			} else {
+			$statusCode = $responsedata->results[0]->statusCode;
 
-				$this->displayText = " The Card : " . $input . " is invalid";
-				$this->sessionState = "END";
+			// if ($statusCode == 307) {
+			// 	return TRUE;
+			// } else {
+			// 	return TRUE;
+			// }
+			//
 
-			}
+			$this->displayText = $statusCode;
+			$this->sessionState = "END";
+
+/*
+if ($response == TRUE) {
+
+$this->displayText = "Select payment option \n1) Mobile Money ";
+$this->sessionState = "CONTRINUE";
+$this->nextFunction = "selectPaymentOption";
+$this->previousPage = "getCardNumber";
+
+} else {
+
+$this->displayText = " The Card : " . $input . " is invalid";
+$this->sessionState = "END";
+
+} */
 
 		}
 
@@ -183,15 +199,7 @@ class GAZUSSD extends DynamicMenuController {
 
 		$response = $this->postValidationRequestToHUB($this->hubJSONAPIUrl, json_encode($spayload));
 
-		$responsedata = json_decode($response);
-
-		$statusCode = $responsedata->results[0]->statusCode;
-
-		if ($statusCode == 307) {
-			return TRUE;
-		} else {
-			return TRUE;
-		}
+		return $response;
 
 	}
 
